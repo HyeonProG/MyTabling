@@ -11,7 +11,7 @@ import lombok.ToString;
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
-public class Restaurant {
+public class RestaurantDTO {
 	
 	private int restaurant_id; // 가게 id
 	private String restaurant_name; // 가게 이름
