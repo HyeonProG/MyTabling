@@ -1,20 +1,16 @@
 package ver01;
 
 import java.awt.Choice;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 import javax.swing.ImageIcon;
-import javax.swing.JButton;
-import javax.swing.JFormattedTextField;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
-import javax.swing.text.NumberFormatter;
 
 import lombok.Data;
 
@@ -27,8 +23,12 @@ public class SignIn extends JFrame {
 	private Choice localTel;
 	private JTextField userPhone;
 	private Choice myLocation;
-	private JButton duplicateCheck;
-	private JButton signInBtn;
+//	private JButton duplicateCheck;
+//	private JButton signInBtn;
+	private JLabel duplicateCheck;
+	private JLabel signInBtn;
+	
+	private boolean canCheck = false;
 
 	public SignIn() {
 		initData();
@@ -38,7 +38,7 @@ public class SignIn extends JFrame {
 
 	private void initData() {
 		setTitle("회원가입");
-		setSize(600, 500);
+		setSize(400, 600);
 		setResizable(false);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
@@ -47,7 +47,7 @@ public class SignIn extends JFrame {
 		setContentPane(Bg);
 
 		userName = new JTextField(20);
-		userName.setBounds(220, 100, 160, 25);
+		userName.setBounds(90, 165, 200, 25);
 
 		localTel = new Choice();
 		localTel.addItem("010");
@@ -56,10 +56,10 @@ public class SignIn extends JFrame {
 		localTel.addItem("017");
 		localTel.addItem("018");
 		localTel.addItem("019");
-		localTel.setBounds(190, 190, 50, 25);
+		localTel.setBounds(90, 270, 50, 25);
 
 		userPhone = new JTextField();
-		userPhone.setBounds(245, 190, 140, 25);
+		userPhone.setBounds(150, 270, 140, 25);
 
 		myLocation = new Choice();
 		myLocation.addItem("강서구");
@@ -78,14 +78,18 @@ public class SignIn extends JFrame {
 		myLocation.addItem("금정구");
 		myLocation.addItem("해운대구");
 		myLocation.addItem("기장군");
-		myLocation.setSize(160, 25);
-		myLocation.setLocation(220, 280);
+		myLocation.setBounds(90, 380, 200, 25);
 
-		duplicateCheck = new JButton("중복확인");
-		duplicateCheck.setBounds(390, 190, 90, 25);
+//		duplicateCheck = new JButton("중복확인");
+//		duplicateCheck.setBounds(200, 190, 90, 25);
+//		signInBtn = new JButton("가입");
+//		signInBtn.setBounds(200, 370, 120, 30);
 
-		signInBtn = new JButton("가입");
-		signInBtn.setBounds(240, 350, 120, 30);
+		duplicateCheck = new JLabel(new ImageIcon("img/duplicateBtn.jpg"));
+		duplicateCheck.setBounds(200, 300, 90, 25);
+		
+		signInBtn = new JLabel(new ImageIcon("img/signInBtn.jpg"));
+		signInBtn.setBounds(35, 480, 314, 46);
 	}
 
 	private void setInitLayout() {
@@ -107,10 +111,10 @@ public class SignIn extends JFrame {
 
 	private void addEventListener() {
 
-		signInBtn.addActionListener(new ActionListener() {
+		signInBtn.addMouseListener(new MouseAdapter() {
 
 			@Override
-			public void actionPerformed(ActionEvent e) {
+			public void mousePressed(MouseEvent e) {
 				if (userName.getText().length() > 50) {
 					JOptionPane.showMessageDialog(null, "닉네임은 50자까지만 기입 가능합니다.", "경고", JOptionPane.WARNING_MESSAGE);
 				} else if (userPhone.getText().equals("")) {
@@ -120,14 +124,15 @@ public class SignIn extends JFrame {
 			}
 		});
 
-		duplicateCheck.addActionListener(new ActionListener() {
+		duplicateCheck.addMouseListener(new MouseAdapter() {
 
 			@Override
-			public void actionPerformed(ActionEvent e) {
+			public void mousePressed(MouseEvent e) {
 
-				if (userPhone.getText().length() == 8) {
+				if (userPhone.getText().length() == 8 && canCheck == true) {
+					JOptionPane.showMessageDialog(null, "가입 가능한 전화번호입니다.", "경고", JOptionPane.WARNING_MESSAGE);
 					signInBtn.setEnabled(true);
-				} else {
+				} else if(canCheck == true){
 					JOptionPane.showMessageDialog(null, "전화번호가 8자리가 아닙니다.", "경고", JOptionPane.WARNING_MESSAGE);
 				}
 
@@ -143,11 +148,12 @@ public class SignIn extends JFrame {
 				System.out.println(userPhone.getText().length());
 
 				if (userPhone.getText().length() < 9) {
-
 					duplicateCheck.setEnabled(false);
+					canCheck = false;
 				}
 				if (6 < userPhone.getText().length()) {
 					duplicateCheck.setEnabled(true);
+					canCheck = true;
 				}
 
 			}
