@@ -13,9 +13,9 @@ import lombok.ToString;
 @ToString
 public class ReservationDTO {
 
-	private int reservationId;
-	private Boolean reservationState;
-	private String reservationTime;
-	private int customerId;
-	private int restaurantId;
+	private int reservation_id;
+	private Boolean reservation_state;
+	private String reservation_time;
+	private int customer_id;
+	private int restaurant_id;
 }
