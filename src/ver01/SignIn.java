@@ -119,8 +119,12 @@ public class SignIn extends JFrame {
 					JOptionPane.showMessageDialog(null, "닉네임은 50자까지만 기입 가능합니다.", "경고", JOptionPane.WARNING_MESSAGE);
 				} else if (userPhone.getText().equals("")) {
 					JOptionPane.showMessageDialog(null, "전화번호는 비워둘 수 없습니다.", "경고", JOptionPane.WARNING_MESSAGE);
+				} else {
+					System.out.println(userName.getText());
+					System.out.println(userPhone.getText());
+					// TODO - 선택한 지역 받아오기
+					System.out.println(myLocation.getSelectedItem());
 				}
-				System.out.println(userPhone.getText());
 			}
 		});
 
