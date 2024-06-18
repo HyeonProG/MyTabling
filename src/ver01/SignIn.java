@@ -1,5 +1,7 @@
 package ver01;
 
+import java.awt.Choice;
+
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -12,7 +14,7 @@ public class SignIn extends JFrame {
 	private JLabel Bg;
 	private JTextField userName;
 	private JTextField userPhone;
-	private JTextField myLocation;
+	private Choice myLocation;
 	private JButton signInBtn;
 
 	public SignIn() {
@@ -39,7 +41,23 @@ public class SignIn extends JFrame {
 		userPhone.setSize(160,25);
 		userPhone.setLocation(220,200);
 		
-		myLocation = new JTextField(20);
+		myLocation = new Choice();
+		myLocation.addItem("강서구");
+		myLocation.addItem("사하구");
+		myLocation.addItem("사상구");
+		myLocation.addItem("북구");
+		myLocation.addItem("서구");
+		myLocation.addItem("중구");
+		myLocation.addItem("동구");
+		myLocation.addItem("부산진구");
+		myLocation.addItem("영도구");
+		myLocation.addItem("남구");
+		myLocation.addItem("동래구");
+		myLocation.addItem("연제구");
+		myLocation.addItem("수영구");
+		myLocation.addItem("금정구");
+		myLocation.addItem("해운대구");
+		myLocation.addItem("기장군");
 		myLocation.setSize(160,25);
 		myLocation.setLocation(220,300);
 		
