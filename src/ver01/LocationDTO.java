@@ -13,7 +13,7 @@ import lombok.ToString;
 @ToString
 public class LocationDTO {
 
-	private int locationId;
-	private String locationName;
+	private int location_id;
+	private String location_name;
 
 }
