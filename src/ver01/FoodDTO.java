@@ -15,5 +15,6 @@ public class FoodDTO {
 	
 	private int food_id;
 	private String food_name;
+	private int category_id;
 
 }
