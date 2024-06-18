@@ -35,11 +35,11 @@ public class SignIn extends JFrame {
 		
 		userName = new JTextField(20);
 		userName.setSize(160,25);
-		userName.setLocation(220,110);
+		userName.setLocation(220,100);
 		
 		userPhone = new JTextField(20);
 		userPhone.setSize(160,25);
-		userPhone.setLocation(220,200);
+		userPhone.setLocation(220,190);
 		
 		myLocation = new Choice();
 		myLocation.addItem("강서구");
@@ -59,11 +59,11 @@ public class SignIn extends JFrame {
 		myLocation.addItem("해운대구");
 		myLocation.addItem("기장군");
 		myLocation.setSize(160,25);
-		myLocation.setLocation(220,300);
+		myLocation.setLocation(220,280);
 		
 		signInBtn = new JButton("가입");
 		signInBtn.setSize(120,30);
-		signInBtn.setLocation(240,370);
+		signInBtn.setLocation(240,350);
 	}
 
 	private void setInitLayout() {
