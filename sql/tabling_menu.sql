@@ -258,7 +258,10 @@
  INSERT INTO menu (restaurant_id, food_id, price) VALUES(42, 42, 22000); 
  INSERT INTO menu (restaurant_id, food_id, price) VALUES(42, 55, 9000); 
  INSERT INTO menu (restaurant_id, food_id, price) VALUES(42, 57, 12000); 
- INSERT INTO menu (restaurant_id, food_id, price) VALUES(42, 55, 9000); 
+ INSERT INTO menu (restaurant_id, food_id, price) VALUES(43, 57, 12000); 
+ INSERT INTO menu (restaurant_id, food_id, price) VALUES(43, 55, 9000); 
+ INSERT INTO menu (restaurant_id, food_id, price) VALUES(43, 50, 10000); 
+ INSERT INTO menu (restaurant_id, food_id, price) VALUES(43, 48, 27000); 
  INSERT INTO menu (restaurant_id, food_id, price) VALUES(43, 46, 34000); 
  INSERT INTO menu (restaurant_id, food_id, price) VALUES(44, 43, 27000); 
  INSERT INTO menu (restaurant_id, food_id, price) VALUES(44, 52, 9500); 
