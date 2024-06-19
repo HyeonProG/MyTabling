@@ -10,6 +10,8 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
+import ver01.CustomerDTO;
+
 public class MainMenuFrame extends JFrame {
 	
 	private BackgroundPanel backgroundPanel;
@@ -17,15 +19,17 @@ public class MainMenuFrame extends JFrame {
 	private JButton categoryBtn;
 	private JButton locationBtn;
 	private JButton reservationBtn;
+	private CustomerDTO customerDTO;
 
-	public MainMenuFrame() {
+	public MainMenuFrame(CustomerDTO customerDTO) {
+		this.customerDTO = customerDTO;
 		initData();
 		setInitLayout();
 		initListener();
 	}
 	
 	private void initData() {
-		setTitle("메인 메뉴");
+		setTitle("메인 메뉴 " + customerDTO.getCustomerName() + "님");
 		setSize(500, 700);
 		setResizable(false);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -67,6 +71,13 @@ public class MainMenuFrame extends JFrame {
 				setVisible(false);
 			}
 		});
+		categoryBtn.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mousePressed(MouseEvent e) {
+				new CategoryFrame();
+				setVisible(false);
+			}
+		});
 	}
 	
 	private class BackgroundPanel extends JPanel {
@@ -88,7 +99,7 @@ public class MainMenuFrame extends JFrame {
 	}
 	
 	public static void main(String[] args) {
-		new MainMenuFrame();
+		//new MainMenuFrame();
 	}
 	
 }

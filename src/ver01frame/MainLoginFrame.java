@@ -8,34 +8,31 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 
 public class MainLoginFrame extends JFrame {
-	
+
 	private JButton customerBtn;
 	private JButton restaurantBtn;
-	// TODO
-	private CustomerLoginFrame customerLoginFrame;
-	
+	private MainLoginFrame mainLoginFrame;
+
 	public MainLoginFrame() {
 		initData();
 		setInitLayout();
 		initListener();
 	}
-	
+
 	private void initData() {
+		mainLoginFrame = this;
 		setTitle("테이블링");
 		setSize(400, 600);
 		setLocationRelativeTo(null);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setLayout(null);
-		setVisible(true);
 		setResizable(false);
-		
-		// TODO
-		customerLoginFrame = new CustomerLoginFrame(this);
-		
+
 		customerBtn = new JButton("고객 로그인");
 		restaurantBtn = new JButton("점주 로그인");
+		setVisible(true);
 	}
-	
+
 	private void setInitLayout() {
 		customerBtn.setBounds(40, 120, 50, 50);
 		customerBtn.setSize(300, 200);
@@ -47,16 +44,17 @@ public class MainLoginFrame extends JFrame {
 		restaurantBtn.setFont(new Font("Noto Sans KR", Font.BOLD, 15));
 		add(restaurantBtn);
 	}
-	
+
 	private void initListener() {
 		customerBtn.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mousePressed(MouseEvent e) {
 //				new CustomerLoginFrame();
-				customerLoginFrame.setVisible(true);
+				new CustomerLoginFrame(mainLoginFrame).setVisible(true);
+				;
 			}
 		});
-		
+
 		restaurantBtn.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mousePressed(MouseEvent e) {
@@ -64,11 +62,11 @@ public class MainLoginFrame extends JFrame {
 				setVisible(false);
 			}
 		});
-		
+
 	}
-	
+
 	public static void main(String[] args) {
 		new MainLoginFrame();
 	}
-	
+
 }

@@ -97,15 +97,4 @@ public class RestaurantDAO {
 	
 	}
 	
-	// TODO 삭제 예정 테스트 코드
-	public static void main(String[] args) {
-		RestaurantDAO dao = new RestaurantDAO();
-		try {
-			for (RestaurantDTO dto : dao.getRestaurantsByLocation(7)) {
-				System.out.println(dto);
-			}
-		} catch (SQLException e) {
-			e.printStackTrace();
-		} 
-	}
 }

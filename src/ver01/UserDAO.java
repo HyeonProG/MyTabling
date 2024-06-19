@@ -13,7 +13,7 @@ public interface UserDAO {
 	public boolean authenticateAll(String name,String phone) throws SQLException;
 	
 	// 전화번호 일치하는지 조회
-	public boolean authenticatePhone(String phone)throws SQLException;
+	public CustomerDTO authenticatePhone(String phone)throws SQLException;
 	
 	// 로그인 - 유저 전체 조회
 	public List<CustomerDTO> getAllUsers() throws SQLException;

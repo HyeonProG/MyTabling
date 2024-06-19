@@ -1,7 +1,5 @@
 package ver01;
 
-import java.sql.SQLException;
-
 import ver01frame.MainLoginFrame;
 import ver01frame.SignInFrame;
 
@@ -16,7 +14,7 @@ public class Start {
 
 	// test
 	public static void main(String[] args) {
-		main = new MainLoginFrame();
+		new MainLoginFrame();
 		
 	} // end of main
 	

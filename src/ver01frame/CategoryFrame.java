@@ -1,13 +1,11 @@
 package ver01frame;
 
-import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.GridLayout;
 import java.awt.Image;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import java.util.ArrayList;
+import java.sql.SQLException;
 import java.util.List;
 
 import javax.swing.ImageIcon;
@@ -16,6 +14,9 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
+
+import ver01.RestaurantDAO;
+import ver01.RestaurantDTO;
 
 public class CategoryFrame extends JFrame {
 
@@ -164,13 +165,17 @@ public class CategoryFrame extends JFrame {
 	}
 
 	private void initListener() {
-		cateLabel9.addMouseListener(new MouseAdapter() {
+		cateLabel2.addMouseListener(new MouseAdapter() {
 			
-
 			@Override
-			public void mouseClicked(MouseEvent e) {
-				// TODO Auto-generated method stub
-				
+			public void mousePressed(MouseEvent e) {
+				RestaurantDAO dao = new RestaurantDAO();
+				try {
+					List<RestaurantDTO> list = dao.getRestaurantsByCategory(2);
+					new ListFrame(list);
+				} catch (SQLException e1) {
+					e1.printStackTrace();
+				}
 			}
 		});
 

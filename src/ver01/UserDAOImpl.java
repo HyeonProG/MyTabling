@@ -49,8 +49,8 @@ public class UserDAOImpl implements UserDAO {
 	}
 
 	@Override
-	public boolean authenticatePhone(String phone) {
-
+	public CustomerDTO authenticatePhone(String phone) {
+		CustomerDTO dto;
 		String query = "  SELECT * FROM customer WHERE phone = ?  ";
 		boolean result = false;
 
@@ -59,13 +59,17 @@ public class UserDAOImpl implements UserDAO {
 			pstmt.setString(1, phone);
 			ResultSet rs = pstmt.executeQuery();
 
-			result = rs.next();
-
+			// result = rs.next();
+			if (rs.next()) {
+				dto = new CustomerDTO(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getInt(5));
+				return dto;
+			}
+			
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 
-		return result;
+		return null;
 	}
 
 	@Override

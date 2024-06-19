@@ -20,6 +20,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
+import ver01.CustomerDTO;
 import ver01.UserDAOImpl;
 
 public class CustomerLoginFrame extends JFrame {
@@ -34,9 +35,10 @@ public class CustomerLoginFrame extends JFrame {
 	private SignInFrame signInFrame;
 	private UserDAOImpl userDao;
 	private MainLoginFrame mainLoginF; // TODO
-	
-	
+	private CustomerDTO customerDTO;
+
 	public CustomerLoginFrame(MainLoginFrame mainLoginF) {
+		this.mainLoginF = mainLoginF;
 		initData();
 		setInitLayout();
 		initListener();
@@ -49,7 +51,7 @@ public class CustomerLoginFrame extends JFrame {
 		quitBtn = new JLabel(new ImageIcon("img/quitBtn.png"));
 		nameText = new JTextField();
 		phoneText = new JTextField();
-		
+
 		signInFrame = new SignInFrame();
 		userDao = new UserDAOImpl();
 	}
@@ -72,7 +74,7 @@ public class CustomerLoginFrame extends JFrame {
 
 		registerBtn.setBounds(35, 450, 314, 46);
 		backgroundPanel.add(registerBtn);
-		
+
 		quitBtn.setBounds(10, 10, 30, 50);
 		backgroundPanel.add(quitBtn);
 
@@ -101,27 +103,29 @@ public class CustomerLoginFrame extends JFrame {
 		loginBtn.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mousePressed(MouseEvent e) {
-				
-				if(nameText.getText().equals("")&&!phoneText.getText().equals("")) {
-					if(userDao.authenticatePhone(phoneText.getText())) {
+
+				if (nameText.getText().equals("") && !phoneText.getText().equals("")) {
+					if ((customerDTO = userDao.authenticatePhone(phoneText.getText())) != null) {
 						JOptionPane.showMessageDialog(null, "로그인 되었습니다.", "성공", JOptionPane.WARNING_MESSAGE);
-					}else {
+						// TODO dao 필요 고객 테이블 접근해서 값 받아 와야됨, 
+						new MainMenuFrame(customerDTO);
+					} else {
 						JOptionPane.showMessageDialog(null, "존재하지 않는 유저 정보입니다.", "경고", JOptionPane.WARNING_MESSAGE);
 					}
-				}else if(!nameText.getText().equals("")&&!phoneText.getText().equals("")){
+				} else if (!nameText.getText().equals("") && !phoneText.getText().equals("")) {
 					try {
-						if(userDao.authenticateAll(nameText.getText(),phoneText.getText())) {
+						if (userDao.authenticateAll(nameText.getText(), phoneText.getText())) {
 							JOptionPane.showMessageDialog(null, "", "경고", JOptionPane.WARNING_MESSAGE);
 						}
 					} catch (SQLException e1) {
 						e1.printStackTrace();
 					}
-					
+
 				}
-				
+
 			}
 		});
-		
+
 		quitBtn.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mousePressed(MouseEvent e) {
@@ -129,7 +133,7 @@ public class CustomerLoginFrame extends JFrame {
 				mainLoginF.setVisible(true);
 			}
 		});
-		
+
 		// 전화번호 8자 이상 입력불가
 		phoneText.addKeyListener(new KeyAdapter() {
 
