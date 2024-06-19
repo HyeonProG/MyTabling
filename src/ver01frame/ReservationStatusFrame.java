@@ -10,22 +10,21 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
-public class MainMenuFrame extends JFrame {
-	
-	private BackgroundPanel backgroundPanel;
-	
-	private JButton categoryBtn;
-	private JButton locationBtn;
-	private JButton reservationBtn;
+public class ReservationStatusFrame extends JFrame {
 
-	public MainMenuFrame() {
+	private BackgroundPanel backgroundPanel;
+	private JPanel reservationPanel;
+	private JButton backBtn;
+	private JButton cancelBtn;
+
+	public ReservationStatusFrame() {
 		initData();
 		setInitLayout();
 		initListener();
 	}
-	
+
 	private void initData() {
-		setTitle("메인 메뉴");
+		setTitle("예약 현황");
 		setSize(500, 700);
 		setResizable(false);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -33,62 +32,62 @@ public class MainMenuFrame extends JFrame {
 		setVisible(true);
 		
 		backgroundPanel = new BackgroundPanel();
-		reservationBtn = new JButton("예약 현황");
-		categoryBtn = new JButton("카테고리");
-		locationBtn = new JButton("지역별");
+		reservationPanel = new JPanel();
+		backBtn = new JButton("뒤로가기");
+		cancelBtn = new JButton("예약 취소");
 		
 	}
-	
+
 	private void setInitLayout() {
-		
+
 		backgroundPanel.setSize(getWidth(), getHeight());
 		backgroundPanel.setLayout(null);
 		add(backgroundPanel);
-				
-		reservationBtn.setBounds(80, 120, 120, 120);
-		reservationBtn.setSize(330, 130);
-		backgroundPanel.add(reservationBtn);
 		
-		categoryBtn.setBounds(80, 280, 120, 120);
-		categoryBtn.setSize(330, 130);
-		backgroundPanel.add(categoryBtn);
+		reservationPanel.setBounds(40, 200, 300, 300);
+		reservationPanel.setSize(410, 300);
+		backgroundPanel.add(reservationPanel);
 		
-		locationBtn.setBounds(80, 440, 120, 120);
-		locationBtn.setSize(330, 130);
-		backgroundPanel.add(locationBtn);	
+		backBtn.setBounds(350, 20, 50, 50);
+		backBtn.setSize(100, 50);
+		backgroundPanel.add(backBtn);
 		
+		cancelBtn.setBounds(350, 520, 50, 50);
+		cancelBtn.setSize(100, 50);
+		backgroundPanel.add(cancelBtn);
+
 	}
-	
+
 	private void initListener() {
-		reservationBtn.addMouseListener(new MouseAdapter() {
+		backBtn.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mousePressed(MouseEvent e) {
-				new ReservationStatusFrame();
+				new MainMenuFrame();
 				setVisible(false);
 			}
 		});
 	}
-	
+
 	private class BackgroundPanel extends JPanel {
 		private JPanel backgroundPanel;
 		private Image backgroundImage;
-		
+
 		public BackgroundPanel() {
 			backgroundImage = new ImageIcon("img/backgroundimage.jpg").getImage();
 			backgroundPanel = new JPanel();
 			add(backgroundPanel);
 		}
-		
+
 		@Override
 		protected void paintComponent(Graphics g) {
 			super.paintComponent(g);
 			g.drawImage(backgroundImage, 0, 0, getWidth(), getHeight(), null);
 		}
-		
+
 	}
-	
+
 	public static void main(String[] args) {
-		new MainMenuFrame();
+		new ReservationStatusFrame();
 	}
-	
+
 }

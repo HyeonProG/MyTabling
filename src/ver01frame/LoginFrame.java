@@ -3,6 +3,8 @@ package ver01frame;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Image;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -91,7 +93,7 @@ public class LoginFrame extends JFrame {
 	}
 
 	private void initListener() {
-
+		
 	}
 
 	private class BackgroundPanel extends JPanel {
