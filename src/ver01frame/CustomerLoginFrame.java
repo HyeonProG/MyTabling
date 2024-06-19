@@ -5,49 +5,53 @@ import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.sql.SQLException;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+
+import ver01.UserDAOImpl;
 
 public class CustomerLoginFrame extends JFrame {
 
 	private JLabel loginBtn;
 	private JLabel registerBtn;
+	private JLabel quitBtn; // TODO
 	private JTextField nameText;
 	private JTextField phoneText;
-//	private JLabel nameLabel;
-//	private JLabel phoneLabel;
 	private boolean loginCheck;
-	private JButton backBtn;
 	private BackgroundPanel backgroundPanel;
+	private SignInFrame signInFrame;
+	private UserDAOImpl userDao;
+	private MainLoginFrame mainLoginF; // TODO
 	
-	// TODO
-	private SignInFrame signInFrame; 
-
-	public CustomerLoginFrame() {
+	
+	public CustomerLoginFrame(MainLoginFrame mainLoginF) {
 		initData();
 		setInitLayout();
 		initListener();
-		signInFrame = new SignInFrame();
 	}
 
 	private void initData() {
 		backgroundPanel = new BackgroundPanel();
-		loginBtn = new JLabel(); // TODO
-		registerBtn = new JLabel(); // TODO
-//		nameLabel = new JLabel("닉네임");
+		loginBtn = new JLabel(new ImageIcon("img/loginBtn.png"));
+		registerBtn = new JLabel(new ImageIcon("img/signInBtn.png"));
+		quitBtn = new JLabel(new ImageIcon("img/quitBtn.png"));
 		nameText = new JTextField();
-//		phoneLabel = new JLabel("전화번호");
 		phoneText = new JTextField();
-//		quitBtn = new JLabel(new ImageIcon("img/quitBtn.png"));
-//		registerBtn = new JButton("회원가입");
-//		backBtn = new JButton("뒤로가기");
+		
+		signInFrame = new SignInFrame();
+		userDao = new UserDAOImpl();
 	}
 
 	private void setInitLayout() {
@@ -56,41 +60,21 @@ public class CustomerLoginFrame extends JFrame {
 		setLocationRelativeTo(null);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setLayout(null);
-		setVisible(true);
+		setVisible(false); // TODO
 		setResizable(false);
 
 		backgroundPanel.setSize(getWidth(), getHeight());
 		backgroundPanel.setLayout(null);
 		add(backgroundPanel);
 
-		loginBtn.setBounds(270, 450, 100, 50);
-		loginBtn.setSize(90, 85);
-		loginBtn.setFont(new Font("Noto Sans KR", Font.BOLD, 15));
+		loginBtn.setBounds(35, 390, 314, 46);
 		backgroundPanel.add(loginBtn);
 
-		registerBtn.setBounds(30, 450, 100, 50);
-		registerBtn.setSize(90, 30);
-		registerBtn.setFont(new Font("Noto Sans KR", Font.BOLD, 15));
+		registerBtn.setBounds(35, 450, 314, 46);
 		backgroundPanel.add(registerBtn);
-
-//		quitBtn.setBounds(160, 450, 24, 34);
-//		quitBtn.setSize(90, 30);
-//		quitBtn.setFont(new Font("Noto Sans KR", Font.BOLD, 15));
-//		backgroundPanel.add(quitBtn);
-		backBtn.setBounds(160, 320, 100, 50);
-		backBtn.setSize(90, 30);
-		backBtn.setFont(new Font("Noto Sans KR", Font.BOLD, 15));
-		backgroundPanel.add(backBtn);
-
-//		nameLabel.setBounds(30, 170, 100, 50);
-//		nameLabel.setSize(70, 70);
-//		nameLabel.setFont(new Font("Noto Sans KR", Font.BOLD, 15));
-//		backgroundPanel.add(nameLabel);
-
-//		phoneLabel.setBounds(30, 230, 100, 50);
-//		phoneLabel.setSize(70, 70);
-//		phoneLabel.setFont(new Font("Noto Sans KR", Font.BOLD, 15));
-//		backgroundPanel.add(phoneLabel);
+		
+		quitBtn.setBounds(10, 10, 30, 50);
+		backgroundPanel.add(quitBtn);
 
 		nameText.setBounds(90, 230, 100, 30);
 		nameText.setSize(220, 25);
@@ -105,29 +89,61 @@ public class CustomerLoginFrame extends JFrame {
 	}
 
 	private void initListener() {
-		backBtn.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mousePressed(MouseEvent e) {
-				new MainLoginFrame();
-				setVisible(false);
-			}
-		});
-		
+
 		registerBtn.addMouseListener(new MouseAdapter() {
+
 			@Override
 			public void mousePressed(MouseEvent e) {
-				new SignInFrame();
+				signInFrame.setVisible(true);
+			}
+		});
+
+		loginBtn.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mousePressed(MouseEvent e) {
+				
+				if(nameText.getText().equals("")&&!phoneText.getText().equals("")) {
+					if(userDao.authenticatePhone(phoneText.getText())) {
+						JOptionPane.showMessageDialog(null, "로그인 되었습니다.", "성공", JOptionPane.WARNING_MESSAGE);
+					}else {
+						JOptionPane.showMessageDialog(null, "존재하지 않는 유저 정보입니다.", "경고", JOptionPane.WARNING_MESSAGE);
+					}
+				}else if(!nameText.getText().equals("")&&!phoneText.getText().equals("")){
+					try {
+						if(userDao.authenticateAll(nameText.getText(),phoneText.getText())) {
+							JOptionPane.showMessageDialog(null, "", "경고", JOptionPane.WARNING_MESSAGE);
+						}
+					} catch (SQLException e1) {
+						e1.printStackTrace();
+					}
+					
+				}
+				
 			}
 		});
 		
-//		registerBtn.addActionListener(new ActionListener() {
-//			
-//			@Override
-//			public void actionPerformed(ActionEvent e) {
-//				signInFrame.setVisible(true);
-//			}
-//		});
+		quitBtn.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mousePressed(MouseEvent e) {
+				setVisible(false);
+				mainLoginF.setVisible(true);
+			}
+		});
 		
+		// 전화번호 8자 이상 입력불가
+		phoneText.addKeyListener(new KeyAdapter() {
+
+			@Override
+			public void keyTyped(KeyEvent e) {
+				if (phoneText.getText().length() > 10) {
+					e.consume();
+				} else if (!(e.getKeyChar() >= '0' && e.getKeyChar() <= '9')) {
+					e.consume();
+				}
+			}
+
+		});
+
 	}
 
 	private class BackgroundPanel extends JPanel {
@@ -148,8 +164,8 @@ public class CustomerLoginFrame extends JFrame {
 
 	}
 
-	public static void main(String[] args) {
-		new CustomerLoginFrame();
-	}
+//	public static void main(String[] args) {
+//		new CustomerLoginFrame();
+//	}
 
 }

@@ -6,7 +6,6 @@ import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.sql.SQLException;
-import java.util.regex.Pattern;
 
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
@@ -114,6 +113,8 @@ public class SignInFrame extends JFrame {
 						try {
 							signin.addUser(userName.getText(), localTel.getSelectedItem() + userPhone.getText(),
 									myLocation.getSelectedIndex() + 1);
+							JOptionPane.showMessageDialog(null, "회원가입 성공!", "경고", JOptionPane.WARNING_MESSAGE);
+							setVisible(false);
 						} catch (SQLException e1) {
 							e1.printStackTrace();
 						}
@@ -174,5 +175,6 @@ public class SignInFrame extends JFrame {
 		});
 
 	}
+	
 
 } // end of class

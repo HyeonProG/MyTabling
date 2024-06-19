@@ -11,7 +11,9 @@ public class MainLoginFrame extends JFrame {
 	
 	private JButton customerBtn;
 	private JButton restaurantBtn;
-
+	// TODO
+	private CustomerLoginFrame customerLoginFrame;
+	
 	public MainLoginFrame() {
 		initData();
 		setInitLayout();
@@ -26,6 +28,9 @@ public class MainLoginFrame extends JFrame {
 		setLayout(null);
 		setVisible(true);
 		setResizable(false);
+		
+		// TODO
+		customerLoginFrame = new CustomerLoginFrame(this);
 		
 		customerBtn = new JButton("고객 로그인");
 		restaurantBtn = new JButton("점주 로그인");
@@ -47,8 +52,8 @@ public class MainLoginFrame extends JFrame {
 		customerBtn.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mousePressed(MouseEvent e) {
-				new CustomerLoginFrame();
-				setVisible(false);
+//				new CustomerLoginFrame();
+				customerLoginFrame.setVisible(true);
 			}
 		});
 		

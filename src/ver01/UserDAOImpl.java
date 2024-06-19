@@ -38,7 +38,7 @@ public class UserDAOImpl implements UserDAO {
 						.state(rs.getString("state")).locationId(rs.getInt("location_Id")).build();
 				list.add(dto);
 			}
-			
+
 			for (CustomerDTO customerDTO : list) {
 				System.out.println(customerDTO);
 			}
@@ -47,14 +47,14 @@ public class UserDAOImpl implements UserDAO {
 
 		return list;
 	}
-	
+
 	@Override
 	public boolean authenticatePhone(String phone) {
-		
+
 		String query = "  SELECT * FROM customer WHERE phone = ?  ";
 		boolean result = false;
 
-		try (Connection conn = DBConnectionManager.getInstance().getConnection()){
+		try (Connection conn = DBConnectionManager.getInstance().getConnection()) {
 			PreparedStatement pstmt = conn.prepareStatement(query);
 			pstmt.setString(1, phone);
 			ResultSet rs = pstmt.executeQuery();
@@ -64,7 +64,7 @@ public class UserDAOImpl implements UserDAO {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		
+
 		return result;
 	}
 
@@ -74,5 +74,25 @@ public class UserDAOImpl implements UserDAO {
 
 	}
 
+	@Override
+	public boolean authenticateAll(String name, String phone) throws SQLException {
+		
+		String query = "  SELECT customer_name FROM customer WHERE phone = ?  ";
+		boolean result = false;
+
+		try (Connection conn = DBConnectionManager.getInstance().getConnection()) {
+			PreparedStatement pstmt = conn.prepareStatement(query);
+			pstmt.setString(1, phone);
+			ResultSet rs = pstmt.executeQuery();
+
+			result = rs.next();
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+
+		return result;
+
+	}
 
 }
