@@ -26,6 +26,7 @@ public class ListFrame extends JFrame {
 	JScrollPane scroll;
 	JComboBox<String> filter;
 	JButton filterBtn;
+	LocationDAO locationDAO;
 	
 	List<RestaurantDTO> restaurantList = new ArrayList<>();
 	Vector<String> head = new Vector<>();
@@ -35,10 +36,11 @@ public class ListFrame extends JFrame {
 		this.restaurantList = restaurantList;
 		initData();
 		setInitLayout();
-		//addEventListener();
+		addEventListener();
 	}
 
 	private void initData() {
+		locationDAO = new LocationDAO();
 		head.add("식당명");
 		head.add("평점");
 		head.add("지역");
@@ -47,12 +49,17 @@ public class ListFrame extends JFrame {
 			contents.add(new Vector<>());
 			String restaurantName = restaurantList.get(i).getRestaurantName();
 			double rating = restaurantList.get(i).getRating();
-			// TODO 임시 지역 이름
-			String locationId = "부산진구";
+			int locationId = restaurantList.get(i).getLocationId();
+			String locationName = null;
+			try {
+				locationName = locationDAO.getLocationName(locationId);
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
 			String closeTime = restaurantList.get(i).getCloseTime();
 			contents.get(i).add(restaurantName);
 			contents.get(i).add(String.valueOf(rating));
-			contents.get(i).add(locationId);
+			contents.get(i).add(locationName);
 			contents.get(i).add(closeTime);
 		}
 		table = new JTable(contents, head) {
@@ -68,7 +75,6 @@ public class ListFrame extends JFrame {
 
 	private void setInitLayout() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		// Frame -> root Panel
 		setTitle(" 리스트 화면 ");
 		setSize(500, 700);
 		setLayout(null); // 좌표값으로 배치
@@ -105,20 +111,19 @@ public class ListFrame extends JFrame {
 		setVisible(true);
 	}
 
-//	private void addEventListener() {
-//		table.addMouseListener(new MouseAdapter() {
-//			@Override
-//			public void mouseClicked(MouseEvent e) {
-//				if (e.getClickCount() == 2) {
-//					int rowNum = table.getSelectedRow();
-//					System.out.println("됨" + rowNum);
-//					for (String strings : contents[rowNum]) {
-//						System.out.print(strings + " ");
-//					}
-//				}
-//			}
-//		});
-//	}
+	private void addEventListener() {
+		table.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				// 더블 클릭시
+				if (e.getClickCount() == 2) {
+					int rowNum = table.getSelectedRow();
+					System.out.println("됨" + rowNum);
+					new RestaurantFrame(restaurantList.get(rowNum));
+				}
+			}
+		});
+	}
 
 
 	// 테스트 코드

@@ -63,8 +63,7 @@ public class SignInFrame extends JFrame {
 		userPhone.setBounds(150, 270, 140, 25);
 
 		myLocation = new Choice();
-		localArray = new String[] { "강서구", "사하구", "사상구", "북구", "서구", "중구", "동구", "부산진구", "영도구", "남구", "동래구", "연제구",
-				"수영구", "금정구", "해운대구", "기장군" };
+		localArray = new String[] { "강서구", "사하구", "사상구", "북구", "서구", "중구", "동구", "부산진구", "영도구", "남구", "동래구", "연제구", "수영구", "금정구", "해운대구", "기장군" };
 		for (int i = 0; i < localArray.length; i++) {
 			myLocation.add(localArray[i]);
 		}
@@ -111,8 +110,7 @@ public class SignInFrame extends JFrame {
 						JOptionPane.showMessageDialog(null, "전화번호는 비워둘 수 없습니다.", "경고", JOptionPane.WARNING_MESSAGE);
 					} else {
 						try {
-							signin.addUser(userName.getText(), localTel.getSelectedItem() + userPhone.getText(),
-									myLocation.getSelectedIndex() + 1);
+							signin.addUser(userName.getText(), localTel.getSelectedItem() + userPhone.getText(), myLocation.getSelectedIndex() + 1);
 							JOptionPane.showMessageDialog(null, "회원가입 성공!", "경고", JOptionPane.WARNING_MESSAGE);
 							setVisible(false);
 						} catch (SQLException e1) {
@@ -130,9 +128,9 @@ public class SignInFrame extends JFrame {
 
 				if (userPhone.getText().length() == 8 && canCheck == true) {
 
-					if (signin.authenticatePhone(localTel.getSelectedItem() +userPhone.getText())) {
+					if (signin.authenticatePhone(localTel.getSelectedItem() + userPhone.getText()) != null) {
 						JOptionPane.showMessageDialog(null, "중복되는 번호입니다.", "경고", JOptionPane.WARNING_MESSAGE);
-					}else {
+					} else {
 						JOptionPane.showMessageDialog(null, "가입 가능한 전화번호입니다.", "경고", JOptionPane.WARNING_MESSAGE);
 						signInBtn.setEnabled(true);
 						canLogin = true;
@@ -175,6 +173,5 @@ public class SignInFrame extends JFrame {
 		});
 
 	}
-	
 
 } // end of class
