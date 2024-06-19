@@ -66,7 +66,7 @@
  INSERT INTO restaurant (restaurant_name, address, phone, category_id, content) VALUES( '밀양보신탕', '부산광역시 동구 중앙대로361번길 36-3', '051-467-3635', 7, '무엇을 먹을지 고민되신다고요? 부산광역시 동구에 계시다면 "밀양보신탕"을 추천합니다! 50년 이상의 전통을 자랑합니다.' ); 
  INSERT INTO restaurant (restaurant_name, address, phone, category_id, content) VALUES( '함응보쌈사계절냉면', '부산광역시 영도구 남항로 42', '051-416-2342', 7, '부산광역시 영도구에서 가 볼 만한 식당을 찾으신다면? "함응보쌈사계절냉면"을 추천합니다! 지방자치단체 인증을 받은 농림축산식품부 제공 안심식당입니다. 50년 이상의 전통을 자랑합니다.' ); 
  INSERT INTO restaurant (restaurant_name, address, phone, category_id, content) VALUES( '하늘소호프', '부산광역시 영도구 절영로14번길 10', '051-417-7611', 7, '"하늘소호프"를 부산광역시 영도구의 가 볼 만한 식당으로 추천합니다! 50년 이상의 전통을 자랑합니다.' ); 
- INSERT INTO restaurant (restaurant_name, address, phone, category_id, content) VALUES( '한전구내식당', '부산광역시 서구 까치고개로 252', '051-240-3206', 7, '부산광역시 서구에 가신다면 "한전구내식당"에 방문해보세요~ 50년 이상의 전통을 자랑합니다.' ); 
+ INSERT INTO restaurant (restaurant_name, address, phone, category_id, content) VALUES( '한전구내식당(서구)', '부산광역시 서구 까치고개로 252', '051-240-3206', 7, '부산광역시 서구에 가신다면 "한전구내식당"에 방문해보세요~ 50년 이상의 전통을 자랑합니다.' ); 
  INSERT INTO restaurant (restaurant_name, address, phone, category_id, content) VALUES( '서울집', '부산광역시 영도구 태종로99번길 28', '051-416-4845', 7, '2020년 10월 22일 KBS1 6시내고향 7140회에서 소개되었던 맛집, "서울집"입니다! 부산광역시 영도구 근처라면 방문해보세요. 50년 이상의 전통을 자랑합니다.' ); 
  INSERT INTO restaurant (restaurant_name, address, phone, category_id, content) VALUES( '한전구내식당', '부산광역시 동래구 충렬대로 429-5', '', 7, '무엇을 먹을지 고민되신다고요? 부산광역시 동래구에 계시다면 "한전구내식당"을 추천합니다! 50년 이상의 전통을 자랑합니다.' ); 
  INSERT INTO restaurant (restaurant_name, address, phone, category_id, content) VALUES( '함안돼지국밥', '부산광역시 북구 구포만세길 77', '051-341-1991', 7, '부산광역시 북구에서 식당을 찾으신다면? "함안돼지국밥"을 방문해보세요! 50년 이상의 전통을 자랑합니다.' ); 
@@ -79,7 +79,7 @@
  INSERT INTO restaurant (restaurant_name, address, phone, category_id, content) VALUES( '산청한방돼지국밥', '부산광역시 동구 진성로28번길 7', '051-647-3577', 7, '부산광역시 동구에서 식당을 찾으신다면? "산청한방돼지국밥"을 방문해보세요! 50년 이상의 전통을 자랑합니다.' ); 
  INSERT INTO restaurant (restaurant_name, address, phone, category_id, content) VALUES( '철마한우곰탕', '부산광역시 동구 고관로 164', '051-723-0723', 7, '어디 가야 할지 고민이시라고요? 그럼 부산광역시 동구 맛집, "철마한우곰탕"을 추천합니다! 위생 수준이 우수하고 친절한 서비스로 지방자치단체의 선정을 받은 모범음식점입니다. 50년 이상의 전통을 자랑합니다. 레드테이블에서 온라인 예약이 가능합니다!' ); 
  INSERT INTO restaurant (restaurant_name, address, phone, category_id, content) VALUES( '후생식당', '부산광역시 동구 중앙대로 243', '051-463-7540', 7, '"후생식당"은 부산광역시 동구에 있습니다. 50년 이상의 전통을 자랑합니다.' ); 
- INSERT INTO restaurant (restaurant_name, address, phone, category_id, content) VALUES( '진주식당', '부산광역시 동구 성남로47번길 2', '051-632-4169', 7, '부산광역시 동구에서 식당을 찾으신다면? "진주식당"을 방문해보세요! 50년 이상의 전통을 자랑합니다.' ); 
+ INSERT INTO restaurant (restaurant_name, address, phone, category_id, content) VALUES( '진주식당(동구)', '부산광역시 동구 성남로47번길 2', '051-632-4169', 7, '부산광역시 동구에서 식당을 찾으신다면? "진주식당"을 방문해보세요! 50년 이상의 전통을 자랑합니다.' ); 
  INSERT INTO restaurant (restaurant_name, address, phone, category_id, content) VALUES( '롯데양곱창', '부산광역시 부산진구 가야대로784번길 58', '051-807-8350', 7, '어디 가야 할지 고민이시라고요? 그럼 부산광역시 부산진구 맛집, "롯데양곱창"을 추천합니다! 50년 이상의 전통을 자랑합니다.' ); 
  INSERT INTO restaurant (restaurant_name, address, phone, category_id, content) VALUES( '청룡각', '부산광역시 사하구 암남공원로 471', '051-205-1101', 7, '부산광역시 사하구에서 식당을 찾으신다면? "청룡각"을 방문해보세요! 50년 이상의 전통을 자랑합니다.' ); 
  INSERT INTO restaurant (restaurant_name, address, phone, category_id, content) VALUES( '우마이도', '부산광역시 금정구 금강로 247-5', '051-514-8785', 11, '"우마이도"는 부산광역시 금정구에 있습니다. 이 매장은 2021년에 블루리본 서베이에서 리본 1개를 받은 식당으로, "시간을 내어 다시 방문하고 싶은 곳"이라 평가받았습니다.' ); 
