@@ -1,10 +1,12 @@
-package ver01;
+package ver01frame;
 
 import java.awt.Choice;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.sql.SQLException;
+import java.util.regex.Pattern;
 
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
@@ -13,24 +15,26 @@ import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 
 import lombok.Data;
+import ver01.UserDAOImpl;
 
 @Data
 //swing 회원가입 화면
-public class SignIn extends JFrame {
+public class SignInFrame extends JFrame {
 
 	private JLabel Bg;
 	private JTextField userName;
 	private Choice localTel;
 	private JTextField userPhone;
 	private Choice myLocation;
-//	private JButton duplicateCheck;
-//	private JButton signInBtn;
 	private JLabel duplicateCheck;
 	private JLabel signInBtn;
-	
-	private boolean canCheck = false;
+	private String[] localArray;
+	private String[] localTelArray;
+	private boolean canCheck;
+	private boolean canLogin;
+	UserDAOImpl signin = new UserDAOImpl();
 
-	public SignIn() {
+	public SignInFrame() {
 		initData();
 		setInitLayout();
 		addEventListener();
@@ -50,44 +54,29 @@ public class SignIn extends JFrame {
 		userName.setBounds(90, 165, 200, 25);
 
 		localTel = new Choice();
-		localTel.addItem("010");
-		localTel.addItem("011");
-		localTel.addItem("016");
-		localTel.addItem("017");
-		localTel.addItem("018");
-		localTel.addItem("019");
+		localTelArray = new String[] { "010", "011", "016", "017", "018", "019" };
+		for (int i = 0; i < localTelArray.length; i++) {
+			localTel.add(localTelArray[i]);
+		}
 		localTel.setBounds(90, 270, 50, 25);
 
 		userPhone = new JTextField();
 		userPhone.setBounds(150, 270, 140, 25);
 
 		myLocation = new Choice();
-		myLocation.addItem("강서구");
-		myLocation.addItem("사하구");
-		myLocation.addItem("사상구");
-		myLocation.addItem("북구");
-		myLocation.addItem("서구");
-		myLocation.addItem("중구");
-		myLocation.addItem("동구");
-		myLocation.addItem("부산진구");
-		myLocation.addItem("영도구");
-		myLocation.addItem("남구");
-		myLocation.addItem("동래구");
-		myLocation.addItem("연제구");
-		myLocation.addItem("수영구");
-		myLocation.addItem("금정구");
-		myLocation.addItem("해운대구");
-		myLocation.addItem("기장군");
+		localArray = new String[] { "강서구", "사하구", "사상구", "북구", "서구", "중구", "동구", "부산진구", "영도구", "남구", "동래구", "연제구",
+				"수영구", "금정구", "해운대구", "기장군" };
+		for (int i = 0; i < localArray.length; i++) {
+			myLocation.add(localArray[i]);
+		}
 		myLocation.setBounds(90, 380, 200, 25);
 
-//		duplicateCheck = new JButton("중복확인");
-//		duplicateCheck.setBounds(200, 190, 90, 25);
-//		signInBtn = new JButton("가입");
-//		signInBtn.setBounds(200, 370, 120, 30);
+		canCheck = false;
+		canLogin = false;
 
 		duplicateCheck = new JLabel(new ImageIcon("img/duplicateBtn.jpg"));
 		duplicateCheck.setBounds(200, 300, 90, 25);
-		
+
 		signInBtn = new JLabel(new ImageIcon("img/signInBtn.jpg"));
 		signInBtn.setBounds(35, 480, 314, 46);
 	}
@@ -115,15 +104,20 @@ public class SignIn extends JFrame {
 
 			@Override
 			public void mousePressed(MouseEvent e) {
-				if (userName.getText().length() > 50) {
-					JOptionPane.showMessageDialog(null, "닉네임은 50자까지만 기입 가능합니다.", "경고", JOptionPane.WARNING_MESSAGE);
-				} else if (userPhone.getText().equals("")) {
-					JOptionPane.showMessageDialog(null, "전화번호는 비워둘 수 없습니다.", "경고", JOptionPane.WARNING_MESSAGE);
-				} else {
-					System.out.println(userName.getText());
-					System.out.println(userPhone.getText());
-					// TODO - 선택한 지역 받아오기
-					System.out.println(myLocation.getSelectedItem());
+
+				if (canLogin == true) {
+					if (userName.getText().length() > 50) {
+						JOptionPane.showMessageDialog(null, "닉네임은 50자까지만 기입 가능합니다.", "경고", JOptionPane.WARNING_MESSAGE);
+					} else if (userPhone.getText().equals("")) {
+						JOptionPane.showMessageDialog(null, "전화번호는 비워둘 수 없습니다.", "경고", JOptionPane.WARNING_MESSAGE);
+					} else {
+						try {
+							signin.addUser(userName.getText(), localTel.getSelectedItem() + userPhone.getText(),
+									myLocation.getSelectedIndex() + 1);
+						} catch (SQLException e1) {
+							e1.printStackTrace();
+						}
+					}
 				}
 			}
 		});
@@ -134,12 +128,18 @@ public class SignIn extends JFrame {
 			public void mousePressed(MouseEvent e) {
 
 				if (userPhone.getText().length() == 8 && canCheck == true) {
-					JOptionPane.showMessageDialog(null, "가입 가능한 전화번호입니다.", "경고", JOptionPane.WARNING_MESSAGE);
-					signInBtn.setEnabled(true);
-				} else if(canCheck == true){
+
+					if (signin.authenticatePhone(localTel.getSelectedItem() +userPhone.getText())) {
+						JOptionPane.showMessageDialog(null, "중복되는 번호입니다.", "경고", JOptionPane.WARNING_MESSAGE);
+					}else {
+						JOptionPane.showMessageDialog(null, "가입 가능한 전화번호입니다.", "경고", JOptionPane.WARNING_MESSAGE);
+						signInBtn.setEnabled(true);
+						canLogin = true;
+					}
+
+				} else if (canCheck == true) {
 					JOptionPane.showMessageDialog(null, "전화번호가 8자리가 아닙니다.", "경고", JOptionPane.WARNING_MESSAGE);
 				}
-
 			}
 		});
 
@@ -166,16 +166,13 @@ public class SignIn extends JFrame {
 			public void keyTyped(KeyEvent e) {
 				if (userPhone.getText().length() > 7) {
 					e.consume();
+				} else if (!(e.getKeyChar() >= '0' && e.getKeyChar() <= '9')) {
+					e.consume();
 				}
 			}
 
 		});
 
-	}
-
-	// test
-	public static void main(String[] args) {
-		new SignIn();
 	}
 
 } // end of class

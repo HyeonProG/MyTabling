@@ -89,3 +89,5 @@ select * from location;
 select * from menu;
 select * from reservation;
 select * from restaurant;
+
+INSERT INTO customer(customer_name,phone,location_id) VALUES();
