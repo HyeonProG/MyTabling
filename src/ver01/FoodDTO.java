@@ -13,8 +13,8 @@ import lombok.ToString;
 @ToString
 public class FoodDTO {
 	
-	private int food_id;
-	private String food_name;
-	private int category_id;
+	private int foodId;
+	private String foodName;
+	private int categoryId;
 
 }

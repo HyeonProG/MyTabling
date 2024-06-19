@@ -13,6 +13,6 @@ import lombok.ToString;
 @ToString
 public class CategoryDTO {
 	
-	private int category_id;
-	private String category_name;
+	private int categoryId;
+	private String categoryName;
 }
