@@ -14,7 +14,7 @@ import lombok.ToString;
 public class ReservationDTO {
 
 	private int reservationId;
-	private Boolean reservationState;
+	private String reservationState;
 	private String reservationTime;
 	private int customerId;
 	private int restaurantId;
