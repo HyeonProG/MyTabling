@@ -1,6 +1,7 @@
 package ver01;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -11,11 +12,12 @@ import lombok.ToString;
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
+@Builder
 public class RestaurantDTO {
 	
 	private int restaurantId; // 가게 id
 	private String restaurantName; // 가게 이름
-	private int phone; // 가게 번호
+	private String phone; // 가게 번호
 	private String address; // 가게 주소
 	private String content; // 가게 설명
 	private String openTime; // 가게 오픈 시간

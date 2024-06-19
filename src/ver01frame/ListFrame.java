@@ -4,6 +4,10 @@ package ver01frame;
 import java.awt.Font;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Vector;
 
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -13,53 +17,77 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableCellRenderer;
 
+import ver01.RestaurantDAO;
+import ver01.RestaurantDTO;
+
 public class ListFrame extends JFrame {
 	
 	JTable table;
 	JScrollPane scroll;
 	JComboBox<String> filter;
 	JButton filterBtn;
-	// TODO 샘플
-	String[] head = {"식당명","평점","지역","마감시간"};
-	String[][] content = {{"밥집밥집밥집밥집밥집밥집밥집","5","부산진구","21:00:00"},
-			{"카페","7","서구","21:00:00"},
-			{"카페","7","서구","21:00:00"},
-			{"카페","7","서구","21:00:00"},
-			{"카페","7","서구","21:00:00"},
-			{"카페","7","서구","21:00:00"},
-			{"카페","7","서구","21:00:00"},
-			{"카페","7","서구","21:00:00"},
-			{"카페","7","서구","21:00:00"},
-			{"카페","7","서구","21:00:00"},
-			{"카페","7","서구","21:00:00"},
-			{"카페","7","서구","21:00:00"},
-			{"카페","7","서구","21:00:00"},
-			{"카페","7","서구","21:00:00"},
-			{"카페","7","서구","21:00:00"},
-			{"카페","7","서구","21:00:00"},
-			{"카페","7","서구","21:00:00"},
-			{"카페","7","서구","21:00:00"},
-			{"카페","7","서구","21:00:00"},
-			{"카페","7","서구","21:00:00"},
-			{"카페","7","서구","21:00:00"},
-			{"카페","7","서구","21:00:00"},
-			{"카페","7","서구","21:00:00"},
-			{"카페","7","서구","21:00:00"},
-			{"카페","7","서구","21:00:00"},
-			{"카페","7","서구","21:00:00"},
-			{"카페","7","서구","21:00:00"},
-			{"카페","7","서구","21:00:00"},
-			{"카페","7","서구","21:00:00"}
-			};
 	
-	public ListFrame() {
+	List<RestaurantDTO> restaurantList = new ArrayList<>();
+	// TODO 샘플
+//	String[] head = {"식당명","평점","지역","마감시간"};
+//	String[][] content = {{"밥집밥집밥집밥집밥집밥집밥집","5","부산진구","21:00:00"},
+//			{"카페","7","서구","21:00:00"},
+//			{"카페","7","서구","21:00:00"},
+//			{"카페","7","서구","21:00:00"},
+//			{"카페","7","서구","21:00:00"},
+//			{"카페","7","서구","21:00:00"},
+//			{"카페","7","서구","21:00:00"},
+//			{"카페","7","서구","21:00:00"},
+//			{"카페","7","서구","21:00:00"},
+//			{"카페","7","서구","21:00:00"},
+//			{"카페","7","서구","21:00:00"},
+//			{"카페","7","서구","21:00:00"},
+//			{"카페","7","서구","21:00:00"},
+//			{"카페","7","서구","21:00:00"},
+//			{"카페","7","서구","21:00:00"},
+//			{"카페","7","서구","21:00:00"},
+//			{"카페","7","서구","21:00:00"},
+//			{"카페","7","서구","21:00:00"},
+//			{"카페","7","서구","21:00:00"},
+//			{"카페","7","서구","21:00:00"},
+//			{"카페","7","서구","21:00:00"},
+//			{"카페","7","서구","21:00:00"},
+//			{"카페","7","서구","21:00:00"},
+//			{"카페","7","서구","21:00:00"},
+//			{"카페","7","서구","21:00:00"},
+//			{"카페","7","서구","21:00:00"},
+//			{"카페","7","서구","21:00:00"},
+//			{"카페","7","서구","21:00:00"},
+//			{"카페","7","서구","21:00:00"}
+//			};
+	Vector<String> head = new Vector<>();
+	Vector<Vector<String>> contents = new Vector<>();
+	
+	public ListFrame(List<RestaurantDTO> restaurantList) {
+		this.restaurantList = restaurantList;
 		initData();
 		setInitLayout();
-		addEventListener();
+		//addEventListener();
 	}
 
 	private void initData() {
-		table = new JTable(content, head) {
+		head.add("식당명");
+		head.add("평점");
+		head.add("지역");
+		head.add("마감시간");
+		for (int i = 0; i < restaurantList.size(); i++) {
+			contents.add(new Vector<>());
+			String restaurantName = restaurantList.get(i).getRestaurantName();
+			double rating = restaurantList.get(i).getRating();
+			// TODO 임시 지역 이름
+			String locationId = "부산진구";
+			String closeTime = restaurantList.get(i).getCloseTime();
+			contents.get(i).add(restaurantName);
+			contents.get(i).add(String.valueOf(rating));
+			contents.get(i).add(locationId);
+			contents.get(i).add(closeTime);
+		}
+		table = new JTable(contents, head) {
 			@Override
 			public boolean isCellEditable(int row, int column) {
 				return false;
@@ -105,38 +133,33 @@ public class ListFrame extends JFrame {
 		table.getColumn("지역").setCellRenderer(centerAlign);
 		table.getColumn("마감시간").setPreferredWidth(70);
 		table.getColumn("마감시간").setCellRenderer(centerAlign);
-		// TODO 샘플
-//		add(list); 
-//		list.setSize(345,450);
-//		list.setLocation(20, 95);
-//		list.setLayout(new GridLayout(0, 1));
-//		for (int i = 0; i < 10; i++) {
-//			RestaurantMiniPanel panel = new RestaurantMiniPanel();
-//			list.add(panel);
-//		}
-		
 		
 		setVisible(true);
 	}
 
-	private void addEventListener() {
-		table.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent e) {
-				if (e.getClickCount() == 2) {
-					int rowNum = table.getSelectedRow();
-					System.out.println("됨" + rowNum);
-					for (String strings : content[rowNum]) {
-						System.out.print(strings + " ");
-					}
-				}
-			}
-		});
-	}
+//	private void addEventListener() {
+//		table.addMouseListener(new MouseAdapter() {
+//			@Override
+//			public void mouseClicked(MouseEvent e) {
+//				if (e.getClickCount() == 2) {
+//					int rowNum = table.getSelectedRow();
+//					System.out.println("됨" + rowNum);
+//					for (String strings : contents[rowNum]) {
+//						System.out.print(strings + " ");
+//					}
+//				}
+//			}
+//		});
+//	}
 
 
 	// 테스트 코드
 	public static void main(String[] args) {
-		new ListFrame();
+		RestaurantDAO dao = new RestaurantDAO();
+		try {
+			new ListFrame(dao.getAllRestaurants());
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 	}
 }
