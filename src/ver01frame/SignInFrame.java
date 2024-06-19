@@ -74,16 +74,16 @@ public class SignInFrame extends JFrame {
 		canCheck = false;
 		canLogin = false;
 
-		duplicateCheck = new JLabel(new ImageIcon("img/duplicateBtn.jpg"));
+		duplicateCheck = new JLabel(new ImageIcon("img/duplicateBtn.png"));
 		duplicateCheck.setBounds(200, 300, 90, 25);
 
-		signInBtn = new JLabel(new ImageIcon("img/signInBtn.jpg"));
+		signInBtn = new JLabel(new ImageIcon("img/signInBtn.png"));
 		signInBtn.setBounds(35, 480, 314, 46);
 	}
 
 	private void setInitLayout() {
 		setLayout(null);
-		setVisible(true);
+		setVisible(false);
 		setLocationRelativeTo(null);
 
 		add(userName);
