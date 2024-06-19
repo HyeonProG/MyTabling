@@ -13,7 +13,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
-public class LoginFrame extends JFrame {
+public class CustomerLoginFrame extends JFrame {
 
 	private JButton loginBtn;
 	private JButton registerBtn;
@@ -22,10 +22,10 @@ public class LoginFrame extends JFrame {
 	private JLabel nameLabel;
 	private JLabel phoneLabel;
 	private boolean loginCheck;
-	private JButton quitBtn;
+	private JButton backBtn;
 	private BackgroundPanel backgroundPanel;
 
-	public LoginFrame() {
+	public CustomerLoginFrame() {
 		initData();
 		setInitLayout();
 		initListener();
@@ -39,11 +39,11 @@ public class LoginFrame extends JFrame {
 		phoneLabel = new JLabel("전화번호");
 		phoneText = new JTextField();
 		registerBtn = new JButton("회원가입");
-		quitBtn = new JButton("나가기");
+		backBtn = new JButton("뒤로가기");
 	}
 
 	private void setInitLayout() {
-		setTitle("Tabling - 식당 예약 테이블");
+		setTitle("Tabling - 식당 예약 테이블[고객]");
 		setSize(400, 600);
 		setLocationRelativeTo(null);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -65,10 +65,10 @@ public class LoginFrame extends JFrame {
 		registerBtn.setFont(new Font("Noto Sans KR", Font.BOLD, 15));
 		backgroundPanel.add(registerBtn);
 
-		quitBtn.setBounds(160, 320, 100, 50);
-		quitBtn.setSize(90, 30);
-		quitBtn.setFont(new Font("Noto Sans KR", Font.BOLD, 15));
-		backgroundPanel.add(quitBtn);
+		backBtn.setBounds(160, 320, 100, 50);
+		backBtn.setSize(90, 30);
+		backBtn.setFont(new Font("Noto Sans KR", Font.BOLD, 15));
+		backgroundPanel.add(backBtn);
 
 		nameLabel.setBounds(30, 170, 100, 50);
 		nameLabel.setSize(70, 70);
@@ -93,6 +93,20 @@ public class LoginFrame extends JFrame {
 	}
 
 	private void initListener() {
+		backBtn.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mousePressed(MouseEvent e) {
+				new MainLoginFrame();
+				setVisible(false);
+			}
+		});
+		
+		registerBtn.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mousePressed(MouseEvent e) {
+				new SignInFrame();
+			}
+		});
 		
 	}
 
@@ -115,7 +129,7 @@ public class LoginFrame extends JFrame {
 	}
 
 	public static void main(String[] args) {
-		new LoginFrame();
+		new CustomerLoginFrame();
 	}
 
 }
