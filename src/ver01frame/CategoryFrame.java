@@ -5,6 +5,7 @@ import java.awt.GridLayout;
 import java.awt.Image;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.sql.SQLException;
 import java.util.List;
 
@@ -18,7 +19,7 @@ import javax.swing.JTextField;
 import ver01.RestaurantDAO;
 import ver01.RestaurantDTO;
 
-public class CategoryFrame extends JFrame {
+public class CategoryFrame extends JFrame implements MouseListener{
 
 	private JLabel cateLabel1;
 	private JLabel cateLabel2;
@@ -163,23 +164,147 @@ public class CategoryFrame extends JFrame {
 
 		mainPanel.setLayout(new GridLayout(0, 2));
 	}
-
 	private void initListener() {
-		cateLabel2.addMouseListener(new MouseAdapter() {
-			
-			@Override
-			public void mousePressed(MouseEvent e) {
-				RestaurantDAO dao = new RestaurantDAO();
-				try {
-					List<RestaurantDTO> list = dao.getRestaurantsByCategory(2);
-					new ListFrame(list);
-				} catch (SQLException e1) {
-					e1.printStackTrace();
-				}
-			}
-		});
-
+		cateLabel1.addMouseListener(this);
+		cateLabel2.addMouseListener(this);
+		cateLabel3.addMouseListener(this);
+		cateLabel4.addMouseListener(this);
+		cateLabel5.addMouseListener(this);
+		cateLabel6.addMouseListener(this);
+		cateLabel7.addMouseListener(this);
+		cateLabel8.addMouseListener(this);
+		cateLabel9.addMouseListener(this);
+		cateLabel10.addMouseListener(this);
+		cateLabel11.addMouseListener(this);
+		cateLabel12.addMouseListener(this);
+		cateLabel13.addMouseListener(this);
+		cateTextLabel1.addMouseListener(this);
+		cateTextLabel2.addMouseListener(this);
+		cateTextLabel3.addMouseListener(this);
+		cateTextLabel4.addMouseListener(this);
+		cateTextLabel5.addMouseListener(this);
+		cateTextLabel6.addMouseListener(this);
+		cateTextLabel7.addMouseListener(this);
+		cateTextLabel8.addMouseListener(this);
+		cateTextLabel9.addMouseListener(this);
+		cateTextLabel10.addMouseListener(this);
+		cateTextLabel11.addMouseListener(this);
+		cateTextLabel12.addMouseListener(this);
+		cateTextLabel13.addMouseListener(this);
 	}
+
+	@Override
+	public void mousePressed(MouseEvent e) {
+		if(e.getSource()== cateLabel1 || e.getSource()==cateTextLabel1) {
+			
+		RestaurantDAO dao = new RestaurantDAO();
+		try {
+			List<RestaurantDTO> list = dao.getRestaurantsByCategory(1);
+			new ListFrame(list);
+		} catch (SQLException e1) {
+			e1.printStackTrace();
+			}
+		} else if(e.getSource()== cateLabel2 || e.getSource()==cateTextLabel2) {
+			RestaurantDAO dao = new RestaurantDAO();
+			try {
+				List<RestaurantDTO> list = dao.getRestaurantsByCategory(2);
+				new ListFrame(list);
+			} catch (SQLException e1) {
+				e1.printStackTrace();
+				}
+		} else if(e.getSource()== cateLabel3 || e.getSource()==cateTextLabel3) {
+			RestaurantDAO dao = new RestaurantDAO();
+			try {
+				List<RestaurantDTO> list = dao.getRestaurantsByCategory(3);
+				new ListFrame(list);
+			} catch (SQLException e1) {
+				e1.printStackTrace();
+			}
+		} else if(e.getSource()== cateLabel4 || e.getSource()==cateTextLabel4) {
+			RestaurantDAO dao = new RestaurantDAO();
+			try {
+				List<RestaurantDTO> list = dao.getRestaurantsByCategory(4);
+				new ListFrame(list);
+			} catch (SQLException e1) {
+				e1.printStackTrace();
+			}
+		} else if(e.getSource()== cateLabel5 || e.getSource()==cateTextLabel5) {
+			RestaurantDAO dao = new RestaurantDAO();
+			try {
+				List<RestaurantDTO> list = dao.getRestaurantsByCategory(5);
+				new ListFrame(list);
+			} catch (SQLException e1) {
+				e1.printStackTrace();
+			}
+		} else if(e.getSource()== cateLabel6 || e.getSource()==cateTextLabel6) {
+			RestaurantDAO dao = new RestaurantDAO();
+			try {
+				List<RestaurantDTO> list = dao.getRestaurantsByCategory(6);
+				new ListFrame(list);
+			} catch (SQLException e1) {
+				e1.printStackTrace();
+			}
+		} else if(e.getSource()== cateLabel7 || e.getSource()==cateTextLabel7) {
+			RestaurantDAO dao = new RestaurantDAO();
+			try {
+				List<RestaurantDTO> list = dao.getRestaurantsByCategory(7);
+				new ListFrame(list);
+			} catch (SQLException e1) {
+				e1.printStackTrace();
+			}
+		} else if(e.getSource()== cateLabel8 || e.getSource()==cateTextLabel8) {
+			RestaurantDAO dao = new RestaurantDAO();
+			try {
+				List<RestaurantDTO> list = dao.getRestaurantsByCategory(8);
+				new ListFrame(list);
+			} catch (SQLException e1) {
+				e1.printStackTrace();
+			}
+		} else if(e.getSource()== cateLabel9 || e.getSource()==cateTextLabel9) {
+			RestaurantDAO dao = new RestaurantDAO();
+			try {
+				List<RestaurantDTO> list = dao.getRestaurantsByCategory(9);
+				new ListFrame(list);
+			} catch (SQLException e1) {
+				e1.printStackTrace();
+			}
+		} else if(e.getSource()== cateLabel10 || e.getSource()==cateTextLabel10) {
+			RestaurantDAO dao = new RestaurantDAO();
+			try {
+				List<RestaurantDTO> list = dao.getRestaurantsByCategory(10);
+				new ListFrame(list);
+			} catch (SQLException e1) {
+				e1.printStackTrace();
+			}
+		} else if(e.getSource()== cateLabel11 || e.getSource()==cateTextLabel11) {
+			RestaurantDAO dao = new RestaurantDAO();
+			try {
+				List<RestaurantDTO> list = dao.getRestaurantsByCategory(11);
+				new ListFrame(list);
+			} catch (SQLException e1) {
+				e1.printStackTrace();
+			}
+		} else if(e.getSource()== cateLabel12 || e.getSource()==cateTextLabel12) {
+			RestaurantDAO dao = new RestaurantDAO();
+			try {
+				List<RestaurantDTO> list = dao.getRestaurantsByCategory(12);
+				new ListFrame(list);
+			} catch (SQLException e1) {
+				e1.printStackTrace();
+			}
+		} else if(e.getSource()== cateLabel13 || e.getSource()==cateTextLabel13) {
+			RestaurantDAO dao = new RestaurantDAO();
+			try {
+				List<RestaurantDTO> list = dao.getRestaurantsByCategory(13);
+				new ListFrame(list);
+			} catch (SQLException e1) {
+				e1.printStackTrace();
+			}
+		
+		
+	}
+		
+}
 
 	private class BackgroundPanel extends JPanel {
 		private Image backgroundImage;
@@ -209,7 +334,37 @@ public class CategoryFrame extends JFrame {
 		}
 	}
 
-	public static void main(String[] args) {
-		new CategoryFrame();
+
+	
+	
+	@Override
+	public void mouseClicked(MouseEvent e) {
+		// TODO Auto-generated method stub
+		
 	}
+
+
+	@Override
+	public void mouseReleased(MouseEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void mouseEntered(MouseEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void mouseExited(MouseEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+	
+	
+	
+//	public static void main(String[] args) {
+//		new CategoryFrame();
+//	}
 }

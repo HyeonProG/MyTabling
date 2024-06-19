@@ -67,16 +67,16 @@ public class ReservationCustomerDAO {
 	}
 
 	//임시
-	public static void main(String[] args) {
-	ReservationCustomerDAO dao=	new ReservationCustomerDAO();
-	try {
+//	public static void main(String[] args) {
+//	ReservationCustomerDAO dao=	new ReservationCustomerDAO();
+//	try {
 //		dao.addReservation(1, 1);
 //		dao.updateCustomerReservationY(1);
-		dao.updateCustomerReservationN(1);
-		dao.updateReservation(1, 1);
-	} catch (Exception e) {
-		e.printStackTrace();
-	}
-	}
+//		dao.updateCustomerReservationN(1);
+//		dao.updateReservation(1, 1);
+//	} catch (Exception e) {
+//		e.printStackTrace();
+//	}
+//	}
 
 }
