@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-public class restaurant_reservationDAO {
+public class Restaurant_reservationDAO {
 
 	// 식당에서 Table select * where 식당
 	public List<ReservationDTO> selectReservation(int restaurantId) throws SQLException {
@@ -64,7 +64,7 @@ public class restaurant_reservationDAO {
 	}
 	// TODO : TEST CODE
 	public static void main(String[] args) {
-		restaurant_reservationDAO dao = new restaurant_reservationDAO();
+		Restaurant_reservationDAO dao = new Restaurant_reservationDAO();
 		
 		try {
 			dao.updateReservation(3,3);
@@ -72,7 +72,7 @@ public class restaurant_reservationDAO {
 			e.printStackTrace();
 		}
 		
-		restaurant_reservationDAO dao1 = new restaurant_reservationDAO();
+		Restaurant_reservationDAO dao1 = new Restaurant_reservationDAO();
 		try {
 			dao1.selectReservation(1);
 		} catch (SQLException e) {
