@@ -37,6 +37,8 @@ public class LocationFrame extends JFrame implements MouseListener {
 	
 	private JButton Allselect; // 지역구 음식점 모두 검색 
 	
+	private JButton back;
+	
 	public LocationFrame() {
 		initData();
 		setInitLayout();
@@ -152,6 +154,9 @@ public class LocationFrame extends JFrame implements MouseListener {
 		
 		Allselect = new JButton("전체 검색"); // 지역구 모두 검색 
 		Allselect.setBounds(190, 460, 120, 40);
+		
+		back = new  JButton("뒤로 가기");
+		back.setBounds(40, 60, 90, 40);
 				
 	}
 	
@@ -181,6 +186,8 @@ public class LocationFrame extends JFrame implements MouseListener {
 		
 		add(Allselect);
 		
+		add(back);
+		
 	}
 	
 	private void addEventListener() {
@@ -203,6 +210,8 @@ public class LocationFrame extends JFrame implements MouseListener {
 		Gijanggun.addMouseListener(this);
 		
 		Allselect.addMouseListener(this);
+		back.addMouseListener(this);
+		
 	}
 			
 	@Override
