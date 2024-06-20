@@ -13,7 +13,7 @@ import lombok.ToString;
 @NoArgsConstructor
 @ToString
 @Builder
-public class RestaurantDTO {
+public class RestaurantDTO implements Comparable<RestaurantDTO> {
 	
 	private int restaurantId; // 가게 id
 	private String restaurantName; // 가게 이름
@@ -28,5 +28,10 @@ public class RestaurantDTO {
 	private int locationId; // 가게 위치
 	private int categoryId; // 가게 카테고리
 	
+	@Override
+	public int compareTo(RestaurantDTO dto) {
+		return (int)(dto.getRating() * 10 - rating * 10);
+	}
+
 
 }

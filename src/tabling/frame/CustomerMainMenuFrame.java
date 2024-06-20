@@ -25,9 +25,6 @@ public class CustomerMainMenuFrame extends JFrame {
 	private JLabel userInfoBtn;
 
 	private CustomerDTO customerDTO;
-	private ReservationDTO reservationDTO;
-	private RestaurantDTO restaurantDto;
-
 	public CustomerMainMenuFrame(CustomerDTO customerDTO) {
 		this.customerDTO = customerDTO;
 		initData();
@@ -85,7 +82,7 @@ public class CustomerMainMenuFrame extends JFrame {
 		categoryBtn.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mousePressed(MouseEvent e) {
-				new CategoryFrame();
+				new CategoryFrame(customerDTO);
 				setVisible(false);
 			}
 		});

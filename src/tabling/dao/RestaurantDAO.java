@@ -9,6 +9,7 @@ import java.util.List;
 
 import tabling.dto.RestaurantDTO;
 import tabling.util.DBConnectionManager;
+import tabling.util.Time;
 
 public class RestaurantDAO {
 
@@ -67,7 +68,7 @@ public class RestaurantDAO {
 			}
 		}
 		return list;
-	
+
 	}
 
 	public List<RestaurantDTO> getRestaurantsByLocation(int locationId) throws SQLException {
@@ -97,9 +98,75 @@ public class RestaurantDAO {
 			}
 		}
 		return list;
-	
+
 	}
-	
+
+	public List<RestaurantDTO> getRestaurantsByCategoryFiltered(int categoryId, Time currentTime) throws SQLException {
+		List<RestaurantDTO> list = new ArrayList<>();
+		String query = " SELECT * FROM restaurant where category_id = ? ";
+		try (Connection conn = DBConnectionManager.getInstance().getConnection()) {
+			PreparedStatement pstmt = conn.prepareStatement(query);
+			pstmt.setInt(1, categoryId);
+			try (ResultSet rs = pstmt.executeQuery()) {
+				while (rs.next()) {
+					RestaurantDTO dto = new RestaurantDTO().builder() //
+							.restaurantId(rs.getInt(1)) //
+							.restaurantName(rs.getString(2)) //
+							.phone(rs.getString(3)) //
+							.address(rs.getString(4)) //
+							.content(rs.getString(5)) //
+							.openTime(rs.getString(6)) //
+							.closeTime(rs.getString(7)) //
+							.rating(rs.getDouble(8)) //
+							.likes(rs.getInt(9)) //
+							.restDay(rs.getString(10)) //
+							.locationId(rs.getInt(11)) //
+							.categoryId(rs.getInt(12)) //
+							.build();
+					// 영업중 일때만 리스트에 add함
+					if (currentTime.isOpen(dto)) {
+						list.add(dto);
+					}
+				}
+			}
+		}
+		return list;
+
+	}
+
+	public List<RestaurantDTO> getRestaurantsByLocationFiltered(int locationId, Time currentTime) throws SQLException {
+		List<RestaurantDTO> list = new ArrayList<>();
+		String query = " SELECT * FROM restaurant where location_id = ? ";
+		try (Connection conn = DBConnectionManager.getInstance().getConnection()) {
+			PreparedStatement pstmt = conn.prepareStatement(query);
+			pstmt.setInt(1, locationId);
+			try (ResultSet rs = pstmt.executeQuery()) {
+				while (rs.next()) {
+					RestaurantDTO dto = new RestaurantDTO().builder() //
+							.restaurantId(rs.getInt(1)) //
+							.restaurantName(rs.getString(2)) //
+							.phone(rs.getString(3)) //
+							.address(rs.getString(4)) //
+							.content(rs.getString(5)) //
+							.openTime(rs.getString(6)) //
+							.closeTime(rs.getString(7)) //
+							.rating(rs.getDouble(8)) //
+							.likes(rs.getInt(9)) //
+							.restDay(rs.getString(10)) //
+							.locationId(rs.getInt(11)) //
+							.categoryId(rs.getInt(12)) //
+							.build();
+					// 영업중 일때만 리스트에 add함
+					if (currentTime.isOpen(dto)) {
+						list.add(dto);
+					}
+				}
+			}
+		}
+		return list;
+
+	}
+
 	public RestaurantDTO authenticateOwnerId(int restaurantId) {
 		RestaurantDTO dto;
 		String query = "  SELECT * FROM restaurant WHERE restaurant_id = ?  ";
@@ -110,9 +177,8 @@ public class RestaurantDAO {
 			ResultSet rs = pstmt.executeQuery();
 
 			if (rs.next()) {
-				dto = new RestaurantDTO(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4),
-						rs.getString(5), rs.getString(6), rs.getString(7), rs.getDouble(8), rs.getInt(9),
-						rs.getString(10), rs.getInt(11), rs.getInt(12));
+				dto = new RestaurantDTO(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(5), rs.getString(6),
+						rs.getString(7), rs.getDouble(8), rs.getInt(9), rs.getString(10), rs.getInt(11), rs.getInt(12));
 
 				return dto;
 			}
@@ -123,5 +189,5 @@ public class RestaurantDAO {
 
 		return null;
 	}
-	
+
 }

@@ -17,7 +17,9 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 
+import tabling.dao.CustomerDAO;
 import tabling.dao.RestaurantDAO;
+import tabling.dto.CustomerDTO;
 import tabling.dto.RestaurantDTO;
 import tabling.util.Define;
 
@@ -32,9 +34,11 @@ public class CategoryFrame extends JFrame implements MouseListener {
 	private MainPanel mainPanel;
 	private JScrollPane scrollPane;
 	private CustomerLoginFrame customerLoginFrame;
+	private CustomerDTO customerDTO;
 
 //	private List<JLabel> cateLabels= new ArrayList<>(13);
-	public CategoryFrame() {
+	public CategoryFrame(CustomerDTO customerDTO) {
+		this.customerDTO=customerDTO;
 		initData();
 		setInitLayout();
 		initListener();
@@ -45,43 +49,43 @@ public class CategoryFrame extends JFrame implements MouseListener {
 		//그림라벨
 		categoryImgs = new JLabel[14];
 		// allLabel= new JLabel(new ImageIcon("img/korean_btn.png"));
-		categoryImgs[Define.CATEGORY_ALL] = new JLabel(new ImageIcon("img/korean_btn.png"));
-		categoryImgs[Define.CATEGORY_GYOUNGYANG] = new JLabel(new ImageIcon("img/gyungyang.png"));
-		categoryImgs[Define.CATEGORY_CAFE] = new JLabel(new ImageIcon("img/cafe.png"));
-		categoryImgs[Define.CATEGORY_BOONSIK] = new JLabel(new ImageIcon("img/boonsik.png"));
-		categoryImgs[Define.CATEGORY_GUI] = new JLabel(new ImageIcon("img/gui.png"));
-		categoryImgs[Define.CATEGORY_JOONGSIK] = new JLabel(new ImageIcon("img/joongsik.png"));
-		categoryImgs[Define.CATEGORY_FASTFOOD] = new JLabel(new ImageIcon("img/fastfood.png"));
-		categoryImgs[Define.CATEGORY_HANSIK] = new JLabel(new ImageIcon("img/hansik.png"));
-		categoryImgs[Define.CATEGORY_CHICKEN] = new JLabel(new ImageIcon("img/chicken.png"));
-		categoryImgs[Define.CATEGORY_HOE] = new JLabel(new ImageIcon("img/hoe.png"));
-		categoryImgs[Define.CATEGORY_FAMILIY] = new JLabel(new ImageIcon("img/family.png"));
-		categoryImgs[Define.CATEGORY_ILSIK] = new JLabel(new ImageIcon("img/ilsik.png"));
-		categoryImgs[Define.CATEGORY_NAENGMYUN] = new JLabel(new ImageIcon("img/naengmyun.png"));
-		categoryImgs[Define.CATEGORY_HOF] = new JLabel(new ImageIcon("img/hof.png"));
+		categoryImgs[Define.CATEGORY_ALL] = new JLabel(new ImageIcon("img/전체보기.png"));
+		categoryImgs[Define.CATEGORY_GYOUNGYANG] = new JLabel(new ImageIcon("img/경양식.png"));
+		categoryImgs[Define.CATEGORY_CAFE] = new JLabel(new ImageIcon("img/카페.png"));
+		categoryImgs[Define.CATEGORY_BOONSIK] = new JLabel(new ImageIcon("img/분식.png"));
+		categoryImgs[Define.CATEGORY_GUI] = new JLabel(new ImageIcon("img/구이.png"));
+		categoryImgs[Define.CATEGORY_JOONGSIK] = new JLabel(new ImageIcon("img/중식.png"));
+		categoryImgs[Define.CATEGORY_FASTFOOD] = new JLabel(new ImageIcon("img/패스트푸드.png"));
+//		categoryImgs[Define.CATEGORY_HANSIK] = new JLabel(new ImageIcon("img/hansik.png"));
+//		categoryImgs[Define.CATEGORY_CHICKEN] = new JLabel(new ImageIcon("img/chicken.png"));
+//		categoryImgs[Define.CATEGORY_HOE] = new JLabel(new ImageIcon("img/hoe.png"));
+//		categoryImgs[Define.CATEGORY_FAMILIY] = new JLabel(new ImageIcon("img/family.png"));
+//		categoryImgs[Define.CATEGORY_ILSIK] = new JLabel(new ImageIcon("img/ilsik.png"));
+//		categoryImgs[Define.CATEGORY_NAENGMYUN] = new JLabel(new ImageIcon("img/naengmyun.png"));
+//		categoryImgs[Define.CATEGORY_HOF] = new JLabel(new ImageIcon("img/hof.png"));
 		//테스트라벨
-		categoryTexts = new JLabel[14];
-		categoryTexts[Define.CATEGORY_ALL] = new JLabel(new ImageIcon("img/korean_btn.png"));
-		categoryTexts[Define.CATEGORY_GYOUNGYANG] = new JLabel(new ImageIcon("img/korean_btn.png"));
-		categoryTexts[Define.CATEGORY_CAFE] = new JLabel(new ImageIcon("img/korean_btn.png"));
-		categoryTexts[Define.CATEGORY_BOONSIK] = new JLabel(new ImageIcon("img/korean_btn.png"));
-		categoryTexts[Define.CATEGORY_GUI] = new JLabel(new ImageIcon("img/korean_btn.png"));
-		categoryTexts[Define.CATEGORY_JOONGSIK] = new JLabel(new ImageIcon("img/korean_btn.png"));
-		categoryTexts[Define.CATEGORY_FASTFOOD] = new JLabel(new ImageIcon("img/korean_btn.png"));
-		categoryTexts[Define.CATEGORY_HANSIK] = new JLabel(new ImageIcon("img/korean_btn.png"));
-		categoryTexts[Define.CATEGORY_CHICKEN] = new JLabel(new ImageIcon("img/korean_btn.png"));
-		categoryTexts[Define.CATEGORY_HOE] = new JLabel(new ImageIcon("img/korean_btn.png"));
-		categoryTexts[Define.CATEGORY_FAMILIY] = new JLabel(new ImageIcon("img/korean_btn.png"));
-		categoryTexts[Define.CATEGORY_ILSIK] = new JLabel(new ImageIcon("img/korean_btn.png"));
-		categoryTexts[Define.CATEGORY_NAENGMYUN] = new JLabel(new ImageIcon("img/korean_btn.png"));
-		categoryTexts[Define.CATEGORY_HOF] = new JLabel(new ImageIcon("img/korean_btn.png"));
+//		categoryTexts = new JLabel[14];
+//		categoryTexts[Define.CATEGORY_ALL] = new JLabel(new ImageIcon("img/korean_btn.png"));
+//		categoryTexts[Define.CATEGORY_GYOUNGYANG] = new JLabel(new ImageIcon("img/korean_btn.png"));
+//		categoryTexts[Define.CATEGORY_CAFE] = new JLabel(new ImageIcon("img/korean_btn.png"));
+//		categoryTexts[Define.CATEGORY_BOONSIK] = new JLabel(new ImageIcon("img/korean_btn.png"));
+//		categoryTexts[Define.CATEGORY_GUI] = new JLabel(new ImageIcon("img/korean_btn.png"));
+//		categoryTexts[Define.CATEGORY_JOONGSIK] = new JLabel(new ImageIcon("img/korean_btn.png"));
+//		categoryTexts[Define.CATEGORY_FASTFOOD] = new JLabel(new ImageIcon("img/korean_btn.png"));
+//		categoryTexts[Define.CATEGORY_HANSIK] = new JLabel(new ImageIcon("img/korean_btn.png"));
+//		categoryTexts[Define.CATEGORY_CHICKEN] = new JLabel(new ImageIcon("img/korean_btn.png"));
+//		categoryTexts[Define.CATEGORY_HOE] = new JLabel(new ImageIcon("img/korean_btn.png"));
+//		categoryTexts[Define.CATEGORY_FAMILIY] = new JLabel(new ImageIcon("img/korean_btn.png"));
+//		categoryTexts[Define.CATEGORY_ILSIK] = new JLabel(new ImageIcon("img/korean_btn.png"));
+//		categoryTexts[Define.CATEGORY_NAENGMYUN] = new JLabel(new ImageIcon("img/korean_btn.png"));
+//		categoryTexts[Define.CATEGORY_HOF] = new JLabel(new ImageIcon("img/korean_btn.png"));
 		mainPanel = new MainPanel();
 		scrollPane = new JScrollPane(mainPanel);
 		
 		homeLable= new JLabel(new ImageIcon("img/home.png"));
 		// 리스트 생각중
-		for(int i=0;i<14;i++) {
-			mainPanel.add(categoryTexts[i]);
+		for(int i=0;i<5;i++) {
+//			mainPanel.add(categoryTexts[i]);
 			mainPanel.add(categoryImgs[i]);
 		}
 
@@ -105,25 +109,27 @@ public class CategoryFrame extends JFrame implements MouseListener {
 		scrollPane.setBounds(10, 80, 360, 400);
 		backgroundPanel.add(scrollPane);
 
-		mainPanel.setLayout(new GridLayout(0, 2));
+		mainPanel.setLayout(new GridLayout(0, 1));
 	}
 
 	private void initListener() {
-		for (JLabel categoryImgs : categoryImgs) {
-			categoryImgs.addMouseListener(this);
+//		for (JLabel categoryImgs : categoryImgs) {
+//			categoryImgs.addMouseListener(this);
+//		}
+		for(int i=0;i<5;i++) {
+			categoryImgs[i].addMouseListener(this);
+			
 		}
-		for (JLabel categoryTexts : categoryTexts) {
-			categoryTexts.addMouseListener(this);
-		}
+		homeLable.addMouseListener(this);
 	}
 
 	@Override
 	public void mousePressed(MouseEvent e) {
 		try {
 			
-	for(int i=0;i<14;i++) {
+	for(int i=0;i<3;i++) {
 		 if (i==0) {			 
-			 if(e.getSource() == categoryImgs[i]  || e.getSource() == categoryTexts[i]) {
+			 if(e.getSource() == categoryImgs[i]  ) {
 				 
 					RestaurantDAO dao = new RestaurantDAO();
 					List<RestaurantDTO> list = dao.getAllRestaurants();
@@ -131,7 +137,7 @@ public class CategoryFrame extends JFrame implements MouseListener {
 			 }
 		} else {
 	 
-		  if (e.getSource() == categoryImgs[i]  || e.getSource() == categoryTexts[i] ) {
+		  if (e.getSource() == categoryImgs[i]  ) {
 			RestaurantDAO dao = new RestaurantDAO();
 				List<RestaurantDTO> list = dao.getRestaurantsByCategory(i);
 				new RestaurantListFrame(list);
@@ -139,11 +145,11 @@ public class CategoryFrame extends JFrame implements MouseListener {
 		 	}  
 		 
 		 
-//		 if(e.getSource() == homeLable) {
-//			 customerLoginFrame();
-//
-//			 
-//		 }
+		 if(e.getSource() == homeLable) {
+			 new CustomerMainMenuFrame(customerDTO);
+
+			 
+		 }
 		}
 	
 		} catch (SQLException e1) {
@@ -203,7 +209,7 @@ public class CategoryFrame extends JFrame implements MouseListener {
 
 	}
 
-	public static void main(String[] args) {
-		new CategoryFrame();
-	}
+//	public static void main(String[] args) {
+//		new CategoryFrame();
+//	}
 }
