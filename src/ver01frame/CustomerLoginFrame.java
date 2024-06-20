@@ -76,8 +76,9 @@ public class CustomerLoginFrame extends JFrame {
 		quitBtn.setBounds(10, 10, 30, 50);
 		backgroundPanel.add(quitBtn);
 
-		phoneText.setBounds(90, 270, 100, 30);
+		phoneText.setBounds(90, 260, 100, 30);
 		phoneText.setSize(220, 25);
+		phoneText.setBorder(null);
 		phoneText.setFont(new Font("Noto Sans KR", Font.BOLD, 15));
 		backgroundPanel.add(phoneText);
 
@@ -132,6 +133,7 @@ public class CustomerLoginFrame extends JFrame {
 		});
 
 	}
+	
 
 	private class BackgroundPanel extends JPanel {
 		private JPanel backgroundPanel;

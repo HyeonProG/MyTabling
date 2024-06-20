@@ -15,11 +15,10 @@ import javax.swing.JTextField;
 
 public class RestaurantLoginFrame extends JFrame {
 
-	private JButton loginBtn;
+	private JLabel loginBtn;
 	private JTextField nameText;
-	private JLabel nameLabel;
 	private boolean loginCheck;
-	private JButton backBtn;
+	private JLabel backBtn;
 	private BackgroundPanel backgroundPanel;
 
 	public RestaurantLoginFrame() {
@@ -30,10 +29,9 @@ public class RestaurantLoginFrame extends JFrame {
 
 	private void initData() {
 		backgroundPanel = new BackgroundPanel();
-		loginBtn = new JButton("로그인");
-		nameLabel = new JLabel("식당ID");
+		loginBtn = new JLabel(new ImageIcon("img/loginBtn.png"));
 		nameText = new JTextField();
-		backBtn = new JButton("뒤로가기");
+		backBtn = new JLabel(new ImageIcon("img/quitBtn.png"));
 	}
 
 	private void setInitLayout() {
@@ -49,24 +47,18 @@ public class RestaurantLoginFrame extends JFrame {
 		backgroundPanel.setLayout(null);
 		add(backgroundPanel);
 
-		loginBtn.setBounds(260, 265, 100, 50);
-		loginBtn.setSize(90, 25);
+		loginBtn.setBounds(35, 420, 314, 46);
 		loginBtn.setFont(new Font("Noto Sans KR", Font.BOLD, 15));
 		backgroundPanel.add(loginBtn);
 
-		backBtn.setBounds(160, 300, 100, 50);
-		backBtn.setSize(90, 30);
+		backBtn.setBounds(10, 10, 30, 50);
 		backBtn.setFont(new Font("Noto Sans KR", Font.BOLD, 15));
 		backgroundPanel.add(backBtn);
 
-		nameLabel.setBounds(30, 210, 100, 50);
-		nameLabel.setSize(70, 70);
-		nameLabel.setFont(new Font("Noto Sans KR", Font.BOLD, 15));
-		backgroundPanel.add(nameLabel);
-
-		nameText.setBounds(30, 265, 100, 30);
+		nameText.setBounds(90, 285, 100, 30);
 		nameText.setSize(220, 25);
 		nameText.setFont(new Font("Noto Sans KR", Font.BOLD, 15));
+		nameText.setBorder(null);
 		backgroundPanel.add(nameText);
 
 	}
@@ -86,7 +78,7 @@ public class RestaurantLoginFrame extends JFrame {
 		private Image backgroundImage;
 
 		public BackgroundPanel() {
-			backgroundImage = new ImageIcon("img/backgroundimage.jpg").getImage();
+			backgroundImage = new ImageIcon("img/restaurantLoginBg.jpg").getImage();
 			backgroundPanel = new JPanel();
 			add(backgroundPanel);
 		}
