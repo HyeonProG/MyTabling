@@ -18,13 +18,12 @@ import tabling.dto.RestaurantDTO;
 
 public class RestaurantLoginFrame extends JFrame {
 
-	private JLabel loginBtn;
-	private JTextField nameText;
-	private boolean loginCheck;
-	private JLabel backBtn;
 	private BackgroundPanel backgroundPanel;
-	
-	// TODO - 임시로 클래스 설계
+	private JTextField resIdText;
+	private JTextField resPwText; // TODO
+	private JLabel loginBtn;
+	private JLabel backBtn;
+	private boolean loginCheck;
 	private RestaurantDAO restaurantDao;
 	private RestaurantDTO restaurantDto;
 	private int restaurantId;
@@ -38,9 +37,10 @@ public class RestaurantLoginFrame extends JFrame {
 	private void initData() {
 		backgroundPanel = new BackgroundPanel();
 		loginBtn = new JLabel(new ImageIcon("img/loginBtn.png"));
-		nameText = new JTextField();
+		resIdText = new JTextField();
+		resPwText = new JTextField();
 		backBtn = new JLabel(new ImageIcon("img/quitBtn.png"));
-	
+
 		restaurantDao = new RestaurantDAO();
 		restaurantDto = new RestaurantDTO();
 	}
@@ -58,7 +58,7 @@ public class RestaurantLoginFrame extends JFrame {
 		backgroundPanel.setLayout(null);
 		add(backgroundPanel);
 
-		loginBtn.setBounds(35, 420, 314, 46);
+		loginBtn.setBounds(35, 425, 314, 46);
 		loginBtn.setFont(new Font("Noto Sans KR", Font.BOLD, 15));
 		backgroundPanel.add(loginBtn);
 
@@ -66,32 +66,45 @@ public class RestaurantLoginFrame extends JFrame {
 		backBtn.setFont(new Font("Noto Sans KR", Font.BOLD, 15));
 		backgroundPanel.add(backBtn);
 
-		nameText.setBounds(90, 285, 100, 30);
-		nameText.setSize(220, 25);
-		nameText.setFont(new Font("Noto Sans KR", Font.BOLD, 15));
-		nameText.setBorder(null);
-		backgroundPanel.add(nameText);
+		resIdText.setBounds(85, 240, 100, 30);
+		resIdText.setSize(220, 25);
+		resIdText.setFont(new Font("Noto Sans KR", Font.BOLD, 15));
+		resIdText.setBorder(null);
+		backgroundPanel.add(resIdText);
 
+		resPwText.setBounds(85, 330, 100, 30);
+		resPwText.setSize(220, 25);
+		resPwText.setFont(new Font("Noto Sans KR", Font.BOLD, 15));
+		resPwText.setBorder(null);
+		backgroundPanel.add(resPwText);
 	}
 
 	private void initListener() {
 		loginBtn.addMouseListener(new MouseAdapter() {
-			
+
 			@Override
 			public void mousePressed(MouseEvent e) {
-				
-				if (!nameText.getText().equals("")) {
-					restaurantId = Integer.parseInt(nameText.getText());
-					if((restaurantDto = restaurantDao.authenticateOwnerId(restaurantId)) != null) {
-						JOptionPane.showMessageDialog(null, "로그인 되었습니다.", "성공", JOptionPane.WARNING_MESSAGE);
-						setVisible(false);
+
+				try {
+					if (!resIdText.getText().equals("") || !resPwText.getText().equals("")) {
+						restaurantId = Integer.parseInt(resIdText.getText());
+						if ((restaurantDto = restaurantDao.authenticateOwnerId(restaurantId)) != null
+								&& resPwText.getText().equals("1111")) {
+							JOptionPane.showMessageDialog(null, "로그인 되었습니다.", "성공", JOptionPane.WARNING_MESSAGE);
+							setVisible(false);
+						} else if ((restaurantDto = restaurantDao.authenticateOwnerId(restaurantId)) == null) {
+							JOptionPane.showMessageDialog(null, "아이디가 올바르지 않습니다.", "성공", JOptionPane.WARNING_MESSAGE);
+						} else {
+							JOptionPane.showMessageDialog(null, "비밀번호가 올바르지 않습니다.", "성공", JOptionPane.WARNING_MESSAGE);
+						}
 					}
+				} catch (NumberFormatException e1) {
+					JOptionPane.showMessageDialog(null, "존재하지 않는 ID입니다.", "성공", JOptionPane.WARNING_MESSAGE);
 				}
-				
 			}
-			
+
 		});
-		
+
 		backBtn.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mousePressed(MouseEvent e) {
