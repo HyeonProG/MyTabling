@@ -27,8 +27,7 @@ public class CustomerLoginFrame extends JFrame {
 
 	private JLabel loginBtn;
 	private JLabel registerBtn;
-	private JLabel quitBtn; // TODO
-	private JTextField nameText;
+	private JLabel quitBtn;
 	private JTextField phoneText;
 	private boolean loginCheck;
 	private BackgroundPanel backgroundPanel;
@@ -49,7 +48,6 @@ public class CustomerLoginFrame extends JFrame {
 		loginBtn = new JLabel(new ImageIcon("img/loginBtn.png"));
 		registerBtn = new JLabel(new ImageIcon("img/signInBtn.png"));
 		quitBtn = new JLabel(new ImageIcon("img/quitBtn.png"));
-		nameText = new JTextField();
 		phoneText = new JTextField();
 
 		signInFrame = new SignInFrame();
@@ -78,12 +76,7 @@ public class CustomerLoginFrame extends JFrame {
 		quitBtn.setBounds(10, 10, 30, 50);
 		backgroundPanel.add(quitBtn);
 
-		nameText.setBounds(90, 230, 100, 30);
-		nameText.setSize(220, 25);
-		nameText.setFont(new Font("Noto Sans KR", Font.BOLD, 15));
-		backgroundPanel.add(nameText);
-
-		phoneText.setBounds(90, 300, 100, 30);
+		phoneText.setBounds(90, 270, 100, 30);
 		phoneText.setSize(220, 25);
 		phoneText.setFont(new Font("Noto Sans KR", Font.BOLD, 15));
 		backgroundPanel.add(phoneText);
@@ -104,25 +97,15 @@ public class CustomerLoginFrame extends JFrame {
 			@Override
 			public void mousePressed(MouseEvent e) {
 
-				if (nameText.getText().equals("") && !phoneText.getText().equals("")) {
+				if (!phoneText.getText().equals("")) {
 					if ((customerDTO = userDao.authenticatePhone(phoneText.getText())) != null) {
 						JOptionPane.showMessageDialog(null, "로그인 되었습니다.", "성공", JOptionPane.WARNING_MESSAGE);
-						// TODO dao 필요 고객 테이블 접근해서 값 받아 와야됨, 
+						setVisible(false);
 						new MainMenuFrame(customerDTO);
 					} else {
 						JOptionPane.showMessageDialog(null, "존재하지 않는 유저 정보입니다.", "경고", JOptionPane.WARNING_MESSAGE);
 					}
-				} else if (!nameText.getText().equals("") && !phoneText.getText().equals("")) {
-					try {
-						if (userDao.authenticateAll(nameText.getText(), phoneText.getText())) {
-							JOptionPane.showMessageDialog(null, "", "경고", JOptionPane.WARNING_MESSAGE);
-						}
-					} catch (SQLException e1) {
-						e1.printStackTrace();
-					}
-
 				}
-
 			}
 		});
 
@@ -134,7 +117,7 @@ public class CustomerLoginFrame extends JFrame {
 			}
 		});
 
-		// 전화번호 8자 이상 입력불가
+		// 전화번호 8자 이상 입력불가 & 숫자만 입력 가능
 		phoneText.addKeyListener(new KeyAdapter() {
 
 			@Override
