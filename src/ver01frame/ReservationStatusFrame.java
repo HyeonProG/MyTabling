@@ -1,5 +1,6 @@
 package ver01frame;
 
+import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.event.MouseAdapter;
@@ -8,7 +9,13 @@ import java.awt.event.MouseEvent;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JTextField;
+
+import ver01.CustomerDTO;
+import ver01.ReservationDTO;
+import ver01.UserDAOImpl;
 
 public class ReservationStatusFrame extends JFrame {
 
@@ -16,8 +23,16 @@ public class ReservationStatusFrame extends JFrame {
 	private JPanel reservationPanel;
 	private JButton backBtn;
 	private JButton cancelBtn;
+	private CustomerDTO customerDTO;
+	private JLabel customerId;
+	private JLabel phone;
+	private JLabel customerState;
+	private JLabel locationId;
+	private JLabel reservationState;
+	private JLabel restaurantId;
 
-	public ReservationStatusFrame() {
+	public ReservationStatusFrame(CustomerDTO customerDTO) {
+		this.customerDTO=customerDTO;
 		initData();
 		setInitLayout();
 		initListener();
@@ -35,7 +50,12 @@ public class ReservationStatusFrame extends JFrame {
 		reservationPanel = new JPanel();
 		backBtn = new JButton("뒤로가기");
 		cancelBtn = new JButton("예약 취소");
-		
+		customerId=new JLabel(String.valueOf(customerDTO.getCustomerId()));
+		phone=new JLabel(customerDTO.getPhone());
+		customerState=new JLabel(customerDTO.getState());
+		locationId=new JLabel(String.valueOf(customerDTO.getLocationId()));
+//		reservationState=new JTextField(reservationDTO.getReservationState());
+//		restaurantId=new JTextField(reservationDTO.getRestaurantId());
 	}
 
 	private void setInitLayout() {
@@ -56,6 +76,36 @@ public class ReservationStatusFrame extends JFrame {
 		cancelBtn.setSize(100, 50);
 		backgroundPanel.add(cancelBtn);
 
+		customerId.setBounds(30, 260, 100, 30);
+		customerId.setBorder(null);
+		customerId.setFont(new Font("Noto Sans KR", Font.BOLD, 15));
+		reservationPanel.add(customerId);
+		
+		phone.setBounds(90, 260, 100, 30);
+		phone.setBorder(null);
+		phone.setFont(new Font("Noto Sans KR", Font.BOLD, 15));
+		reservationPanel.add(phone);
+		
+		customerState.setBounds(140, 260, 100, 30);
+		customerState.setBorder(null);
+		customerState.setFont(new Font("Noto Sans KR", Font.BOLD, 15));
+		reservationPanel.add(customerState);
+		
+		locationId.setBounds(30, 400, 100, 30);
+		locationId.setBorder(null);
+		locationId.setFont(new Font("Noto Sans KR", Font.BOLD, 15));
+		reservationPanel.add(locationId);
+//		
+//		reservationState.setBounds(90, 300, 100, 30);
+//		reservationState.setBorder(null);
+//		reservationState.setFont(new Font("Noto Sans KR", Font.BOLD, 15));
+//		reservationPanel.add(reservationState);
+//		
+//		restaurantId.setBounds(140, 400, 100, 30);
+//		restaurantId.setBorder(null);
+//		restaurantId.setFont(new Font("Noto Sans KR", Font.BOLD, 15));
+//		reservationPanel.add(restaurantId);
+		
 	}
 
 	private void initListener() {
@@ -87,7 +137,7 @@ public class ReservationStatusFrame extends JFrame {
 	}
 
 	public static void main(String[] args) {
-		new ReservationStatusFrame();
+		new ReservationStatusFrame(new UserDAOImpl().authenticatePhone("01011112222"));
 	}
 
 }

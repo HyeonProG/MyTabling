@@ -11,6 +11,7 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 
 import ver01.CustomerDTO;
+import ver01.ReservationDTO;
 
 public class MainMenuFrame extends JFrame {
 	
@@ -20,7 +21,8 @@ public class MainMenuFrame extends JFrame {
 	private JButton locationBtn;
 	private JButton reservationBtn;
 	private CustomerDTO customerDTO;
-
+	private ReservationDTO reservationDTO;
+	
 	public MainMenuFrame(CustomerDTO customerDTO) {
 		this.customerDTO = customerDTO;
 		initData();
@@ -67,8 +69,11 @@ public class MainMenuFrame extends JFrame {
 		reservationBtn.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mousePressed(MouseEvent e) {
-				new ReservationStatusFrame();
+
+				
+				new ReservationStatusFrame(customerDTO);
 				setVisible(false);
+			
 			}
 		});
 		categoryBtn.addMouseListener(new MouseAdapter() {
