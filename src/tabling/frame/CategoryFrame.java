@@ -1,5 +1,6 @@
 package tabling.frame;
 
+import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.GridLayout;
 import java.awt.Image;
@@ -23,40 +24,14 @@ import tabling.util.Define;
 public class CategoryFrame extends JFrame implements MouseListener {
 
 	private JLabel[] categoryImgs;
-	private JLabel gyungyangLabel;
-	private JLabel cafeLabel;
-	private JLabel boonsikLabel;
-	private JLabel guiLabel;
-	private JLabel joongsikLabel;
-	private JLabel fastfoodLabel;
-	private JLabel hansikLabel;
-	private JLabel chickenLabel;
-	private JLabel hoeLabel;
-	private JLabel famliyLabel;
-	private JLabel ilsikLabel;
-	private JLabel naengmyunLabel;
-	private JLabel hofLabel;
-	private JLabel allLabel;
-	
 	private JLabel[] categoryTexts;
-	private JLabel gyungyangTextLabel;
-	private JLabel cafeTextLabel;
-	private JLabel boonsikTextLabel;
-	private JLabel guiTextLabel;
-	private JLabel joongsikTextLabel;
-	private JLabel fastfoodTextLabel;
-	private JLabel hansikTextLabel;
-	private JLabel chickenTextLabel;
-	private JLabel hoeTextLabel;
-	private JLabel famliyTextLabel;
-	private JLabel ilsikTextLabel;
-	private JLabel naengmyunTextLabel;
-	private JLabel hofTextLabel;
-	private JLabel allTextLabel;
-	private JTextField cateText;
+
+	private JLabel homeLable;
+	
 	private BackgroundPanel backgroundPanel;
 	private MainPanel mainPanel;
 	private JScrollPane scrollPane;
+	private CustomerLoginFrame customerLoginFrame;
 
 //	private List<JLabel> cateLabels= new ArrayList<>(13);
 	public CategoryFrame() {
@@ -103,13 +78,13 @@ public class CategoryFrame extends JFrame implements MouseListener {
 		mainPanel = new MainPanel();
 		scrollPane = new JScrollPane(mainPanel);
 		
+		homeLable= new JLabel(new ImageIcon("img/home.png"));
 		// 리스트 생각중
-		for (JLabel categoryImgs : categoryImgs) {
-			mainPanel.add(categoryImgs);
+		for(int i=0;i<14;i++) {
+			mainPanel.add(categoryTexts[i]);
+			mainPanel.add(categoryImgs[i]);
 		}
-		for (JLabel categoryTexts : categoryTexts) {
-			mainPanel.add(categoryTexts);
-		}
+
 	}
 
 	private void setInitLayout() {
@@ -119,6 +94,9 @@ public class CategoryFrame extends JFrame implements MouseListener {
 		setLayout(null);
 		setVisible(true);
 		setResizable(false);
+		
+		homeLable.setBounds(40, 5, 70, 70);
+		add(homeLable);
 
 		backgroundPanel.setSize(getWidth(), getHeight());
 		backgroundPanel.setLayout(null);
@@ -159,6 +137,13 @@ public class CategoryFrame extends JFrame implements MouseListener {
 				new RestaurantListFrame(list);
 		  			}
 		 	}  
+		 
+		 
+//		 if(e.getSource() == homeLable) {
+//			 customerLoginFrame();
+//
+//			 
+//		 }
 		}
 	
 		} catch (SQLException e1) {

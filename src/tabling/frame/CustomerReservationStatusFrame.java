@@ -14,6 +14,8 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 
 import tabling.dao.CustomerDAO;
+import tabling.dao.ReservationDAO;
+import tabling.dao.RestaurantReservationDAO;
 import tabling.dto.CustomerDTO;
 import tabling.dto.ReservationDTO;
 
@@ -30,6 +32,8 @@ public class CustomerReservationStatusFrame extends JFrame {
 	private JLabel locationId;
 	private JLabel reservationState;
 	private JLabel restaurantId;
+	private ReservationDAO reservationDAO; 
+	private RestaurantReservationDAO restaurantReservationDAO;
 
 	public CustomerReservationStatusFrame(CustomerDTO customerDTO) {
 		this.customerDTO=customerDTO;
@@ -39,6 +43,10 @@ public class CustomerReservationStatusFrame extends JFrame {
 	}
 
 	private void initData() {
+		reservationDAO= new ReservationDAO();
+		restaurantReservationDAO= new RestaurantReservationDAO();
+		int count=reservationDAO.checkReservation(, );
+		
 		setTitle("예약 현황");
 		setSize(500, 700);
 		setResizable(false);
@@ -54,8 +62,6 @@ public class CustomerReservationStatusFrame extends JFrame {
 		phone=new JLabel(customerDTO.getPhone());
 		customerState=new JLabel(customerDTO.getState());
 		locationId=new JLabel(String.valueOf(customerDTO.getLocationId()));
-//		reservationState=new JTextField(reservationDTO.getReservationState());
-//		restaurantId=new JTextField(reservationDTO.getRestaurantId());
 	}
 
 	private void setInitLayout() {
@@ -95,16 +101,7 @@ public class CustomerReservationStatusFrame extends JFrame {
 		locationId.setBorder(null);
 		locationId.setFont(new Font("Noto Sans KR", Font.BOLD, 15));
 		reservationPanel.add(locationId);
-//		
-//		reservationState.setBounds(90, 300, 100, 30);
-//		reservationState.setBorder(null);
-//		reservationState.setFont(new Font("Noto Sans KR", Font.BOLD, 15));
-//		reservationPanel.add(reservationState);
-//		
-//		restaurantId.setBounds(140, 400, 100, 30);
-//		restaurantId.setBorder(null);
-//		restaurantId.setFont(new Font("Noto Sans KR", Font.BOLD, 15));
-//		reservationPanel.add(restaurantId);
+
 		
 	}
 

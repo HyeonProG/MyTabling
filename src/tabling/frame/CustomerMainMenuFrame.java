@@ -4,6 +4,7 @@ import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.List;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -11,8 +12,10 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
+import tabling.dao.RestaurantDAO;
 import tabling.dto.CustomerDTO;
 import tabling.dto.ReservationDTO;
+import tabling.dto.RestaurantDTO;
 
 public class CustomerMainMenuFrame extends JFrame {
 
@@ -24,7 +27,6 @@ public class CustomerMainMenuFrame extends JFrame {
 	private JLabel userInfoBtn;
 
 	private CustomerDTO customerDTO;
-	private ReservationDTO reservationDTO;
 
 	public CustomerMainMenuFrame(CustomerDTO customerDTO) {
 		this.customerDTO = customerDTO;
@@ -75,9 +77,12 @@ public class CustomerMainMenuFrame extends JFrame {
 		reservationBtn.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mousePressed(MouseEvent e) {
-
-				new CustomerReservationStatusFrame(customerDTO);
-				setVisible(false);
+				ReservationDTO dao = new ReservationDTO();
+				if(customerDTO.getCustomerId()==dao.getCustomerId()) {
+					new CustomerReservationStatusFrame(customerDTO);
+					setVisible(false);
+				}
+				
 
 			}
 		});
