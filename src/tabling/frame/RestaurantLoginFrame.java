@@ -20,12 +20,12 @@ public class RestaurantLoginFrame extends JFrame {
 
 	private BackgroundPanel backgroundPanel;
 	private JTextField resIdText;
-	private JTextField resPwText; // TODO
+	private JTextField resPwText;
 	private JLabel loginBtn;
 	private JLabel backBtn;
 	private boolean loginCheck;
 	private RestaurantDAO restaurantDao;
-	private RestaurantDTO restaurantDto;
+	private RestaurantDTO restaurantDTO;
 	private int restaurantId;
 
 	public RestaurantLoginFrame() {
@@ -42,7 +42,7 @@ public class RestaurantLoginFrame extends JFrame {
 		backBtn = new JLabel(new ImageIcon("img/quitBtn.png"));
 
 		restaurantDao = new RestaurantDAO();
-		restaurantDto = new RestaurantDTO();
+		restaurantDTO = new RestaurantDTO();
 	}
 
 	private void setInitLayout() {
@@ -88,11 +88,12 @@ public class RestaurantLoginFrame extends JFrame {
 				try {
 					if (!resIdText.getText().equals("") || !resPwText.getText().equals("")) {
 						restaurantId = Integer.parseInt(resIdText.getText());
-						if ((restaurantDto = restaurantDao.authenticateOwnerId(restaurantId)) != null
+						if ((restaurantDTO = restaurantDao.authenticateOwnerId(restaurantId)) != null
 								&& resPwText.getText().equals("1111")) {
 							JOptionPane.showMessageDialog(null, "로그인 되었습니다.", "성공", JOptionPane.WARNING_MESSAGE);
 							setVisible(false);
-						} else if ((restaurantDto = restaurantDao.authenticateOwnerId(restaurantId)) == null) {
+							new RestaurantMainMenuFrame(restaurantDTO);
+						} else if ((restaurantDTO = restaurantDao.authenticateOwnerId(restaurantId)) == null) {
 							JOptionPane.showMessageDialog(null, "아이디가 올바르지 않습니다.", "성공", JOptionPane.WARNING_MESSAGE);
 						} else {
 							JOptionPane.showMessageDialog(null, "비밀번호가 올바르지 않습니다.", "성공", JOptionPane.WARNING_MESSAGE);
