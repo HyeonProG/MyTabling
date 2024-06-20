@@ -52,7 +52,6 @@ public class UserDAOImpl implements UserDAO {
 	public CustomerDTO authenticatePhone(String phone) {
 		CustomerDTO dto;
 		String query = "  SELECT * FROM customer WHERE phone = ?  ";
-		boolean result = false;
 
 		try (Connection conn = DBConnectionManager.getInstance().getConnection()) {
 			PreparedStatement pstmt = conn.prepareStatement(query);

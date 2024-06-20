@@ -5,13 +5,18 @@ import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.sql.SQLException;
 
 import javax.swing.ImageIcon;
-import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+
+import ver01.RestaurantDAO;
+import ver01.RestaurantDAOohj;
+import ver01.RestaurantDTO;
 
 public class RestaurantLoginFrame extends JFrame {
 
@@ -20,6 +25,11 @@ public class RestaurantLoginFrame extends JFrame {
 	private boolean loginCheck;
 	private JLabel backBtn;
 	private BackgroundPanel backgroundPanel;
+	
+	// TODO - 임시로 클래스 설계
+	private RestaurantDAOohj resdao;
+	private RestaurantDTO resdto;
+	private int restaurantId;
 
 	public RestaurantLoginFrame() {
 		initData();
@@ -32,6 +42,9 @@ public class RestaurantLoginFrame extends JFrame {
 		loginBtn = new JLabel(new ImageIcon("img/loginBtn.png"));
 		nameText = new JTextField();
 		backBtn = new JLabel(new ImageIcon("img/quitBtn.png"));
+	
+		resdao = new RestaurantDAOohj();
+		resdto = new RestaurantDTO();
 	}
 
 	private void setInitLayout() {
@@ -64,6 +77,23 @@ public class RestaurantLoginFrame extends JFrame {
 	}
 
 	private void initListener() {
+		loginBtn.addMouseListener(new MouseAdapter() {
+			
+			@Override
+			public void mousePressed(MouseEvent e) {
+				
+				if (!nameText.getText().equals("")) {
+					restaurantId = Integer.parseInt(nameText.getText());
+					if((resdto = resdao.authenticateOwnerId(restaurantId)) != null) {
+						JOptionPane.showMessageDialog(null, "로그인 되었습니다.", "성공", JOptionPane.WARNING_MESSAGE);
+						setVisible(false);
+					}
+				}
+				
+			}
+			
+		});
+		
 		backBtn.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mousePressed(MouseEvent e) {
@@ -71,6 +101,7 @@ public class RestaurantLoginFrame extends JFrame {
 				setVisible(false);
 			}
 		});
+
 	}
 
 	private class BackgroundPanel extends JPanel {
