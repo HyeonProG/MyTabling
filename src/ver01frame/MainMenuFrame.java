@@ -78,6 +78,13 @@ public class MainMenuFrame extends JFrame {
 				setVisible(false);
 			}
 		});
+		locationBtn.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mousePressed(MouseEvent e) {
+				new LocationFrame();
+				setVisible(false);
+			}
+		});
 	}
 	
 	private class BackgroundPanel extends JPanel {

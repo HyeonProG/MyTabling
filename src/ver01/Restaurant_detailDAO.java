@@ -7,8 +7,8 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class restaurant_detailDAO {
-	private static final restaurant_detailDAO detailDAO = new restaurant_detailDAO();
+public class Restaurant_detailDAO {
+	private static final Restaurant_detailDAO detailDAO = new Restaurant_detailDAO();
 	
 	// 식당 정보 디테일 조회 기능(식당ID로)
 	public List<MenuDTO> getMenuById(int restaurtantId) throws SQLException {

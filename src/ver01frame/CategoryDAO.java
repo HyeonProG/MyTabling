@@ -6,19 +6,17 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import ver01.DBConnectionManager;
-import ver01.LocationDTO;
 
-public class LocationDAO {
-
-	public String getLocationName(int locationId) throws SQLException {
+public class CategoryDAO {
+	public String getCategoryName(int categoryId) throws SQLException {
 		String name = null;
-		String query = " SELECT * FROM location WHERE location_id = ? ";
+		String query = " SELECT * FROM category WHERE category_id = ? ";
 		try (Connection conn = DBConnectionManager.getInstance().getConnection()) {
 			PreparedStatement pstmt = conn.prepareStatement(query);
-			pstmt.setInt(1, locationId);
+			pstmt.setInt(1, categoryId);
 			try (ResultSet rs = pstmt.executeQuery()) {
 				if (rs.next()) {
-					name = rs.getString("location_name");
+					name = rs.getString("category_name");
 				}
 			}
 		}
