@@ -5,7 +5,6 @@ import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.sql.SQLException;
 
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
@@ -16,7 +15,6 @@ import javax.swing.JTextField;
 
 import tabling.dao.RestaurantDAO;
 import tabling.dto.RestaurantDTO;
-import ver01.RestaurantDAOohj;
 
 public class RestaurantLoginFrame extends JFrame {
 
@@ -27,8 +25,8 @@ public class RestaurantLoginFrame extends JFrame {
 	private BackgroundPanel backgroundPanel;
 	
 	// TODO - 임시로 클래스 설계
-	private RestaurantDAOohj resdao;
-	private RestaurantDTO resdto;
+	private RestaurantDAO restaurantDao;
+	private RestaurantDTO restaurantDto;
 	private int restaurantId;
 
 	public RestaurantLoginFrame() {
@@ -43,8 +41,8 @@ public class RestaurantLoginFrame extends JFrame {
 		nameText = new JTextField();
 		backBtn = new JLabel(new ImageIcon("img/quitBtn.png"));
 	
-		resdao = new RestaurantDAOohj();
-		resdto = new RestaurantDTO();
+		restaurantDao = new RestaurantDAO();
+		restaurantDto = new RestaurantDTO();
 	}
 
 	private void setInitLayout() {
@@ -84,7 +82,7 @@ public class RestaurantLoginFrame extends JFrame {
 				
 				if (!nameText.getText().equals("")) {
 					restaurantId = Integer.parseInt(nameText.getText());
-					if((resdto = resdao.authenticateOwnerId(restaurantId)) != null) {
+					if((restaurantDto = restaurantDao.authenticateOwnerId(restaurantId)) != null) {
 						JOptionPane.showMessageDialog(null, "로그인 되었습니다.", "성공", JOptionPane.WARNING_MESSAGE);
 						setVisible(false);
 					}
