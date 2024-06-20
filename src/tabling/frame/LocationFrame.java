@@ -1,6 +1,7 @@
 package tabling.frame;
 
 
+import java.awt.Frame;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
@@ -44,10 +45,12 @@ public class LocationFrame extends JFrame implements MouseListener {
 	
 	private JButton back;
 	
+	
 	public LocationFrame() {
 		initData();
 		setInitLayout();
 		addEventListener();
+		
 	}
 	
 	private void initData() {
@@ -373,7 +376,6 @@ public class LocationFrame extends JFrame implements MouseListener {
 					e1.printStackTrace();
 				}
 			}
-		
 		
 	} // end of mousePressed
 

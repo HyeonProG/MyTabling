@@ -12,6 +12,8 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 import tabling.dto.CustomerDTO;
+import tabling.dto.ReservationDTO;
+import tabling.dto.RestaurantDTO;
 
 public class CustomerMainMenuFrame extends JFrame {
 
