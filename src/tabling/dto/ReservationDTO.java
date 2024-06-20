@@ -12,10 +12,11 @@ import lombok.ToString;
 @Builder
 @ToString
 public class ReservationDTO {
-
+	
 	private int reservationId;
 	private String reservationState;
 	private String reservationTime;
 	private int customerId;
 	private int restaurantId;
+	
 }

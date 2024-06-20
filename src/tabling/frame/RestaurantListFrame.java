@@ -1,11 +1,13 @@
 package tabling.frame;
 
-
 import java.awt.Font;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Vector;
 
@@ -16,16 +18,20 @@ import javax.swing.JLabel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableRowSorter;
 
 import tabling.dao.CategoryDAO;
+import tabling.dao.CustomerDAO;
 import tabling.dao.LocationDAO;
+import tabling.dao.MenuDAO;
 import tabling.dao.RestaurantDAO;
+import tabling.dto.CustomerDTO;
 import tabling.dto.RestaurantDTO;
 import tabling.util.Time;
-import ver01.Restaurant_detailDAO;
 
 public class RestaurantListFrame extends JFrame {
-	
+
 	private JTable table;
 	private JScrollPane scroll;
 	private JComboBox<String> filter;
@@ -35,20 +41,37 @@ public class RestaurantListFrame extends JFrame {
 	private JButton locationBtn;
 	private LocationDAO locationDAO;
 	private CategoryDAO categoryDAO;
-	
+	private RestaurantDAO restaurantDAO;
+	private CustomerDTO customerDTO;
+	private int categoryId;
+	private int locationId;
+	private int type;
+	public static final int CATEGORY = 0;
+	public static final int LOCATION = 1;
+
+	private final String RESET = "초기화";
 	private final String GANADA_UP = "가나다순";
 	private final String GANADA_DOWN = "가나다역순";
 	private final String RATING_UP = "평점역순";
 	private final String RATING_DOWN = "평점순";
 	private final String OPEN = "영업중";
-	
-	Time currentTime;
-	List<RestaurantDTO> restaurantList = new ArrayList<>();
-	Vector<String> head = new Vector<>();
-	Vector<Vector<String>> contents = new Vector<>();
-	
-	public RestaurantListFrame(List<RestaurantDTO> restaurantList) {
+
+	private Time currentTime;
+	private List<RestaurantDTO> restaurantList = new ArrayList<>();
+	private List<RestaurantDTO> defaultList = new ArrayList<>();
+
+	private String[] head = {"식당명", "카테고리", "지역", "영업중", "평점"};
+	private String[][] contents;
+	private TableRowSorter<DefaultTableModel> sorter;
+
+	public RestaurantListFrame(List<RestaurantDTO> restaurantList, CustomerDTO customerDTO, int type) {
+		this.customerDTO = customerDTO;
 		this.restaurantList = restaurantList;
+		for (RestaurantDTO restaurantDTO : restaurantList) {
+			defaultList.add(restaurantDTO);
+		}
+		this.type = type;
+		typeSet();
 		initData();
 		setInitLayout();
 		addEventListener();
@@ -57,16 +80,132 @@ public class RestaurantListFrame extends JFrame {
 	private void initData() {
 		locationDAO = new LocationDAO();
 		categoryDAO = new CategoryDAO();
+		restaurantDAO = new RestaurantDAO();
 		// TODO 임시 시간 설정
 		currentTime = new Time(19, 30, "월요일");
-		head.add("식당명");
-		head.add("카테고리");
-		head.add("지역");
-		head.add("영업중");
-		head.add("평점");
 		// 테이블에 담는 과정
+		tableSet();
+		filter = new JComboBox<String>();
+		filterBtn = new JButton("적용");
+		homeBtn = new JButton("홈");
+		categoryBtn = new JButton("카테고리");
+		locationBtn = new JButton("지역");
+	}
+
+	private void setInitLayout() {
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setTitle(" 리스트 화면 " + customerDTO.getCustomerName() + "님");
+		setSize(500, 700);
+		setLayout(null); // 좌표값으로 배치
+		setResizable(false); // 프레임 조절 불가
+		setLocationRelativeTo(null); // JFrame을 모니터 가운데 자동 배치
+
+		add(filter);
+		filter.setLocation(230, 120);
+		filter.setSize(150, 30);
+		filter.setFont(new Font("Noto Sans KR", Font.BOLD, 15));
+
+		filter.addItem(RESET);
+		filter.addItem(GANADA_UP);
+		filter.addItem(GANADA_DOWN);
+		filter.addItem(RATING_DOWN);
+		filter.addItem(RATING_UP);
+		filter.addItem(OPEN);
+
+		add(filterBtn);
+		filterBtn.setLocation(400, 120);
+		filterBtn.setSize(70, 30);
+		filterBtn.setFont(new Font("Noto Sans KR", Font.BOLD, 15));
+
+		add(homeBtn);
+
+		add(categoryBtn);
+
+		add(locationBtn);
+
+		setVisible(true);
+	}
+
+	private void addEventListener() {
+		table.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				// 더블 클릭시
+				if (e.getClickCount() == 2) {
+					int rowNum = table.getSelectedRow();
+					MenuDAO dao = new MenuDAO();
+					RestaurantDTO dto = restaurantList.get(rowNum);
+					try {
+						new RestaurantFrame(dto, dao.getMenuById(dto.getCategoryId()));
+					} catch (SQLException e1) {
+						e1.printStackTrace();
+					}
+				}
+			}
+		});
+		filterBtn.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				System.out.println(filter.getSelectedItem().toString());
+				switch (filter.getSelectedItem().toString()) {
+				case RESET:
+					break;
+				case GANADA_UP:
+					break;
+				case GANADA_DOWN:
+					break;
+				case RATING_DOWN:
+					Collections.sort(restaurantList);
+					tableSet();
+					break;
+				case RATING_UP:
+					Collections.sort(restaurantList, Collections.reverseOrder());
+					tableSet();
+					break;
+				case OPEN:
+					try {
+						if (type == LOCATION) {
+							restaurantList = restaurantDAO.getRestaurantsByLocationFiltered(locationId, currentTime);
+						} else if (type == CATEGORY) {
+							restaurantList = restaurantDAO.getRestaurantsByCategoryFiltered(categoryId, currentTime);
+						}
+						tableSet();
+					} catch (SQLException e1) {
+						e1.printStackTrace();
+					}
+					break;
+				}
+			}
+		});
+	}
+
+	private void typeSet() {
+		if (!restaurantList.isEmpty()) {
+			switch (type) {
+			case CATEGORY:
+				categoryId = restaurantList.get(0).getCategoryId();
+				break;
+			case LOCATION:
+				locationId = restaurantList.get(0).getLocationId();
+				break;
+			}
+		}
+	}
+
+	private void tableSet() {
+		if (scroll != null) {
+			remove(scroll);
+		}
+		contents = new String[restaurantList.size()][head.length];
+		
 		for (int i = 0; i < restaurantList.size(); i++) {
-			contents.add(new Vector<>());
+			String isOpen = null;
+			if (currentTime.isOpen(restaurantList.get(i))) {
+				isOpen = "O";
+			} else {
+				isOpen = "X";
+			}
 			String restaurantName = restaurantList.get(i).getRestaurantName();
 			int categoryId = restaurantList.get(i).getCategoryId();
 			double rating = restaurantList.get(i).getRating();
@@ -79,57 +218,26 @@ public class RestaurantListFrame extends JFrame {
 			} catch (SQLException e) {
 				e.printStackTrace();
 			}
-//			String closeTime = restaurantList.get(i).getCloseTime().substring(0, 5);
-//			String openTime = restaurantList.get(i).getOpenTime().substring(0, 5);
-			String isOpen = null;
-			if (currentTime.isOpen(restaurantList.get(i))) {
-				isOpen = "O";
-			} else {
-				isOpen = "X";
-			}
-			contents.get(i).add(restaurantName);
-			contents.get(i).add(categoryName);
-			contents.get(i).add(locationName);
-			contents.get(i).add(isOpen);
-			contents.get(i).add(String.valueOf(rating));
+
+			contents[i][0] = restaurantName;
+			contents[i][1] = categoryName;
+			contents[i][2] = locationName;
+			contents[i][3] = isOpen;
+			contents[i][4] = String.valueOf(rating);
 		}
-		table = new JTable(contents, head) {
+		DefaultTableModel tableModel = new DefaultTableModel(contents, head);
+		table = new JTable(tableModel) {
 			@Override
 			public boolean isCellEditable(int row, int column) {
 				return false;
 			}
 		};
+		sorter = new TableRowSorter<>(tableModel);
+		table.setRowSorter(sorter);
 		scroll = new JScrollPane(table);
-		filter = new JComboBox<String>();
-		filterBtn = new JButton("적용");
-		homeBtn = new JButton("홈");
-		categoryBtn = new JButton("카테고리");
-		locationBtn = new JButton("지역");
-	}
-
-	private void setInitLayout() {
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setTitle(" 리스트 화면 ");
-		setSize(500, 700);
-		setLayout(null); // 좌표값으로 배치
-		setResizable(false); // 프레임 조절 불가
-		setLocationRelativeTo(null); // JFrame을 모니터 가운데 자동 배치
-		
-		add(filter);
-		filter.setLocation(230, 120);
-		filter.setSize(150, 30);
-		filter.setFont(new Font("Noto Sans KR", Font.BOLD, 15));
-		
-		add(filterBtn);
-		filterBtn.setLocation(400, 120);
-		filterBtn.setSize(70, 30);
-		filterBtn.setFont(new Font("Noto Sans KR", Font.BOLD, 15));
-		
 		add(scroll);
 		scroll.setSize(450, 450);
 		scroll.setLocation(20, 170);
-		
-		add(homeBtn);
 		
 		DefaultTableCellRenderer centerAlign = new DefaultTableCellRenderer();
 		centerAlign.setHorizontalAlignment(JLabel.CENTER);
@@ -145,31 +253,14 @@ public class RestaurantListFrame extends JFrame {
 		table.getColumn("영업중").setCellRenderer(centerAlign);
 		table.getColumn("평점").setPreferredWidth(30);
 		table.getColumn("평점").setCellRenderer(centerAlign);
-		
-		setVisible(true);
+		repaint();
 	}
-
-	private void addEventListener() {
-		table.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent e) {
-				// 더블 클릭시
-				if (e.getClickCount() == 2) {
-					int rowNum = table.getSelectedRow();
-					Restaurant_detailDAO dao = new Restaurant_detailDAO();
-					RestaurantDTO dto = restaurantList.get(rowNum);
-					new RestaurantFrame(dto, dao.getMenuById(dto.getCategoryId()));
-				}
-			}
-		});
-	}
-	
 
 	// 테스트 코드
 	public static void main(String[] args) {
 		RestaurantDAO dao = new RestaurantDAO();
 		try {
-			new RestaurantListFrame(dao.getAllRestaurants());
+			new RestaurantListFrame(dao.getRestaurantsByLocation(7), new CustomerDAO().authenticatePhone("01067871703"), LOCATION);
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
