@@ -134,7 +134,6 @@ public class RestaurantFrame extends JFrame {
 		restaurantDetail.setBackground(Color.WHITE);
 		add(restaurantDetail);
 		
-
 	}
 
 	private void addEventListener() {

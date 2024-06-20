@@ -43,7 +43,6 @@ public class SignInFrame extends JFrame {
 		setTitle("회원가입");
 		setSize(400, 600);
 		setResizable(false);
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
 		Bg = new JLabel(new ImageIcon("img/signInBg.jpg"));
 
