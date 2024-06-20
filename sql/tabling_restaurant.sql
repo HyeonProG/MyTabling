@@ -191,11 +191,21 @@ set rest_day =
         end;
 
 update restaurant
+set open_time = '16:30:00'
+where restaurant_name = '개코포차';
+update restaurant
+set open_time = '16:00:00'
+where restaurant_name = '딱 한잔';
+update restaurant
+set open_time = '16:00:00'
+where restaurant_name = '블랙맥스';
+
+update restaurant
 set close_time = '03:00:00'
-where restaurant_id = 99;
+where restaurant_name = '개코포차';
 update restaurant
 set close_time = '02:00:00'
-where restaurant_id = 100;
+where restaurant_name = '딱 한잔';
 update restaurant
 set close_time = '02:30:00'
-where restaurant_id = 101;
+where restaurant_name = '블랙맥스';
