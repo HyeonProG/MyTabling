@@ -2,11 +2,14 @@ package tabling.frame;
 
 import java.awt.Color;
 import java.awt.Font;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
 
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -15,31 +18,43 @@ import javax.swing.JTable;
 import javax.swing.JTextArea;
 import javax.swing.table.DefaultTableCellRenderer;
 
+import tabling.dao.LikeDAO;
 import tabling.dao.MenuDAO;
 import tabling.dao.RestaurantDAO;
+import tabling.dto.CustomerDTO;
+import tabling.dto.LikeDTO;
 import tabling.dto.MenuDTO;
 import tabling.dto.RestaurantDTO;
-import ver01.restaurant_detailDAO;
 
 public class RestaurantFrame extends JFrame {
-	
 	RestaurantDTO restaurantDTO;
 	List<MenuDTO> menuDTO = new ArrayList<>();
 	MenuDAO menuDAO;
+	CustomerDTO customerDTO;
+	
+	private JLabel imageLabel;
+	private JLabel ratingLabel;
+	private JLabel likeLabel;
+	private ImageIcon likeImg;
+	private ImageIcon unlikeImg;
+	private boolean checkLike;
 	
 	private JTable table;
-	private JScrollPane scroll;
+	private JScrollPane tableScroll;
 	Vector<String> head = new Vector<>();
 	Vector<Vector<String>> contents = new Vector<>();
-	
-	private JButton backBtn;
+
 	private JButton reservationBtn;
-	
+
 	private JLabel restaurantNameLabel;
 	private JTextArea restaurantDetail;
 	private JScrollPane detailScroll;
 	
+	private LikeDTO likeDTO;
+	private LikeDAO likeDAO;
+
 	public RestaurantFrame(RestaurantDTO restaurantDTO, List<MenuDTO> menuDTO) {
+		// this.customerDTO = customerDTO;
 		this.restaurantDTO = restaurantDTO;
 		this.menuDTO = menuDTO;
 		initData();
@@ -50,30 +65,37 @@ public class RestaurantFrame extends JFrame {
 	private void initData() {
 		setTitle("음식점 상세페이지");
 		setSize(500, 700);
-		setResizable(true);
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setResizable(false);
 		setLocationRelativeTo(null);
 		setLayout(null);
 		
-		detailScroll = new JScrollPane();
+		likeDAO = new LikeDAO();
+		// TODO 커스터머 id 변경 예정
+		try {
+			checkLike = likeDAO.readLike(1, restaurantDTO.getRestaurantId());
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 		
+		imageLabel = new JLabel(new ImageIcon("img/waitingimage.jpg"));
+
 		restaurantNameLabel = new JLabel();
 		restaurantNameLabel.setText(restaurantDTO.getRestaurantName());
 		restaurantDetail = new JTextArea();
 		restaurantDetail.setLineWrap(true);
 		restaurantDetail.append("주소 : " + restaurantDTO.getAddress() + "\n");
 		restaurantDetail.append("가게 번호 : " + restaurantDTO.getPhone() + "\n");
-		restaurantDetail.append("가게 오픈 시간 : " + restaurantDTO.getOpenTime() + " ~ " + restaurantDTO.getCloseTime() + "\n");
+		restaurantDetail
+				.append("가게 오픈 시간 : " + restaurantDTO.getOpenTime() + " ~ " + restaurantDTO.getCloseTime() + "\n");
 		restaurantDetail.append("가게 휴무일 : " + restaurantDTO.getRestDay() + "\n");
 		restaurantDetail.append("가게 위치 : " + restaurantDTO.getAddress() + "\n");
 		restaurantDetail.append("상세 설명 \n");
 		restaurantDetail.append(restaurantDTO.getContent() + "\n");
 
-		
 		menuDAO = new MenuDAO();
-		
+
 		head.add("메뉴 이름");
-		head.add("가격");		
+		head.add("가격");
 		for (int i = 0; i < menuDTO.size(); i++) {
 			contents.add(new Vector<>());
 			int price = menuDTO.get(i).getPrice();
@@ -83,36 +105,51 @@ public class RestaurantFrame extends JFrame {
 				menuName = menuDAO.getMenuName(foodId);
 			} catch (SQLException e) {
 				e.printStackTrace();
-			}			
+			}
 			contents.get(i).add(menuName);
 			contents.get(i).add(String.valueOf(price));
 		}
-		
+
 		table = new JTable(contents, head) {
 			@Override
 			public boolean isCellEditable(int row, int column) {
 				return false;
 			}
 		};
-		
-		backBtn = new JButton("뒤로가기");
+
 		reservationBtn = new JButton("예약하기");
-		
-		scroll = new JScrollPane(table);
+
+		tableScroll = new JScrollPane(table);
 		setVisible(true);
+
+		detailScroll = new JScrollPane(restaurantDetail);
+		
+		ratingLabel = new JLabel();
+		ratingLabel.setText("평점 : " + restaurantDTO.getRating());
+		ratingLabel.setFont(new Font("Noto Sans KR", Font.BOLD, 15));
+		
+		likeImg = new ImageIcon("img/like.png");
+		unlikeImg = new ImageIcon("img/unlike.png");
+		if (checkLike == false) {
+			likeLabel = new JLabel(unlikeImg);			
+		} else {
+			likeLabel = new JLabel(likeImg);
+		}
+
 	}
 
 	private void setInitLayout() {
+		likeLabel.setBounds(60, 110, 50, 50);
+		add(likeLabel);
+		likeLabel.setVisible(true);
+		
 		reservationBtn.setBounds(320, 50, 90, 30);
 		add(reservationBtn);
-		
-		backBtn.setBounds(320, 550, 90, 30);
-		add(backBtn);
-		
-		add(scroll);
-		scroll.setSize(350, 148);
-		scroll.setLocation(65, 380);
-		
+
+		add(tableScroll);
+		tableScroll.setSize(350, 148);
+		tableScroll.setLocation(65, 400);
+
 		table.setFont(new Font("Noto Sans KR", Font.BOLD, 15));
 		table.setRowHeight(25);
 		table.getTableHeader().setReorderingAllowed(false); // 컬럼 이동 불가
@@ -123,29 +160,72 @@ public class RestaurantFrame extends JFrame {
 		table.getColumn("가격").setCellRenderer(centerAlign);
 		table.getColumn("메뉴 이름").setPreferredWidth(70);
 		table.getColumn("메뉴 이름").setCellRenderer(centerAlign);
-		
+
 		restaurantNameLabel.setBounds(65, 45, 150, 50);
+		restaurantNameLabel.setFont(new Font("Noto Sans KR", Font.BOLD, 15));
 		restaurantNameLabel.setOpaque(true);
 		restaurantNameLabel.setBackground(Color.WHITE);
 		add(restaurantNameLabel);
-		
+
+		add(detailScroll);
+		detailScroll.setSize(350, 150);
+		detailScroll.setLocation(65, 250);
+
+		restaurantDetail.setFont(new Font("Noto Sans KR", Font.BOLD, 15));
 		restaurantDetail.setBounds(65, 250, 350, 150);
 		restaurantDetail.setOpaque(true);
 		restaurantDetail.setBackground(Color.WHITE);
-		add(restaurantDetail);
 		
+
+		imageLabel.setBounds(250, 100, 170, 150);
+		add(imageLabel);
+		
+		ratingLabel.setBounds(65, 170, 150, 50);
+		ratingLabel.setBackground(Color.WHITE);
+		ratingLabel.setOpaque(true);
+		add(ratingLabel);
+
 	}
 
 	private void addEventListener() {
+		reservationBtn.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mousePressed(MouseEvent e) {
+				new ReservationFrame(restaurantDTO);
+			}
+		});
 		
+		likeLabel.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mousePressed(MouseEvent e) {
+				if (checkLike == false) {
+					try {
+						likeDAO.getLike(1, restaurantDTO.getRestaurantId());
+					} catch (SQLException e1) {
+						e1.printStackTrace();
+					}
+					likeLabel.setIcon(likeImg);
+					checkLike = true;
+				} else {
+					try {
+						likeDAO.getUnlike(1, restaurantDTO.getRestaurantId());
+					} catch (SQLException e1) {
+						e1.printStackTrace();
+					}
+					likeLabel.setIcon(unlikeImg);
+					checkLike = false;
+				}
+			}
+		});		
+
 	}
-	
+
 	public static void main(String[] args) {
 		try {
-			new RestaurantFrame(new RestaurantDAO().getAllRestaurants().get(93), new restaurant_detailDAO().getMenuById(93));
+			new RestaurantFrame(new RestaurantDAO().getAllRestaurants().get(93), new MenuDAO().getMenuById(93));
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 	}
-	
+
 }
