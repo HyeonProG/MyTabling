@@ -98,7 +98,7 @@ public class CustomerMainMenuFrame extends JFrame {
 			@Override
 			public void mousePressed(MouseEvent e) {
 				
-				new EditCustomerInfo(customerDTO);
+				new EditCustomerInfoFrame1(customerDTO);
 				setVisible(false);
 			}
 		});
