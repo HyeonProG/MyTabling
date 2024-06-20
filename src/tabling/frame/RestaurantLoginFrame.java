@@ -26,6 +26,10 @@ public class RestaurantLoginFrame extends JFrame {
 	private boolean loginCheck;
 	private RestaurantDAO restaurantDao;
 	private RestaurantDTO restaurantDto;
+	
+	// TODO - 임시로 클래스 설계
+	// private RestaurantDAOohj resdao;
+	private RestaurantDTO resdto;
 	private int restaurantId;
 
 	public RestaurantLoginFrame() {
