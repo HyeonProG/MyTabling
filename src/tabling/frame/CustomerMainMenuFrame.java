@@ -89,7 +89,7 @@ public class CustomerMainMenuFrame extends JFrame {
 		locationBtn.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mousePressed(MouseEvent e) {
-				new LocationFrame();
+				new LocationFrame(customerDTO);
 				setVisible(false);
 			}
 		});

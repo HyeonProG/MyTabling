@@ -7,7 +7,6 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
 import javax.swing.ImageIcon;
-import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -61,9 +60,8 @@ public class LoginSelectFrame extends JFrame {
 		customerBtn.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mousePressed(MouseEvent e) {
-//				new CustomerLoginFrame();
 				new CustomerLoginFrame(mainLoginFrame).setVisible(true);
-				;
+				setVisible(false);
 			}
 		});
 
