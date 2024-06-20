@@ -4,6 +4,7 @@ import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.List;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -78,9 +79,12 @@ public class CustomerMainMenuFrame extends JFrame {
 		reservationBtn.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mousePressed(MouseEvent e) {
-
-				new CustomerReservationStatusFrame(customerDTO);
-				setVisible(false);
+				ReservationDTO dao = new ReservationDTO();
+				if(customerDTO.getCustomerId()==dao.getCustomerId()) {
+					new CustomerReservationStatusFrame(customerDTO);
+					setVisible(false);
+				}
+				
 
 			}
 		});

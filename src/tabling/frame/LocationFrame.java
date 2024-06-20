@@ -1,5 +1,7 @@
 package tabling.frame;
 
+
+import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.sql.SQLException;
@@ -13,10 +15,13 @@ import javax.swing.JLabel;
 
 import tabling.dao.RestaurantDAO;
 import tabling.dto.RestaurantDTO;
+import tabling.util.Define;
 
 public class LocationFrame extends JFrame implements MouseListener {
 	
 	private JLabel background;
+	
+	private JButton[] locationbutton;
 	
 	private JButton Gangseogu; // 강서구 Gangseo-gu
 	private JButton Sahagu; // 사하구 Saha-gu
@@ -46,8 +51,10 @@ public class LocationFrame extends JFrame implements MouseListener {
 	}
 	
 	private void initData() {
+		locationbutton = new JButton[17]; // 0 ~ 17 배열
 		setTitle("지역 찾기");
 		setSize(500, 700);
+		setLocationRelativeTo(null);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
 		Icon icon = new ImageIcon("img/location.png");
@@ -56,109 +63,110 @@ public class LocationFrame extends JFrame implements MouseListener {
 		background.setSize(413, 355);
 		background.setLocation(35,50);
 		
-		Gangseogu = new JButton(); // 강서구
-		Gangseogu.setBounds(40,220, 70, 50);
-		Gangseogu.setBorderPainted(false); 
-		Gangseogu.setContentAreaFilled(false); 
-		Gangseogu.setFocusPainted(false);
+		locationbutton[Define.LOCATION_ALL] = new JButton("전체 검색"); // 지역구 모두 검색 (전체 검색)
+		locationbutton[Define.LOCATION_ALL].setBounds(190, 460, 120, 40); // 190, 460, 120, 40
 		
-		Sahagu = new JButton(); // 사하구
-		Sahagu.setBounds(110, 300, 50, 50);
-		Sahagu.setBorderPainted(false); 
-		Sahagu.setContentAreaFilled(false); 
-		Sahagu.setFocusPainted(false);
+		locationbutton[Define.LOCATION_GANGSEOGU] = new JButton(); // 강서구
+		locationbutton[Define.LOCATION_GANGSEOGU].setBounds(40,220, 70, 50);
+		locationbutton[Define.LOCATION_GANGSEOGU].setBorderPainted(false); 
+		locationbutton[Define.LOCATION_GANGSEOGU].setContentAreaFilled(false); 
+		locationbutton[Define.LOCATION_GANGSEOGU].setFocusPainted(false);
 		
-		Sasanggu = new JButton(); // 사상구
-		Sasanggu.setBounds(125, 210, 40, 40);
-		Sasanggu.setBorderPainted(false); 
-		Sasanggu.setContentAreaFilled(false); 
-		Sasanggu.setFocusPainted(false);
+		locationbutton[Define.LOCATION_SAHAGU] = new JButton(); // 사하구
+		locationbutton[Define.LOCATION_SAHAGU].setBounds(110, 300, 50, 50);
+		locationbutton[Define.LOCATION_SAHAGU].setBorderPainted(false); 
+		locationbutton[Define.LOCATION_SAHAGU].setContentAreaFilled(false); 
+		locationbutton[Define.LOCATION_SAHAGU].setFocusPainted(false);
 		
-		Bukgu = new JButton(); // 북구
-		Bukgu.setBounds(160, 120, 40, 50);
-		Bukgu.setBorderPainted(false); 
-		Bukgu.setContentAreaFilled(false); 
-		Bukgu.setFocusPainted(false);
+		locationbutton[Define.LOCATION_SASANGGU] = new JButton(); // 사상구
+		locationbutton[Define.LOCATION_SASANGGU].setBounds(125, 210, 40, 40);
+		locationbutton[Define.LOCATION_SASANGGU].setBorderPainted(false); 
+		locationbutton[Define.LOCATION_SASANGGU].setContentAreaFilled(false); 
+		locationbutton[Define.LOCATION_SASANGGU].setFocusPainted(false);
 		
-		Seogu = new JButton(); // 서구
-		Seogu.setBounds(165, 270, 20, 20);
-		Seogu.setBorderPainted(false); 
-		Seogu.setContentAreaFilled(false); 
-		Seogu.setFocusPainted(false);
+		locationbutton[Define.LOCATION_BUKGU] = new JButton(); // 북구
+		locationbutton[Define.LOCATION_BUKGU].setBounds(160, 120, 40, 50);
+		locationbutton[Define.LOCATION_BUKGU].setBorderPainted(false); 
+		locationbutton[Define.LOCATION_BUKGU].setContentAreaFilled(false); 
+		locationbutton[Define.LOCATION_BUKGU].setFocusPainted(false);
 		
-		Junggu = new JButton(); // 중구
-		Junggu.setBounds(185, 300, 20, 20);
-		Junggu.setBorderPainted(false); 
-		Junggu.setContentAreaFilled(false); 
-		Junggu.setFocusPainted(false);
+		locationbutton[Define.LOCATION_SEOGU] = new JButton(); // 서구
+		locationbutton[Define.LOCATION_SEOGU].setBounds(165, 270, 20, 20);
+		locationbutton[Define.LOCATION_SEOGU].setBorderPainted(false); 
+		locationbutton[Define.LOCATION_SEOGU].setContentAreaFilled(false); 
+		locationbutton[Define.LOCATION_SEOGU].setFocusPainted(false);
 		
-		Donggu = new JButton(); // 동구
-		Donggu.setBounds(195, 260, 23, 23);
-		Donggu.setBorderPainted(false); 
-		Donggu.setContentAreaFilled(false); 
-		Donggu.setFocusPainted(false);
+		locationbutton[Define.LOCATION_JUNGGU] = new JButton(); // 중구
+		locationbutton[Define.LOCATION_JUNGGU].setBounds(185, 300, 20, 20);
+		locationbutton[Define.LOCATION_JUNGGU].setBorderPainted(false); 
+		locationbutton[Define.LOCATION_JUNGGU].setContentAreaFilled(false); 
+		locationbutton[Define.LOCATION_JUNGGU].setFocusPainted(false);
 		
-		Busangingu = new JButton(); // 부산진구
-		Busangingu.setBounds(180, 210, 40, 40);
-		Busangingu.setBorderPainted(false); 
-		Busangingu.setContentAreaFilled(false); 
-		Busangingu.setFocusPainted(false);
+		locationbutton[Define.LOCATION_DONGGU] = new JButton(); // 동구
+		locationbutton[Define.LOCATION_DONGGU].setBounds(195, 260, 23, 23);
+		locationbutton[Define.LOCATION_DONGGU].setBorderPainted(false); 
+		locationbutton[Define.LOCATION_DONGGU].setContentAreaFilled(false); 
+		locationbutton[Define.LOCATION_DONGGU].setFocusPainted(false);
 		
-		Yeongdogu = new JButton(); // 영도구
-		Yeongdogu.setBounds(210, 320, 20, 20);
-		Yeongdogu.setBorderPainted(false); 
-		Yeongdogu.setContentAreaFilled(false); 
-		Yeongdogu.setFocusPainted(false);
+		locationbutton[Define.LOCATION_BUSANSGINGU] = new JButton(); // 부산진구
+		locationbutton[Define.LOCATION_BUSANSGINGU].setBounds(180, 210, 40, 40);
+		locationbutton[Define.LOCATION_BUSANSGINGU].setBorderPainted(false); 
+		locationbutton[Define.LOCATION_BUSANSGINGU].setContentAreaFilled(false); 
+		locationbutton[Define.LOCATION_BUSANSGINGU].setFocusPainted(false);
 		
-		Namgu = new JButton(); // 남구
-		Namgu.setBounds(230, 260, 23, 23);
-		Namgu.setBorderPainted(false); 
-		Namgu.setContentAreaFilled(false); 
-		Namgu.setFocusPainted(false);
+		locationbutton[Define.LOCATION_YEONGDOGU] = new JButton(); // 영도구
+		locationbutton[Define.LOCATION_YEONGDOGU].setBounds(210, 320, 20, 20);
+		locationbutton[Define.LOCATION_YEONGDOGU].setBorderPainted(false); 
+		locationbutton[Define.LOCATION_YEONGDOGU].setContentAreaFilled(false); 
+		locationbutton[Define.LOCATION_YEONGDOGU].setFocusPainted(false);
 		
-		Dongnaegu = new JButton(); // 동래구
-		Dongnaegu.setBounds(210, 160, 30, 30);
-		Dongnaegu.setBorderPainted(false); 
-		Dongnaegu.setContentAreaFilled(false); 
-		Dongnaegu.setFocusPainted(false);
+		locationbutton[Define.LOCATION_NAMGU] = new JButton(); // 남구
+		locationbutton[Define.LOCATION_NAMGU].setBounds(230, 260, 23, 23);
+		locationbutton[Define.LOCATION_NAMGU].setBorderPainted(false); 
+		locationbutton[Define.LOCATION_NAMGU].setContentAreaFilled(false); 
+		locationbutton[Define.LOCATION_NAMGU].setFocusPainted(false);
 		
-		Yeonjegu = new JButton(); // 연제구
-		Yeonjegu.setBounds(220, 190, 25, 20);
-		Yeonjegu.setBorderPainted(false); 
-		Yeonjegu.setContentAreaFilled(false); 
-		Yeonjegu.setFocusPainted(false);
+		locationbutton[Define.LOCATION_DONGNAEGU] = new JButton(); // 동래구
+		locationbutton[Define.LOCATION_DONGNAEGU].setBounds(210, 160, 30, 30);
+		locationbutton[Define.LOCATION_DONGNAEGU].setBorderPainted(false); 
+		locationbutton[Define.LOCATION_DONGNAEGU].setContentAreaFilled(false); 
+		locationbutton[Define.LOCATION_DONGNAEGU].setFocusPainted(false);
 		
-		Suyeonggu = new JButton(); // 수영구
-		Suyeonggu.setBounds(256, 220, 23, 23);
-		Suyeonggu.setBorderPainted(false); 
-		Suyeonggu.setContentAreaFilled(false); 
-		Suyeonggu.setFocusPainted(false);
+		locationbutton[Define.LOCATION_YEONJEGU] = new JButton(); // 연제구
+		locationbutton[Define.LOCATION_YEONJEGU].setBounds(220, 190, 25, 20);
+		locationbutton[Define.LOCATION_YEONJEGU].setBorderPainted(false); 
+		locationbutton[Define.LOCATION_YEONJEGU].setContentAreaFilled(false); 
+		locationbutton[Define.LOCATION_YEONJEGU].setFocusPainted(false);
 		
-		Geumjeonggu = new JButton(); // 금정구
-		Geumjeonggu.setBounds(220, 110, 50, 40);
-		Geumjeonggu.setBorderPainted(false); 
-		Geumjeonggu.setContentAreaFilled(false); 
-		Geumjeonggu.setFocusPainted(false);
+		locationbutton[Define.LOCATION_SUYEONGGU] = new JButton(); // 수영구
+		locationbutton[Define.LOCATION_SUYEONGGU].setBounds(256, 220, 23, 23);
+		locationbutton[Define.LOCATION_SUYEONGGU].setBorderPainted(false); 
+		locationbutton[Define.LOCATION_SUYEONGGU].setContentAreaFilled(false); 
+		locationbutton[Define.LOCATION_SUYEONGGU].setFocusPainted(false);
 		
-		Haeundaegu = new JButton(); // 해운대구
-		Haeundaegu.setBounds(290, 190, 40, 30);
-		Haeundaegu.setBorderPainted(false); 
-		Haeundaegu.setContentAreaFilled(false); 
-		Haeundaegu.setFocusPainted(false);
+		locationbutton[Define.LOCATION_GEUMJEONGGU] = new JButton(); // 금정구
+		locationbutton[Define.LOCATION_GEUMJEONGGU].setBounds(220, 110, 50, 40);
+		locationbutton[Define.LOCATION_GEUMJEONGGU].setBorderPainted(false); 
+		locationbutton[Define.LOCATION_GEUMJEONGGU].setContentAreaFilled(false); 
+		locationbutton[Define.LOCATION_GEUMJEONGGU].setFocusPainted(false);
 		
-		Gijanggun = new JButton(); // 기장군
-		Gijanggun.setBounds(320, 50, 80, 80);
-		Gijanggun.setBorderPainted(false); 
-		Gijanggun.setContentAreaFilled(false); 
-		Gijanggun.setFocusPainted(false);
+		locationbutton[Define.LOCATION_HAEUNDAEGU] = new JButton(); // 해운대구
+		locationbutton[Define.LOCATION_HAEUNDAEGU].setBounds(290, 190, 40, 30);
+		locationbutton[Define.LOCATION_HAEUNDAEGU].setBorderPainted(false); 
+		locationbutton[Define.LOCATION_HAEUNDAEGU].setContentAreaFilled(false); 
+		locationbutton[Define.LOCATION_HAEUNDAEGU].setFocusPainted(false);
 		
-		Allselect = new JButton("전체 검색"); // 지역구 모두 검색 
-		Allselect.setBounds(190, 460, 120, 40);
+		locationbutton[Define.LOCATION_GIJANGGUN] = new JButton(); // 기장군
+		locationbutton[Define.LOCATION_GIJANGGUN].setBounds(320, 50, 80, 80);
+		locationbutton[Define.LOCATION_GIJANGGUN].setBorderPainted(false); 
+		locationbutton[Define.LOCATION_GIJANGGUN].setContentAreaFilled(false); 
+		locationbutton[Define.LOCATION_GIJANGGUN].setFocusPainted(false);
 		
-		back = new  JButton("뒤로 가기");
+	
+		back = new JButton("뒤로 가기");
 		back.setBounds(40, 60, 90, 40);
-				
-	}
+		
+	} // end of initData
 	
 	private void setInitLayout() {
 		
@@ -167,205 +175,195 @@ public class LocationFrame extends JFrame implements MouseListener {
 		setVisible(true);
 		setResizable(false);
 		
-		background.add(Gangseogu);
-		background.add(Sahagu);
-		background.add(Sasanggu);
-		background.add(Bukgu);
-		background.add(Seogu);
-		background.add(Junggu);
-		background.add(Donggu);
-		background.add(Busangingu);
-		background.add(Yeongdogu);
-		background.add(Namgu);
-		background.add(Dongnaegu);
-		background.add(Yeonjegu);
-		background.add(Suyeonggu);
-		background.add(Geumjeonggu);
-		background.add(Haeundaegu);
-		background.add(Gijanggun);
-		
-		add(Allselect);
-		
+		for (int i =1 ; i < 17; i++) {
+			background.add(locationbutton[i]);
+			System.out.println(i);
+		}
+		add(locationbutton[Define.LOCATION_ALL]);
 		add(back);
 		
 	}
 	
 	private void addEventListener() {
 		
-		Gangseogu.addMouseListener(this);
-		Sahagu.addMouseListener(this);
-		Sasanggu.addMouseListener(this);
-		Bukgu.addMouseListener(this);
-		Seogu.addMouseListener(this);
-		Junggu.addMouseListener(this);
-		Donggu.addMouseListener(this);
-		Busangingu.addMouseListener(this);
-		Yeongdogu.addMouseListener(this);
-		Namgu.addMouseListener(this);
-		Dongnaegu.addMouseListener(this);
-		Yeonjegu.addMouseListener(this);
-		Suyeonggu.addMouseListener(this);
-		Geumjeonggu.addMouseListener(this);
-		Haeundaegu.addMouseListener(this);
-		Gijanggun.addMouseListener(this);
 		
-		Allselect.addMouseListener(this);
+		locationbutton[Define.LOCATION_GANGSEOGU].addMouseListener(this);
+		locationbutton[Define.LOCATION_SAHAGU].addMouseListener(this);
+		locationbutton[Define.LOCATION_SASANGGU].addMouseListener(this);
+		locationbutton[Define.LOCATION_BUKGU].addMouseListener(this);
+		locationbutton[Define.LOCATION_SEOGU].addMouseListener(this);
+		locationbutton[Define.LOCATION_JUNGGU].addMouseListener(this);
+		locationbutton[Define.LOCATION_DONGGU].addMouseListener(this);
+		locationbutton[Define.LOCATION_BUSANSGINGU].addMouseListener(this);
+		locationbutton[Define.LOCATION_YEONGDOGU].addMouseListener(this);
+		locationbutton[Define.LOCATION_NAMGU].addMouseListener(this);
+		locationbutton[Define.LOCATION_DONGNAEGU].addMouseListener(this);
+		locationbutton[Define.LOCATION_YEONJEGU].addMouseListener(this);
+		locationbutton[Define.LOCATION_SUYEONGGU].addMouseListener(this);
+		locationbutton[Define.LOCATION_GEUMJEONGGU].addMouseListener(this);
+		locationbutton[Define.LOCATION_HAEUNDAEGU].addMouseListener(this);
+		locationbutton[Define.LOCATION_GIJANGGUN].addMouseListener(this);
+		locationbutton[Define.LOCATION_ALL].addMouseListener(this);
+		
 		back.addMouseListener(this);
 		
-	}
+	}		
 			
 	@Override
 	public void mousePressed(MouseEvent e) {
-		if(e.getSource() == Gangseogu ) {
+		if(e.getSource() == locationbutton[Define.LOCATION_GANGSEOGU] ) {
 			
 			RestaurantDAO dao = new RestaurantDAO();
 			try {
-				List<RestaurantDTO> list = dao.getRestaurantsByLocation(1);
+				List<RestaurantDTO> list = dao.getRestaurantsByLocation(Define.LOCATION_GANGSEOGU);
 				new RestaurantListFrame(list);
 			} catch (SQLException e1) {
 				// TODO: handle exception
 				e1.printStackTrace();
 				
 				} 
-			} else if(e.getSource() == Sahagu ) {
+			} else if(e.getSource() == locationbutton[Define.LOCATION_SAHAGU] ) {
 				
 				RestaurantDAO dao = new RestaurantDAO();
 				try {
-					List<RestaurantDTO> list = dao.getRestaurantsByLocation(2);
+					List<RestaurantDTO> list = dao.getRestaurantsByLocation(Define.LOCATION_SAHAGU);
 					new RestaurantListFrame(list);
 				} catch (Exception e1) {
 					// TODO: handle exception
 					e1.printStackTrace();
 				} 
-			} else if(e.getSource() == Sasanggu ) {
+			} else if(e.getSource() == locationbutton[Define.LOCATION_SASANGGU] ) {
 				
 				RestaurantDAO dao = new RestaurantDAO();
 				try {
-					List<RestaurantDTO> list = dao.getRestaurantsByLocation(3);
+					List<RestaurantDTO> list = dao.getRestaurantsByLocation(Define.LOCATION_SASANGGU);
 					new RestaurantListFrame(list);
 				} catch (Exception e1) {
 					// TODO: handle exception
 					e1.printStackTrace();
 				}
-			} else if(e.getSource() == Bukgu ) {
+			} 
+			else if(e.getSource() == locationbutton[Define.LOCATION_BUKGU] ) {
 				
 				RestaurantDAO dao = new RestaurantDAO();
 				try {
-					List<RestaurantDTO> list = dao.getRestaurantsByLocation(4);
+					List<RestaurantDTO> list = dao.getRestaurantsByLocation(Define.LOCATION_BUKGU);
 					new RestaurantListFrame(list);
 				} catch (SQLException e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				}
-			} else if(e.getSource() == Seogu ) {
+			} else if(e.getSource() == locationbutton[Define.LOCATION_SEOGU] ) {
 				RestaurantDAO dao = new RestaurantDAO();
 				try {
-					List<RestaurantDTO> list = dao.getRestaurantsByLocation(5);
+					List<RestaurantDTO> list = dao.getRestaurantsByLocation(Define.LOCATION_SEOGU);
 					new RestaurantListFrame(list);
 				} catch (SQLException e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				}
-			} else if(e.getSource() == Junggu ) {
+			} else if(e.getSource() == locationbutton[Define.LOCATION_JUNGGU] ) {
 				RestaurantDAO dao = new RestaurantDAO();
 				try {
-					List<RestaurantDTO> list = dao.getRestaurantsByLocation(6);
+					List<RestaurantDTO> list = dao.getRestaurantsByLocation(Define.LOCATION_JUNGGU);
+					System.out.println(list);
 					new RestaurantListFrame(list);
 				} catch (SQLException e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				}
-			} else if(e.getSource() == Donggu ) {
+			} else if(e.getSource() == locationbutton[Define.LOCATION_DONGGU] ) {
 				RestaurantDAO dao = new RestaurantDAO();
 				try {
-					List<RestaurantDTO> list = dao.getRestaurantsByLocation(7);
+					List<RestaurantDTO> list = dao.getRestaurantsByLocation(Define.LOCATION_DONGGU);
 					new RestaurantListFrame(list);
 				} catch (SQLException e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				}
-			} else if(e.getSource() == Busangingu ) {
+			} else if(e.getSource() == locationbutton[Define.LOCATION_BUSANSGINGU] ) {
 				RestaurantDAO dao = new RestaurantDAO();
 				try {
-					List<RestaurantDTO> list = dao.getRestaurantsByLocation(8);
+					List<RestaurantDTO> list = dao.getRestaurantsByLocation(Define.LOCATION_BUSANSGINGU);
 					new RestaurantListFrame(list);
 				} catch (SQLException e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				}
-			} else if(e.getSource() == Yeongdogu ) {
+			} else if(e.getSource() == locationbutton[Define.LOCATION_YEONGDOGU] ) {
 				RestaurantDAO dao = new RestaurantDAO();
 				try {
-					List<RestaurantDTO> list = dao.getRestaurantsByLocation(9);
+					List<RestaurantDTO> list = dao.getRestaurantsByLocation(Define.LOCATION_YEONGDOGU);
 					new RestaurantListFrame(list);
 				} catch (SQLException e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				}
-			} else if(e.getSource() == Namgu ) {
+			} else if(e.getSource() == locationbutton[Define.LOCATION_NAMGU] ) {
 				RestaurantDAO dao = new RestaurantDAO();
 				try {
-					List<RestaurantDTO> list = dao.getRestaurantsByLocation(10);
+					List<RestaurantDTO> list = dao.getRestaurantsByLocation(Define.LOCATION_NAMGU);
 					new RestaurantListFrame(list);
 				} catch (SQLException e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				}
-			} else if(e.getSource() == Dongnaegu) {
+			} else if(e.getSource() == locationbutton[Define.LOCATION_DONGNAEGU] ) {
 				RestaurantDAO dao = new RestaurantDAO();
 				try {
-					List<RestaurantDTO> list = dao.getRestaurantsByLocation(11);
+					List<RestaurantDTO> list = dao.getRestaurantsByLocation(Define.LOCATION_DONGNAEGU);
 					new RestaurantListFrame(list);
 				} catch (SQLException e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				}
-			} else if(e.getSource() == Yeonjegu ) {
+			} else if(e.getSource() == locationbutton[Define.LOCATION_YEONJEGU] ) {
 				RestaurantDAO dao = new RestaurantDAO();
 				try {
-					List<RestaurantDTO> list = dao.getRestaurantsByLocation(12);
+					List<RestaurantDTO> list = dao.getRestaurantsByLocation(Define.LOCATION_YEONJEGU);
 					new RestaurantListFrame(list);
 				} catch (SQLException e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				}
-			} else if(e.getSource() == Suyeonggu ) {
+			} else if(e.getSource() == locationbutton[Define.LOCATION_SUYEONGGU] ) {
 				RestaurantDAO dao = new RestaurantDAO();
 				try {
-					List<RestaurantDTO> list = dao.getRestaurantsByLocation(13);
+					List<RestaurantDTO> list = dao.getRestaurantsByLocation(Define.LOCATION_SUYEONGGU);
 					new RestaurantListFrame(list);
 				} catch (SQLException e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				}
-			} else if(e.getSource() == Geumjeonggu ) {
+			} else if(e.getSource() == locationbutton[Define.LOCATION_GEUMJEONGGU] ) {
 				RestaurantDAO dao = new RestaurantDAO();
 				try {
-					List<RestaurantDTO> list = dao.getRestaurantsByLocation(14);
+					List<RestaurantDTO> list = dao.getRestaurantsByLocation(Define.LOCATION_GEUMJEONGGU);
 					new RestaurantListFrame(list);
 				} catch (SQLException e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				}
-			} else if(e.getSource() == Haeundaegu ) {
+			} else if(e.getSource() == locationbutton[Define.LOCATION_HAEUNDAEGU] ) {
 				RestaurantDAO dao = new RestaurantDAO();
 				try {
-					List<RestaurantDTO> list = dao.getRestaurantsByLocation(15);
+					List<RestaurantDTO> list = dao.getRestaurantsByLocation(Define.LOCATION_HAEUNDAEGU);
 					new RestaurantListFrame(list);
 				} catch (SQLException e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				}
-			} else if(e.getSource() == Gijanggun ) {
+			} else if(e.getSource() == locationbutton[Define.LOCATION_GIJANGGUN] ) {
 				RestaurantDAO dao = new RestaurantDAO();
 				try {
-					List<RestaurantDTO> list = dao.getRestaurantsByLocation(16);
+					List<RestaurantDTO> list = dao.getRestaurantsByLocation(Define.LOCATION_GIJANGGUN);
 					new RestaurantListFrame(list);
 				} catch (SQLException e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				} 
-			} else if(e.getSource() == Allselect ) { // 지역구 음식점 모두 검색
+			} 
+	else if(e.getSource() == locationbutton[Define.LOCATION_ALL] ) { // 지역구 음식점 모두 검색
 				RestaurantDAO dao = new RestaurantDAO();
 				try {
 					List<RestaurantDTO> list = dao.getAllRestaurants();
@@ -376,8 +374,8 @@ public class LocationFrame extends JFrame implements MouseListener {
 				}
 			}
 		
+		
 	} // end of mousePressed
-	
 
 	@Override
 	public void mouseClicked(MouseEvent e) {
@@ -400,6 +398,8 @@ public class LocationFrame extends JFrame implements MouseListener {
 	public void mouseExited(MouseEvent e) {
 		// TODO Auto-generated method stub
 	}
+	
+	
 	
 	// TODO TEST
 	public static void main(String[] args) {
