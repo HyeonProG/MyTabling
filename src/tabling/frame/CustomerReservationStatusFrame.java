@@ -5,6 +5,7 @@ import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.sql.SQLException;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -32,8 +33,9 @@ public class CustomerReservationStatusFrame extends JFrame {
 	private JLabel locationId;
 	private JLabel reservationState;
 	private JLabel restaurantId;
-	private ReservationDAO reservationDAO; 
-	private RestaurantReservationDAO restaurantReservationDAO;
+	private ReservationDTO reservationDTO;
+	private ReservationDAO reservationDAO;
+	int count;
 
 	public CustomerReservationStatusFrame(CustomerDTO customerDTO) {
 		this.customerDTO=customerDTO;
@@ -43,9 +45,21 @@ public class CustomerReservationStatusFrame extends JFrame {
 	}
 
 	private void initData() {
-		reservationDAO= new ReservationDAO();
-		restaurantReservationDAO= new RestaurantReservationDAO();
-		int count=reservationDAO.checkReservation(, );
+		reservationDAO=new ReservationDAO();
+		reservationDTO=new ReservationDTO();
+		int reservationId= reservationDTO.getReservationId();
+		if(reservationId==customerDTO.getCustomerId()) {
+				try {
+					count=reservationDAO.checkReservation(reservationDTO.getRestaurantId(),reservationId );
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+
+		}
+			
+		
+		
 		
 		setTitle("예약 현황");
 		setSize(500, 700);
@@ -58,10 +72,7 @@ public class CustomerReservationStatusFrame extends JFrame {
 		reservationPanel = new JPanel();
 		backBtn = new JButton("뒤로가기");
 		cancelBtn = new JButton("예약 취소");
-		customerId=new JLabel(String.valueOf(customerDTO.getCustomerId()));
-		phone=new JLabel(customerDTO.getPhone());
-		customerState=new JLabel(customerDTO.getState());
-		locationId=new JLabel(String.valueOf(customerDTO.getLocationId()));
+		customerId=new JLabel(String.valueOf(count));
 	}
 
 	private void setInitLayout() {
@@ -87,20 +98,7 @@ public class CustomerReservationStatusFrame extends JFrame {
 		customerId.setFont(new Font("Noto Sans KR", Font.BOLD, 15));
 		reservationPanel.add(customerId);
 		
-		phone.setBounds(90, 260, 100, 30);
-		phone.setBorder(null);
-		phone.setFont(new Font("Noto Sans KR", Font.BOLD, 15));
-		reservationPanel.add(phone);
-		
-		customerState.setBounds(140, 260, 100, 30);
-		customerState.setBorder(null);
-		customerState.setFont(new Font("Noto Sans KR", Font.BOLD, 15));
-		reservationPanel.add(customerState);
-		
-		locationId.setBounds(30, 400, 100, 30);
-		locationId.setBorder(null);
-		locationId.setFont(new Font("Noto Sans KR", Font.BOLD, 15));
-		reservationPanel.add(locationId);
+
 
 		
 	}
