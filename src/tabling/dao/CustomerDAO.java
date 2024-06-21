@@ -93,14 +93,14 @@ public class CustomerDAO {
 	}
 	
 	// TODO - 회원정보 수정/ 파라미터값으로 DTO를 받아와야할지
-	public void updateCustomer(String name, int location) throws SQLException{
-		String query = "  UPDATE customer SET customer_name = ?, locationId = ? WHERE phone = ?  ";
+	public void updateCustomer(String name, int location, String phone) throws SQLException{
+		String query = "  UPDATE customer SET customer_name = ?, location_id = ? WHERE phone = ?  ";
 		
 		try (Connection conn = DBConnectionManager.getInstance().getConnection()){
 			PreparedStatement pstmt = conn.prepareStatement(query);
 			pstmt.setString(1,name);
 			pstmt.setInt(2,location);
-//			pstmt.setString(3);
+			pstmt.setString(3, phone);
 			pstmt.executeUpdate();
 		}
 		

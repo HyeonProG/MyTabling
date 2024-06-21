@@ -1,9 +1,12 @@
 package tabling.frame;
 
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.sql.SQLException;
+import java.util.Iterator;
 import java.util.List;
 
 import javax.swing.Icon;
@@ -18,7 +21,7 @@ import tabling.dto.CustomerDTO;
 import tabling.dto.RestaurantDTO;
 import tabling.util.Define;
 
-public class LocationFrame extends JFrame implements MouseListener {
+public class LocationFrame extends JFrame implements ActionListener {
 	
 	private JLabel background;
 	
@@ -190,217 +193,72 @@ public class LocationFrame extends JFrame implements MouseListener {
 	
 	private void addEventListener() {
 		
+//		for (int i = Define.LOCATION_ALL; i < Define.LOCATION_GIJANGGUN + 1; i++) {
+//			locationbutton[i].addActionListener(this);
+//		}
 		
-		locationbutton[Define.LOCATION_GANGSEOGU].addMouseListener(this);
-		locationbutton[Define.LOCATION_SAHAGU].addMouseListener(this);
-		locationbutton[Define.LOCATION_SASANGGU].addMouseListener(this);
-		locationbutton[Define.LOCATION_BUKGU].addMouseListener(this);
-		locationbutton[Define.LOCATION_SEOGU].addMouseListener(this);
-		locationbutton[Define.LOCATION_JUNGGU].addMouseListener(this);
-		locationbutton[Define.LOCATION_DONGGU].addMouseListener(this);
-		locationbutton[Define.LOCATION_BUSANSGINGU].addMouseListener(this);
-		locationbutton[Define.LOCATION_YEONGDOGU].addMouseListener(this);
-		locationbutton[Define.LOCATION_NAMGU].addMouseListener(this);
-		locationbutton[Define.LOCATION_DONGNAEGU].addMouseListener(this);
-		locationbutton[Define.LOCATION_YEONJEGU].addMouseListener(this);
-		locationbutton[Define.LOCATION_SUYEONGGU].addMouseListener(this);
-		locationbutton[Define.LOCATION_GEUMJEONGGU].addMouseListener(this);
-		locationbutton[Define.LOCATION_HAEUNDAEGU].addMouseListener(this);
-		locationbutton[Define.LOCATION_GIJANGGUN].addMouseListener(this);
-		locationbutton[Define.LOCATION_ALL].addMouseListener(this);
+		locationbutton[Define.LOCATION_ALL].addActionListener(this);
+		locationbutton[Define.LOCATION_GANGSEOGU].addActionListener(this);
+		locationbutton[Define.LOCATION_SAHAGU].addActionListener(this);
+		locationbutton[Define.LOCATION_SASANGGU].addActionListener(this);
+		locationbutton[Define.LOCATION_BUKGU].addActionListener(this);
+		locationbutton[Define.LOCATION_SEOGU].addActionListener(this);
+		locationbutton[Define.LOCATION_JUNGGU].addActionListener(this);
+		locationbutton[Define.LOCATION_DONGGU].addActionListener(this);
+		locationbutton[Define.LOCATION_BUSANSGINGU].addActionListener(this);
+		locationbutton[Define.LOCATION_YEONGDOGU].addActionListener(this);
+		locationbutton[Define.LOCATION_NAMGU].addActionListener(this);
+		locationbutton[Define.LOCATION_DONGNAEGU].addActionListener(this);
+		locationbutton[Define.LOCATION_YEONJEGU].addActionListener(this);
+		locationbutton[Define.LOCATION_SUYEONGGU].addActionListener(this);
+		locationbutton[Define.LOCATION_GEUMJEONGGU].addActionListener(this);
+		locationbutton[Define.LOCATION_HAEUNDAEGU].addActionListener(this);
+		locationbutton[Define.LOCATION_GIJANGGUN].addActionListener(this);
 		
-		back.addMouseListener(this);
 		
-	}		
-			
+		back.addActionListener(this);
+		
+	}	
 	@Override
-	public void mousePressed(MouseEvent e) {
-		if(e.getSource() == locationbutton[Define.LOCATION_GANGSEOGU] ) {
+	public void actionPerformed(ActionEvent e) {
+		
+		for(int i = Define.CATEGORY_ALL; i<= Define.LOCATION_GIJANGGUN; i++) {
 			
-			RestaurantDAO dao = new RestaurantDAO();
-			try {
-				List<RestaurantDTO> list = dao.getRestaurantsByLocation(Define.LOCATION_GANGSEOGU);
-				new RestaurantListFrame(list, customerDTO, RestaurantListFrame.LOCATION);
-			} catch (SQLException e1) {
-				// TODO: handle exception
-				e1.printStackTrace();
-				
-				} 
-			} else if(e.getSource() == locationbutton[Define.LOCATION_SAHAGU] ) {
-				
+			if (e.getSource() == locationbutton[Define.LOCATION_ALL]) {
 				RestaurantDAO dao = new RestaurantDAO();
 				try {
-					List<RestaurantDTO> list = dao.getRestaurantsByLocation(Define.LOCATION_SAHAGU);
+					List<RestaurantDTO> list = dao.getAllRestaurants(customerDTO.getCustomerId());
 					new RestaurantListFrame(list, customerDTO, RestaurantListFrame.LOCATION);
-				} catch (Exception e1) {
-					// TODO: handle exception
-					e1.printStackTrace();
-				} 
-			} else if(e.getSource() == locationbutton[Define.LOCATION_SASANGGU] ) {
-				
-				RestaurantDAO dao = new RestaurantDAO();
-				try {
-					List<RestaurantDTO> list = dao.getRestaurantsByLocation(Define.LOCATION_SASANGGU);
-					new RestaurantListFrame(list, customerDTO, RestaurantListFrame.LOCATION);
-				} catch (Exception e1) {
-					// TODO: handle exception
-					e1.printStackTrace();
-				}
-			} 
-			else if(e.getSource() == locationbutton[Define.LOCATION_BUKGU] ) {
-				
-				RestaurantDAO dao = new RestaurantDAO();
-				try {
-					List<RestaurantDTO> list = dao.getRestaurantsByLocation(Define.LOCATION_BUKGU);
-					new RestaurantListFrame(list, customerDTO, RestaurantListFrame.LOCATION);
+					setVisible(false);
+					break;
 				} catch (SQLException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}
-			} else if(e.getSource() == locationbutton[Define.LOCATION_SEOGU] ) {
-				RestaurantDAO dao = new RestaurantDAO();
-				try {
-					List<RestaurantDTO> list = dao.getRestaurantsByLocation(Define.LOCATION_SEOGU);
-					new RestaurantListFrame(list, customerDTO, RestaurantListFrame.LOCATION);
-				} catch (SQLException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}
-			} else if(e.getSource() == locationbutton[Define.LOCATION_JUNGGU] ) {
-				RestaurantDAO dao = new RestaurantDAO();
-				try {
-					List<RestaurantDTO> list = dao.getRestaurantsByLocation(Define.LOCATION_JUNGGU);
-					System.out.println(list);
-					new RestaurantListFrame(list, customerDTO, RestaurantListFrame.LOCATION);
-				} catch (SQLException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}
-			} else if(e.getSource() == locationbutton[Define.LOCATION_DONGGU] ) {
-				RestaurantDAO dao = new RestaurantDAO();
-				try {
-					List<RestaurantDTO> list = dao.getRestaurantsByLocation(Define.LOCATION_DONGGU);
-					new RestaurantListFrame(list, customerDTO, RestaurantListFrame.LOCATION);
-				} catch (SQLException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}
-			} else if(e.getSource() == locationbutton[Define.LOCATION_BUSANSGINGU] ) {
-				RestaurantDAO dao = new RestaurantDAO();
-				try {
-					List<RestaurantDTO> list = dao.getRestaurantsByLocation(Define.LOCATION_BUSANSGINGU);
-					new RestaurantListFrame(list, customerDTO, RestaurantListFrame.LOCATION);
-				} catch (SQLException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}
-			} else if(e.getSource() == locationbutton[Define.LOCATION_YEONGDOGU] ) {
-				RestaurantDAO dao = new RestaurantDAO();
-				try {
-					List<RestaurantDTO> list = dao.getRestaurantsByLocation(Define.LOCATION_YEONGDOGU);
-					new RestaurantListFrame(list, customerDTO, RestaurantListFrame.LOCATION);
-				} catch (SQLException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}
-			} else if(e.getSource() == locationbutton[Define.LOCATION_NAMGU] ) {
-				RestaurantDAO dao = new RestaurantDAO();
-				try {
-					List<RestaurantDTO> list = dao.getRestaurantsByLocation(Define.LOCATION_NAMGU);
-					new RestaurantListFrame(list, customerDTO, RestaurantListFrame.LOCATION);
-				} catch (SQLException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}
-			} else if(e.getSource() == locationbutton[Define.LOCATION_DONGNAEGU] ) {
-				RestaurantDAO dao = new RestaurantDAO();
-				try {
-					List<RestaurantDTO> list = dao.getRestaurantsByLocation(Define.LOCATION_DONGNAEGU);
-					new RestaurantListFrame(list, customerDTO, RestaurantListFrame.LOCATION);
-				} catch (SQLException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}
-			} else if(e.getSource() == locationbutton[Define.LOCATION_YEONJEGU] ) {
-				RestaurantDAO dao = new RestaurantDAO();
-				try {
-					List<RestaurantDTO> list = dao.getRestaurantsByLocation(Define.LOCATION_YEONJEGU);
-					new RestaurantListFrame(list, customerDTO, RestaurantListFrame.LOCATION);
-				} catch (SQLException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}
-			} else if(e.getSource() == locationbutton[Define.LOCATION_SUYEONGGU] ) {
-				RestaurantDAO dao = new RestaurantDAO();
-				try {
-					List<RestaurantDTO> list = dao.getRestaurantsByLocation(Define.LOCATION_SUYEONGGU);
-					new RestaurantListFrame(list, customerDTO, RestaurantListFrame.LOCATION);
-				} catch (SQLException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}
-			} else if(e.getSource() == locationbutton[Define.LOCATION_GEUMJEONGGU] ) {
-				RestaurantDAO dao = new RestaurantDAO();
-				try {
-					List<RestaurantDTO> list = dao.getRestaurantsByLocation(Define.LOCATION_GEUMJEONGGU);
-					new RestaurantListFrame(list, customerDTO, RestaurantListFrame.LOCATION);
-				} catch (SQLException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}
-			} else if(e.getSource() == locationbutton[Define.LOCATION_HAEUNDAEGU] ) {
-				RestaurantDAO dao = new RestaurantDAO();
-				try {
-					List<RestaurantDTO> list = dao.getRestaurantsByLocation(Define.LOCATION_HAEUNDAEGU);
-					new RestaurantListFrame(list, customerDTO, RestaurantListFrame.LOCATION);
-				} catch (SQLException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}
-			} else if(e.getSource() == locationbutton[Define.LOCATION_GIJANGGUN] ) {
-				RestaurantDAO dao = new RestaurantDAO();
-				try {
-					List<RestaurantDTO> list = dao.getRestaurantsByLocation(Define.LOCATION_GIJANGGUN);
-					new RestaurantListFrame(list, customerDTO, RestaurantListFrame.LOCATION);
-				} catch (SQLException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				} 
-			} 
-	else if(e.getSource() == locationbutton[Define.LOCATION_ALL] ) { // 지역구 음식점 모두 검색
-				RestaurantDAO dao = new RestaurantDAO();
-				try {
-					List<RestaurantDTO> list = dao.getAllRestaurants();
-					new RestaurantListFrame(list, customerDTO, RestaurantListFrame.LOCATION);
-				} catch (SQLException e1) {
-					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				}
 			}
+			
+				if(e.getSource() == locationbutton[i] ) {
+					 
+					RestaurantDAO dao = new RestaurantDAO();
+					setVisible(false);
+					try {
+						List<RestaurantDTO> list = dao.getRestaurantsByLocation(i);
+						new RestaurantListFrame(list, customerDTO, RestaurantListFrame.LOCATION);
+						setVisible(false);
+						break;
+					} catch (SQLException e1) {
+						// TODO: handle exception
+						e1.printStackTrace();
+						
+						} 
+					}
+				}
 		
-	} // end of mousePressed
-
-	@Override
-	public void mouseClicked(MouseEvent e) {
-		// TODO Auto-generated method stub
-		
-	}
-
-
-	@Override
-	public void mouseReleased(MouseEvent e) {
-		// TODO Auto-generated method stub
-	}
-
-	@Override
-	public void mouseEntered(MouseEvent e) {
-		// TODO Auto-generated method stub
-	}
-
-	@Override
-	public void mouseExited(MouseEvent e) {
-		// TODO Auto-generated method stub
-	}
+		if(e.getSource() == back) {
+			new CustomerMainMenuFrame(customerDTO);
+			setVisible(false);
+			}
+		} // end of actionPerformed
+	
 	
 	
 	
@@ -408,5 +266,5 @@ public class LocationFrame extends JFrame implements MouseListener {
 	public static void main(String[] args) {
 		new LocationFrame(new CustomerDAO().authenticatePhone("01067871703"));
 	} // end of main 
-	
+
 } // end of class
