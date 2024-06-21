@@ -119,7 +119,7 @@ public class ReservationFrame extends JFrame {
 			@Override
 			public void mousePressed(MouseEvent e) {
 				try {
-					new RestaurantFrame(new RestaurantDAO().getAllRestaurants().get(93), new MenuDAO().getMenuById(93));
+					new RestaurantFrame(new RestaurantDAO().getAllRestaurants(1).get(93), new MenuDAO().getMenuById(93));
 					setVisible(false);
 				} catch (SQLException e1) {
 					e1.printStackTrace();

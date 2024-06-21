@@ -91,6 +91,7 @@ public class RestaurantFrame extends JFrame {
 		restaurantDetail.append("가게 위치 : " + restaurantDTO.getAddress() + "\n");
 		restaurantDetail.append("상세 설명 \n");
 		restaurantDetail.append(restaurantDTO.getContent() + "\n");
+		restaurantDetail.setEditable(false);
 
 		menuDAO = new MenuDAO();
 
@@ -223,7 +224,7 @@ public class RestaurantFrame extends JFrame {
 
 	public static void main(String[] args) {
 		try {
-			new RestaurantFrame(new RestaurantDAO().getAllRestaurants().get(93), new MenuDAO().getMenuById(93));
+			new RestaurantFrame(new RestaurantDAO().getAllRestaurants(1).get(93), new MenuDAO().getMenuById(93));
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
