@@ -100,8 +100,7 @@ public class CategoryFrame extends JFrame implements MouseListener {
 	@Override
 	public void mousePressed(MouseEvent e) {
 		try {
-<<<<<<< HEAD
-=======
+
 			
 	for(int i=0;i<3;i++) {
 		 if (i==0) {			 
@@ -123,7 +122,7 @@ public class CategoryFrame extends JFrame implements MouseListener {
 		 
 		 if(e.getSource() == homeLable) {
 			 new CustomerMainMenuFrame(customerDTO);
->>>>>>> 144db223015c3b70623162be5db9d1b569580a56
+
 
 			for (int i = Define.CATEGORY_ALL; i < Define.CATEGORY_HOF; i++) {
 				if (e.getSource() == categoryImgs[i]) {
@@ -148,6 +147,8 @@ public class CategoryFrame extends JFrame implements MouseListener {
 
 		} catch (SQLException e1) {
 			e1.printStackTrace();
+		}
+	}
 		}
 	}
 
