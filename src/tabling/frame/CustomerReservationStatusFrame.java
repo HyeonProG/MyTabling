@@ -3,6 +3,8 @@ package tabling.frame;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Image;
+import java.awt.MouseInfo;
+import java.awt.PointerInfo;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.sql.SQLException;
@@ -28,17 +30,18 @@ import tabling.dto.RestaurantDTO;
 public class CustomerReservationStatusFrame extends JFrame {
 
 	private BackgroundPanel backgroundPanel;
-	private JPanel reservationPanel;
-	private JButton backBtn;
-	private JButton cancelBtn;
-	 private JButton detailBtn;
+	private JLabel backBtn;
+	private JLabel cancelBtn;
+	 private JLabel detailBtn;
 	private CustomerDTO customerDTO;
-	private JLabel customerId;
+	private JLabel customerQueue;
 	private JLabel phone;
 	private JLabel customerState;
 	private JLabel locationId;
 	private JLabel reservationState;
 	private JLabel restaurantId;
+	private JLabel restaurantName;
+	private JLabel customerName;
 	private ReservationDTO reservationDTO;
 	private ReservationDAO reservationDAO;  
 	private RestaurantDAO restaurantDAO;
@@ -51,57 +54,67 @@ public class CustomerReservationStatusFrame extends JFrame {
 	}
 
 	private void initData() {
+		
+		
+		
 		reservationDAO = new ReservationDAO();
+		restaurantDAO= new RestaurantDAO();
 		try {
 			reservationDTO = reservationDAO.getReservationByCustomer(customerDTO.getCustomerId());
 			int count = reservationDAO.checkReservation(reservationDTO.getRestaurantId(),
 					reservationDTO.getReservationId());
+			List<RestaurantDTO> list = restaurantDAO.getAllRestaurants(customerDTO.getCustomerId());
+            RestaurantDTO dto=list.get(0);
 
-			setTitle("예약 현황");
-			setSize(500, 700);
-			setResizable(false);
-			setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-			setLocationRelativeTo(null);
-			setVisible(true);
 
 			backgroundPanel = new BackgroundPanel();
-			reservationPanel = new JPanel();
-			backBtn = new JButton("뒤로가기");
-			cancelBtn = new JButton("예약 취소");
-			detailBtn = new JButton("상세 이동");
-			customerId = new JLabel(String.valueOf(count));
+			backBtn = new JLabel(new ImageIcon("img/quitBtn.png"));
+			cancelBtn = new JLabel(new ImageIcon("img/그룹 25.png"));
+			detailBtn = new JLabel(new ImageIcon("img/그룹 24.png"));
+			customerQueue = new JLabel(String.valueOf(count));
+			restaurantName = new JLabel(dto.getRestaurantName());
+			customerName = new JLabel(customerDTO.getCustomerName());
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 	}
 
 	private void setInitLayout() {
+		setTitle("예약 현황");
+		setSize(500, 700);
+		setResizable(false);
+		setLayout(null);
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setLocationRelativeTo(null);
+		setVisible(true);
 
 		backgroundPanel.setSize(getWidth(), getHeight());
 		backgroundPanel.setLayout(null);
 		add(backgroundPanel);
 
-		reservationPanel.setBounds(40, 200, 300, 300);
-		reservationPanel.setSize(410, 300);
-		backgroundPanel.add(reservationPanel);
 
-		backBtn.setBounds(350, 20, 50, 50);
-		backBtn.setSize(100, 50);
+		backBtn.setBounds(0, 10, 70, 70);
 		backgroundPanel.add(backBtn);
+		
+		customerName.setBounds(42, 73, 100, 70);
+		customerName.setFont(new Font("Noto Sans KR", Font.BOLD, 18));
+		customerName.setSize(100,100);
+		backgroundPanel.add(customerName);
 
-		cancelBtn.setBounds(350, 520, 50, 50);
-		cancelBtn.setSize(100, 50);
+		cancelBtn.setBounds(340, 480, 120, 60);
 		backgroundPanel.add(cancelBtn);
 
-		customerId.setBounds(150, 50, 100, 30);
-		customerId.setBorder(null);
-		customerId.setFont(new Font("Noto Sans KR", Font.BOLD, 15));
-		reservationPanel.add(customerId)
-		;
-		detailBtn.setBounds(250, 50, 100, 30);
-		detailBtn.setBorder(null);
+		customerQueue.setBounds(240, 180, 190, 150);
+		customerQueue.setFont(new Font("Noto Sans KR", Font.BOLD, 60));
+		backgroundPanel.add(customerQueue);
+		
+		restaurantName.setBounds(140, 395, 120, 50);
+		restaurantName.setFont(new Font("Noto Sans KR", Font.BOLD, 18));
+		backgroundPanel.add(restaurantName);
+		
+		detailBtn.setBounds(340, 390, 130, 60);
 		detailBtn.setFont(new Font("Noto Sans KR", Font.BOLD, 15));
-		reservationPanel.add(detailBtn);
+		backgroundPanel.add(detailBtn);
 
 	}
 
@@ -138,12 +151,9 @@ public class CustomerReservationStatusFrame extends JFrame {
 			public void mousePressed(MouseEvent e) {
 				reservationDAO = new ReservationDAO();
 				restaurantDAO= new RestaurantDAO();
-				CustomerReservationDAO customerReservationDAO = new CustomerReservationDAO();
 				try {
 					reservationDTO = reservationDAO.getReservationByCustomer(customerDTO.getCustomerId());
-					System.out.println(reservationDTO.getCustomerId()+"번 ID "+ reservationDTO.getRestaurantId()+"번 음식점 취소완료");
 					List<RestaurantDTO> list = restaurantDAO.getAllRestaurants(customerDTO.getCustomerId());
-		            reservationDTO = reservationDAO.getReservationByCustomer(customerDTO.getCustomerId());
 		            RestaurantDTO dto=list.get(0);
 		            new RestaurantFrame(customerDTO, dto);
 				} catch (SQLException e1) {
@@ -153,14 +163,17 @@ public class CustomerReservationStatusFrame extends JFrame {
 				
 			}
 		});
+		
 	}
+	
+
 
 	private class BackgroundPanel extends JPanel {
 		private JPanel backgroundPanel;
 		private Image backgroundImage;
 
 		public BackgroundPanel() {
-			backgroundImage = new ImageIcon("img/backgroundimage.jpg").getImage();
+			backgroundImage = new ImageIcon("img/예약현황.jpg").getImage();
 			backgroundPanel = new JPanel();
 			add(backgroundPanel);
 		}
@@ -172,6 +185,9 @@ public class CustomerReservationStatusFrame extends JFrame {
 		}
 
 	}
+	
+
+	
 
 	public static void main(String[] args) {
 		new CustomerReservationStatusFrame(new CustomerDAO().authenticatePhone("01011112222"));
