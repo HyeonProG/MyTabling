@@ -111,7 +111,7 @@ public class CategoryFrame extends JFrame implements MouseListener {
 				}
 				if (e.getSource() == categoryImgs[i]) {
 					RestaurantDAO dao = new RestaurantDAO();
-					List<RestaurantDTO> list = dao.getRestaurantsByCategory(i);
+					List<RestaurantDTO> list = dao.getRestaurantsByCategory(i,customerDTO.getCustomerId());
 					new RestaurantListFrame(list,customerDTO,RestaurantListFrame.CATEGORY);
 					setVisible(false);
 					break;
