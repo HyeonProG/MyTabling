@@ -27,6 +27,8 @@ import tabling.dto.MenuDTO;
 import tabling.dto.RestaurantDTO;
 
 public class RestaurantFrame extends JFrame {
+	private RestaurantFrame frame;
+	
 	private RestaurantDTO restaurantDTO;
 	private List<MenuDTO> menuList = new ArrayList<>();
 	private MenuDAO menuDAO;
@@ -51,6 +53,7 @@ public class RestaurantFrame extends JFrame {
 	private JScrollPane detailScroll;
 	
 	private LikeDAO likeDAO;
+	private JLabel likeCountLabel;
 
 	public RestaurantFrame(CustomerDTO customerDTO, RestaurantDTO restaurantDTO) {
 		this.customerDTO = customerDTO;
@@ -67,6 +70,8 @@ public class RestaurantFrame extends JFrame {
 	}
 
 	private void initData() {
+		frame = this;
+		
 		setTitle("음식점 상세페이지");
 		setSize(500, 700);
 		setResizable(false);
@@ -74,9 +79,8 @@ public class RestaurantFrame extends JFrame {
 		setLayout(null);
 		
 		likeDAO = new LikeDAO();
-		// TODO 커스터머 id 변경 예정
 		try {
-			checkLike = likeDAO.readLike(1, restaurantDTO.getRestaurantId());
+			checkLike = likeDAO.readLike(customerDTO.getCustomerId(), restaurantDTO.getRestaurantId());
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -89,8 +93,7 @@ public class RestaurantFrame extends JFrame {
 		restaurantDetail.setLineWrap(true);
 		restaurantDetail.append("주소 : " + restaurantDTO.getAddress() + "\n");
 		restaurantDetail.append("가게 번호 : " + restaurantDTO.getPhone() + "\n");
-		restaurantDetail
-				.append("가게 오픈 시간 : " + restaurantDTO.getOpenTime() + " ~ " + restaurantDTO.getCloseTime() + "\n");
+		restaurantDetail.append("가게 오픈 시간 : " + restaurantDTO.getOpenTime() + " ~ " + restaurantDTO.getCloseTime() + "\n");
 		restaurantDetail.append("가게 휴무일 : " + restaurantDTO.getRestDay() + "\n");
 		restaurantDetail.append("가게 위치 : " + restaurantDTO.getAddress() + "\n");
 		restaurantDetail.append("상세 설명 \n");
@@ -138,11 +141,18 @@ public class RestaurantFrame extends JFrame {
 		} else {
 			likeLabel = new JLabel(likeImg);
 		}
+		
+		likeCountLabel = new JLabel();
+		try {
+			likeCountLabel.setText(String.valueOf(likeDAO.getLikeCount(restaurantDTO.getRestaurantId())));
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 
 	}
 
 	private void setInitLayout() {
-		likeLabel.setBounds(60, 110, 50, 50);
+		likeLabel.setBounds(60, 45, 50, 50);
 		add(likeLabel);
 		likeLabel.setVisible(true);
 		
@@ -164,7 +174,7 @@ public class RestaurantFrame extends JFrame {
 		table.getColumn("메뉴 이름").setPreferredWidth(70);
 		table.getColumn("메뉴 이름").setCellRenderer(centerAlign);
 
-		restaurantNameLabel.setBounds(65, 45, 150, 50);
+		restaurantNameLabel.setBounds(65, 110, 150, 50);
 		restaurantNameLabel.setFont(new Font("Noto Sans KR", Font.BOLD, 15));
 		restaurantNameLabel.setOpaque(true);
 		restaurantNameLabel.setBackground(Color.WHITE);
@@ -174,8 +184,8 @@ public class RestaurantFrame extends JFrame {
 		detailScroll.setSize(350, 150);
 		detailScroll.setLocation(65, 250);
 
-		restaurantDetail.setFont(new Font("Noto Sans KR", Font.BOLD, 15));
 		restaurantDetail.setBounds(65, 250, 350, 150);
+		restaurantDetail.setFont(new Font("Noto Sans KR", Font.BOLD, 15));
 		restaurantDetail.setOpaque(true);
 		restaurantDetail.setBackground(Color.WHITE);
 		
@@ -187,6 +197,10 @@ public class RestaurantFrame extends JFrame {
 		ratingLabel.setBackground(Color.WHITE);
 		ratingLabel.setOpaque(true);
 		add(ratingLabel);
+		
+		likeCountLabel.setBounds(120, 45, 50, 50);
+		likeCountLabel.setFont(new Font("Noto Sans KR", Font.BOLD, 30));
+		add(likeCountLabel);
 
 	}
 
@@ -195,7 +209,8 @@ public class RestaurantFrame extends JFrame {
 			@Override
 			public void mousePressed(MouseEvent e) {
 				new ReservationFrame(customerDTO, restaurantDTO);
-				setVisible(false);
+				frame.setVisible(false);
+				frame.dispose();
 			}
 		});
 		
@@ -204,7 +219,8 @@ public class RestaurantFrame extends JFrame {
 			public void mousePressed(MouseEvent e) {
 				if (checkLike == false) {
 					try {
-						likeDAO.getLike(1, restaurantDTO.getRestaurantId());
+						int likeCount = likeDAO.getLike(customerDTO.getCustomerId(), restaurantDTO.getRestaurantId());
+						likeCountLabel.setText(String.valueOf(likeCount));
 					} catch (SQLException e1) {
 						e1.printStackTrace();
 					}
@@ -212,7 +228,8 @@ public class RestaurantFrame extends JFrame {
 					checkLike = true;
 				} else {
 					try {
-						likeDAO.getUnlike(1, restaurantDTO.getRestaurantId());
+						int likeCount = likeDAO.getUnlike(1, restaurantDTO.getRestaurantId());
+						likeCountLabel.setText(String.valueOf(likeCount));
 					} catch (SQLException e1) {
 						e1.printStackTrace();
 					}
@@ -222,14 +239,6 @@ public class RestaurantFrame extends JFrame {
 			}
 		});		
 
-	}
-
-	public static void main(String[] args) {
-		try {
-			//new RestaurantFrame(new RestaurantDAO().getAllRestaurants(1).get(93), new MenuDAO().getMenuById(93));
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
 	}
 
 }

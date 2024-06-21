@@ -24,10 +24,10 @@ public class RestaurantMainMenuFrame extends JFrame {
 	private JTable table;
 	private JScrollPane scroll;
 	private JComboBox<String> filter;
-//	private TableRowSorter<DefaultTableModel> sorter; // sorter 필요없음
+	// private TableRowSorter<DefaultTableModel> sorter; // sorter 필요없음
 	// DefaultTableModel 클래스 파라미터 값 2개 - head, contents
-	private String[] head = { "고객 닉네임", "고객 전화번호", "예약시간","예약상태" };
-	private String[][] contents = {{ "중구", "0101111111", "09:00","예약종료" }, { "진구", "01022222222", "13:00","대기중" }};
+	private String[] head = { "고객 닉네임", "고객 전화번호", "예약시간", "예약상태" };
+	private String[][] contents;
 	// 리스트
 	private List<ReservationDTO> reserList = new ArrayList<>();
 
@@ -61,7 +61,16 @@ public class RestaurantMainMenuFrame extends JFrame {
 	}
 
 	private void tableSet() {
+
+		// 리스트 값
 		contents = new String[reserList.size()][head.length];
+		
+		for(int i = 0; i < reserList.size(); i++) {
+			String customerName;
+			String customerPhone;
+			String reservationTime = reserList.get(i).getReservationTime();
+			String reservationState = reserList.get(i).getReservationState();
+		}
 
 		// 테이블
 		DefaultTableModel tableModel = new DefaultTableModel(contents, head); // 모델과 데이터 연결

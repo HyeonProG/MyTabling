@@ -28,6 +28,8 @@ public class ReservationFrame extends JFrame {
 	CustomerReservationDAO customerReservationDAO;
 	ReservationDAO reservationDAO;
 	CustomerDTO customerDTO;
+	private int customerId;
+	private int restaurantId;
 
 	private JButton reservationBtn;
 	private JButton backBtn;
@@ -37,6 +39,8 @@ public class ReservationFrame extends JFrame {
 	public ReservationFrame(CustomerDTO customerDTO, RestaurantDTO restaurantDTO) {
 		this.customerDTO = customerDTO;
 		this.restaurantDTO = restaurantDTO;
+		customerId = customerDTO.getCustomerId();
+		restaurantId = restaurantDTO.getRestaurantId();
 		initData();
 		setInitLayout();
 		initListener();
@@ -74,7 +78,7 @@ public class ReservationFrame extends JFrame {
 		reservationStatus.setBackground(Color.WHITE);
 		reservationStatus.setLineWrap(true);
 		try {
-			reservationStatus.append("현재 가게의 대기 인원은 " + reservationDAO.checkReservation(1, 1) + " 명 입니다.");
+			reservationStatus.append("현재 가게의 대기 인원은 " + reservationDAO.checkReservation(restaurantId, customerId) + " 명 입니다.");
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -95,12 +99,12 @@ public class ReservationFrame extends JFrame {
 				int result = JOptionPane.showConfirmDialog(null, "예약하시겠습니까?", "예약", 2, 1);
 				if (result == JOptionPane.YES_OPTION) {
 					try {
-						if (reservationDAO.getReservationByCustomer(1).getReservationState().equalsIgnoreCase("Y")) {
+						if (customerDTO.getState().equalsIgnoreCase("Y")) {
 							JOptionPane.showMessageDialog(null, "이미 예약된 식당이 있습니다.");
 						} else {
 							try {
 								JOptionPane.showMessageDialog(null, "예약되었습니다.");
-								customerReservationDAO.reservation(1, 1);
+								customerReservationDAO.reservation(customerId, restaurantId);
 								dispose();
 							} catch (SQLException e1) {
 								e1.printStackTrace();
@@ -108,9 +112,7 @@ public class ReservationFrame extends JFrame {
 						}
 					} catch (HeadlessException e1) {
 						e1.printStackTrace();
-					} catch (SQLException e1) {
-						e1.printStackTrace();
-					}
+					} 
 				}
 			}
 		});
@@ -118,12 +120,9 @@ public class ReservationFrame extends JFrame {
 		backBtn.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mousePressed(MouseEvent e) {
-				try {
-					new RestaurantFrame(new RestaurantDAO().getAllRestaurants(1).get(93), new MenuDAO().getMenuById(93));
+					new RestaurantFrame(customerDTO, restaurantDTO);
 					setVisible(false);
-				} catch (SQLException e1) {
-					e1.printStackTrace();
-				}
+					dispose();
 			}
 		});
 
