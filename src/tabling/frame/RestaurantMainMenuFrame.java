@@ -1,6 +1,8 @@
 package tabling.frame;
 
 import java.awt.Font;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
@@ -11,6 +13,7 @@ import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 
 import tabling.dao.RestaurantReservationDAO;
+import tabling.dto.ReservationDTO;
 import tabling.dto.RestaurantDTO;
 
 public class RestaurantMainMenuFrame extends JFrame {
@@ -24,9 +27,9 @@ public class RestaurantMainMenuFrame extends JFrame {
 //	private TableRowSorter<DefaultTableModel> sorter; // sorter 필요없음
 	// DefaultTableModel 클래스 파라미터 값 2개 - head, contents
 	private String[] head = { "고객 닉네임", "고객 전화번호", "예약시간","예약상태" };
-	private String[][] contents = { { "중구", "0101111111", "09:00","예약종료" }, { "진구", "01022222222", "13:00","대기중" } };
+	private String[][] contents = {{ "중구", "0101111111", "09:00","예약종료" }, { "진구", "01022222222", "13:00","대기중" }};
 	// 리스트
-//	private List<RestaurantDTO> reserList = new ArrayList<>();
+	private List<ReservationDTO> reserList = new ArrayList<>();
 
 	public RestaurantMainMenuFrame(RestaurantDTO restDTO) {
 		this.restDTO = restDTO;
@@ -58,7 +61,7 @@ public class RestaurantMainMenuFrame extends JFrame {
 	}
 
 	private void tableSet() {
-//		contents = new String[contents][head.length];
+		contents = new String[reserList.size()][head.length];
 
 		// 테이블
 		DefaultTableModel tableModel = new DefaultTableModel(contents, head); // 모델과 데이터 연결
