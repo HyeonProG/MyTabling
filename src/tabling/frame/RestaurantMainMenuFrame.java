@@ -1,39 +1,51 @@
 package tabling.frame;
 
 import java.awt.Font;
-import java.util.ArrayList;
+import java.awt.Graphics;
+import java.awt.Image;
+import java.sql.SQLException;
 import java.util.List;
 
+import javax.swing.ImageIcon;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 
 import tabling.dao.RestaurantReservationDAO;
-import tabling.dto.ReservationDTO;
+import tabling.dto.ReservationDTO2;
 import tabling.dto.RestaurantDTO;
 
 public class RestaurantMainMenuFrame extends JFrame {
 
+	private BackgroundPanel backgroundPanel;
 	private RestaurantDTO restDTO;
-	// TODO - 테이블로 리스트 띄우기 하는 중
 	private RestaurantReservationDAO restDAO;
 	private JTable table;
 	private JScrollPane scroll;
 	private JComboBox<String> filter;
-	// private TableRowSorter<DefaultTableModel> sorter; // sorter 필요없음
 	// DefaultTableModel 클래스 파라미터 값 2개 - head, contents
 	private String[] head = { "고객 닉네임", "고객 전화번호", "예약시간", "예약상태" };
 	private String[][] contents;
 	// 리스트
-	private List<ReservationDTO> reserList = new ArrayList<>();
+	private List<ReservationDTO2> reserList;
+	//
+	private JLabel resetBtn;
+	private JLabel endReserBtn;
+	private JLabel backBtn;
 
 	public RestaurantMainMenuFrame(RestaurantDTO restDTO) {
 		this.restDTO = restDTO;
-//		this.reserList = reserList;
+		restDAO = new RestaurantReservationDAO();
+		try {
+			reserList = restDAO.costomerList(restDTO.getRestaurantId());
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 		initData();
 		setInitLayout();
 		initListener();
@@ -42,6 +54,13 @@ public class RestaurantMainMenuFrame extends JFrame {
 	private void initData() {
 		// 테이블에 담는 메소드
 		tableSet();
+		restDAO = new RestaurantReservationDAO();
+		setCList();
+		backgroundPanel = new BackgroundPanel();
+
+		resetBtn = new JLabel(new ImageIcon("img/새로고침.png"));
+		endReserBtn = new JLabel(new ImageIcon("img/예약종료.png"));
+		backBtn = new JLabel(new ImageIcon("img/quitBtn.png"));
 	}
 
 	private void setInitLayout() {
@@ -53,6 +72,16 @@ public class RestaurantMainMenuFrame extends JFrame {
 		setVisible(true);
 		setResizable(false);
 
+		backgroundPanel.setSize(getWidth(), getHeight());
+		backgroundPanel.setLayout(null);
+		add(backgroundPanel);
+
+		resetBtn.setBounds(20, 590, 184, 44);
+		backgroundPanel.add(resetBtn);
+		endReserBtn.setBounds(280, 590, 184, 44);
+		backgroundPanel.add(endReserBtn);
+		backBtn.setBounds(10,15,30,30);
+		backgroundPanel.add(backBtn);
 	}
 
 	private void initListener() {
@@ -64,12 +93,24 @@ public class RestaurantMainMenuFrame extends JFrame {
 
 		// 리스트 값
 		contents = new String[reserList.size()][head.length];
-		
-		for(int i = 0; i < reserList.size(); i++) {
-			String customerName;
-			String customerPhone;
-			String reservationTime = reserList.get(i).getReservationTime();
-			String reservationState = reserList.get(i).getReservationState();
+
+		for (int i = 0; i < reserList.size(); i++) {
+
+			String cName = reserList.get(i).getCName();
+			String cPhone = reserList.get(i).getCPhone();
+			String time = reserList.get(i).getRevTime();
+			contents[i][0] = cName;
+			contents[i][1] = cPhone;
+			contents[i][2] = time.substring(5, 16);
+
+			if ((reserList.get(i).getState()).equals("Y")) {
+				String state = "대기중";
+				contents[i][3] = state;
+			} else {
+				String state = "예약종료";
+				contents[i][3] = state;
+			}
+
 		}
 
 		// 테이블
@@ -81,15 +122,11 @@ public class RestaurantMainMenuFrame extends JFrame {
 			}
 		};
 
-		// 테이블 검색 필드 초기화 -- 필요없음
-//		sorter = new TableRowSorter<>(tableModel);
-//		table.setRowSorter(sorter);
-
 		// 스크롤
 		scroll = new JScrollPane(table);
 		add(scroll);
 		scroll.setSize(450, 450);
-		scroll.setLocation(20, 170);
+		scroll.setLocation(20, 115);
 
 		// 테이블에 개별 셀을 표시하기 위한 클래스
 		DefaultTableCellRenderer centerAlign = new DefaultTableCellRenderer();
@@ -108,6 +145,32 @@ public class RestaurantMainMenuFrame extends JFrame {
 
 		//
 		repaint();
+
+	}
+
+	private void setCList() {
+		try {
+			reserList = restDAO.costomerList(restDTO.getRestaurantId());
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+
+	private class BackgroundPanel extends JPanel {
+		private JPanel backgroundPanel;
+		private Image backgroundImage;
+
+		public BackgroundPanel() {
+			backgroundImage = new ImageIcon("img/점주측 고객예약리스트.jpg").getImage();
+			backgroundPanel = new JPanel();
+			add(backgroundPanel);
+		}
+
+		@Override
+		protected void paintComponent(Graphics g) {
+			super.paintComponent(g);
+			g.drawImage(backgroundImage, 0, 0, getWidth(), getHeight(), null);
+		}
 
 	}
 

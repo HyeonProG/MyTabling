@@ -5,6 +5,8 @@ import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.ImageIcon;
@@ -14,7 +16,10 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
+import tabling.dao.ReservationDAO;
 import tabling.dao.RestaurantDAO;
+import tabling.dao.RestaurantReservationDAO;
+import tabling.dto.ReservationDTO2;
 import tabling.dto.RestaurantDTO;
 
 public class RestaurantLoginFrame extends JFrame {
@@ -30,8 +35,9 @@ public class RestaurantLoginFrame extends JFrame {
 	private int restaurantId;
 	
 	//
-	private List<RestaurantDTO> reserList;
-
+	private List<ReservationDTO2> reserList = new ArrayList<>();;
+	private RestaurantReservationDAO dao = new RestaurantReservationDAO();
+	
 	public RestaurantLoginFrame() {
 		initData();
 		setInitLayout();
@@ -96,7 +102,7 @@ public class RestaurantLoginFrame extends JFrame {
 								&& resPwText.getText().equals("1111")) {
 							JOptionPane.showMessageDialog(null, "로그인 되었습니다.", "성공", JOptionPane.WARNING_MESSAGE);
 							setVisible(false);
-							new RestaurantMainMenuFrame(restDTO); //
+							new RestaurantMainMenuFrame(restDTO);
 						} else if ((restDTO = restaurantDao.authenticateOwnerId(restaurantId)) == null) {
 							JOptionPane.showMessageDialog(null, "아이디가 올바르지 않습니다.", "성공", JOptionPane.WARNING_MESSAGE);
 						} else {
