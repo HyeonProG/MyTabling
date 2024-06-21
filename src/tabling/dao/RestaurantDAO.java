@@ -7,17 +7,24 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import lombok.Data;
 import tabling.dto.RestaurantDTO;
 import tabling.util.DBConnectionManager;
 import tabling.util.Time;
 
+@Data
 public class RestaurantDAO {
 
-	public List<RestaurantDTO> getAllRestaurants() throws SQLException {
+	private boolean openFilter;
+	private Time currentTime;
+
+	public List<RestaurantDTO> getAllRestaurants(int customerId) throws SQLException {
 		List<RestaurantDTO> list = new ArrayList<>();
-		String query = " SELECT * FROM restaurant ";
+		// String query = " SELECT * FROM restaurant ";
+		String query = " SELECT * FROM restaurant ORDER BY CASE WHEN location_id = (SELECT location_id FROM customer WHERE customer_id = ? ) THEN 0 ELSE 1 END ";
 		try (Connection conn = DBConnectionManager.getInstance().getConnection()) {
 			PreparedStatement pstmt = conn.prepareStatement(query);
+			pstmt.setInt(1, customerId);
 			try (ResultSet rs = pstmt.executeQuery()) {
 				while (rs.next()) {
 					RestaurantDTO dto = new RestaurantDTO().builder() //
@@ -34,7 +41,14 @@ public class RestaurantDAO {
 							.locationId(rs.getInt(11)) //
 							.categoryId(rs.getInt(12)) //
 							.build();
-					list.add(dto);
+					if (openFilter) {
+						// 영업중 일때만 리스트에 add함
+						if (currentTime.isOpen(dto)) {
+							list.add(dto);
+						}
+					} else {
+						list.add(dto);
+					}
 				}
 			}
 		}
@@ -63,7 +77,14 @@ public class RestaurantDAO {
 							.locationId(rs.getInt(11)) //
 							.categoryId(rs.getInt(12)) //
 							.build();
-					list.add(dto);
+					if (openFilter) {
+						// 영업중 일때만 리스트에 add함
+						if (currentTime.isOpen(dto)) {
+							list.add(dto);
+						}
+					} else {
+						list.add(dto);
+					}
 				}
 			}
 		}
@@ -93,71 +114,12 @@ public class RestaurantDAO {
 							.locationId(rs.getInt(11)) //
 							.categoryId(rs.getInt(12)) //
 							.build();
-					list.add(dto);
-				}
-			}
-		}
-		return list;
-
-	}
-
-	public List<RestaurantDTO> getRestaurantsByCategoryFiltered(int categoryId, Time currentTime) throws SQLException {
-		List<RestaurantDTO> list = new ArrayList<>();
-		String query = " SELECT * FROM restaurant where category_id = ? ";
-		try (Connection conn = DBConnectionManager.getInstance().getConnection()) {
-			PreparedStatement pstmt = conn.prepareStatement(query);
-			pstmt.setInt(1, categoryId);
-			try (ResultSet rs = pstmt.executeQuery()) {
-				while (rs.next()) {
-					RestaurantDTO dto = new RestaurantDTO().builder() //
-							.restaurantId(rs.getInt(1)) //
-							.restaurantName(rs.getString(2)) //
-							.phone(rs.getString(3)) //
-							.address(rs.getString(4)) //
-							.content(rs.getString(5)) //
-							.openTime(rs.getString(6)) //
-							.closeTime(rs.getString(7)) //
-							.rating(rs.getDouble(8)) //
-							.likes(rs.getInt(9)) //
-							.restDay(rs.getString(10)) //
-							.locationId(rs.getInt(11)) //
-							.categoryId(rs.getInt(12)) //
-							.build();
-					// 영업중 일때만 리스트에 add함
-					if (currentTime.isOpen(dto)) {
-						list.add(dto);
-					}
-				}
-			}
-		}
-		return list;
-
-	}
-
-	public List<RestaurantDTO> getRestaurantsByLocationFiltered(int locationId, Time currentTime) throws SQLException {
-		List<RestaurantDTO> list = new ArrayList<>();
-		String query = " SELECT * FROM restaurant where location_id = ? ";
-		try (Connection conn = DBConnectionManager.getInstance().getConnection()) {
-			PreparedStatement pstmt = conn.prepareStatement(query);
-			pstmt.setInt(1, locationId);
-			try (ResultSet rs = pstmt.executeQuery()) {
-				while (rs.next()) {
-					RestaurantDTO dto = new RestaurantDTO().builder() //
-							.restaurantId(rs.getInt(1)) //
-							.restaurantName(rs.getString(2)) //
-							.phone(rs.getString(3)) //
-							.address(rs.getString(4)) //
-							.content(rs.getString(5)) //
-							.openTime(rs.getString(6)) //
-							.closeTime(rs.getString(7)) //
-							.rating(rs.getDouble(8)) //
-							.likes(rs.getInt(9)) //
-							.restDay(rs.getString(10)) //
-							.locationId(rs.getInt(11)) //
-							.categoryId(rs.getInt(12)) //
-							.build();
-					// 영업중 일때만 리스트에 add함
-					if (currentTime.isOpen(dto)) {
+					if (openFilter) {
+						// 영업중 일때만 리스트에 add함
+						if (currentTime.isOpen(dto)) {
+							list.add(dto);
+						}
+					} else {
 						list.add(dto);
 					}
 				}

@@ -1,5 +1,7 @@
 package tabling.frame;
 
+import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -9,14 +11,15 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Vector;
 
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.plaf.basic.BasicScrollBarUI;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableRowSorter;
@@ -39,6 +42,7 @@ public class RestaurantListFrame extends JFrame {
 	private JButton homeBtn;
 	private JButton categoryBtn;
 	private JButton locationBtn;
+	private JLabel backBtn;
 	private LocationDAO locationDAO;
 	private CategoryDAO categoryDAO;
 	private RestaurantDAO restaurantDAO;
@@ -48,6 +52,8 @@ public class RestaurantListFrame extends JFrame {
 	private int type;
 	public static final int CATEGORY = 0;
 	public static final int LOCATION = 1;
+	public static final int CATEGORY_ALL = 2;
+	public static final int LOCATION_ALL = 3;
 
 	private final String RESET = "초기화";
 	private final String GANADA_UP = "가나다순";
@@ -60,7 +66,7 @@ public class RestaurantListFrame extends JFrame {
 	private List<RestaurantDTO> restaurantList = new ArrayList<>();
 	private List<RestaurantDTO> defaultList = new ArrayList<>();
 
-	private String[] head = {"식당명", "카테고리", "지역", "영업중", "평점"};
+	private String[] head = { "식당명", "카테고리", "지역", "영업중", "평점" };
 	private String[][] contents;
 	private TableRowSorter<DefaultTableModel> sorter;
 
@@ -90,6 +96,7 @@ public class RestaurantListFrame extends JFrame {
 		homeBtn = new JButton("홈");
 		categoryBtn = new JButton("카테고리");
 		locationBtn = new JButton("지역");
+		backBtn = new JLabel(new ImageIcon("img/quitBtn2.png"));
 	}
 
 	private void setInitLayout() {
@@ -123,10 +130,15 @@ public class RestaurantListFrame extends JFrame {
 
 		add(locationBtn);
 
+		add(backBtn);
+		backBtn.setLocation(20, 20);
+		backBtn.setSize(15, 24);
+
 		setVisible(true);
 	}
 
 	private void addEventListener() {
+
 		table.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
@@ -143,6 +155,7 @@ public class RestaurantListFrame extends JFrame {
 				}
 			}
 		});
+
 		filterBtn.addActionListener(new ActionListener() {
 
 			@Override
@@ -150,6 +163,19 @@ public class RestaurantListFrame extends JFrame {
 				System.out.println(filter.getSelectedItem().toString());
 				switch (filter.getSelectedItem().toString()) {
 				case RESET:
+					restaurantDAO.setOpenFilter(false);
+					try {
+						if (type == LOCATION) {
+							restaurantList = restaurantDAO.getRestaurantsByLocation(locationId);
+						} else if (type == CATEGORY) {
+							restaurantList = restaurantDAO.getRestaurantsByCategory(categoryId);
+						} else {
+							restaurantList = restaurantDAO.getAllRestaurants(customerDTO.getCustomerId());
+						}
+					} catch (Exception e2) {
+						e2.printStackTrace();
+					}
+					tableSet();
 					break;
 				case GANADA_UP:
 					break;
@@ -165,15 +191,42 @@ public class RestaurantListFrame extends JFrame {
 					break;
 				case OPEN:
 					try {
+						restaurantDAO.setOpenFilter(true);
+						restaurantDAO.setCurrentTime(currentTime);
 						if (type == LOCATION) {
-							restaurantList = restaurantDAO.getRestaurantsByLocationFiltered(locationId, currentTime);
+							restaurantList = restaurantDAO.getRestaurantsByLocation(locationId);
 						} else if (type == CATEGORY) {
-							restaurantList = restaurantDAO.getRestaurantsByCategoryFiltered(categoryId, currentTime);
+							restaurantList = restaurantDAO.getRestaurantsByCategory(categoryId);
+						} else {
+							restaurantList = restaurantDAO.getAllRestaurants(customerDTO.getCustomerId());
 						}
 						tableSet();
 					} catch (SQLException e1) {
 						e1.printStackTrace();
 					}
+					break;
+				}
+			}
+		});
+		backBtn.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mousePressed(MouseEvent e) {
+				switch (type) {
+				case CATEGORY:
+					setVisible(false);
+					new CategoryFrame(customerDTO);
+					break;
+				case LOCATION:
+					setVisible(false);
+					new LocationFrame(customerDTO);
+					break;
+				case CATEGORY_ALL:
+					setVisible(false);
+					new CategoryFrame(customerDTO);
+					break;
+				case LOCATION_ALL:
+					setVisible(false);
+					new LocationFrame(customerDTO);
 					break;
 				}
 			}
@@ -198,7 +251,7 @@ public class RestaurantListFrame extends JFrame {
 			remove(scroll);
 		}
 		contents = new String[restaurantList.size()][head.length];
-		
+
 		for (int i = 0; i < restaurantList.size(); i++) {
 			String isOpen = null;
 			if (currentTime.isOpen(restaurantList.get(i))) {
@@ -238,7 +291,32 @@ public class RestaurantListFrame extends JFrame {
 		add(scroll);
 		scroll.setSize(450, 450);
 		scroll.setLocation(20, 170);
-		
+		scroll.getVerticalScrollBar().setUI(new BasicScrollBarUI() {
+			@Override
+			protected JButton createIncreaseButton(int orientation) {
+				JButton btn = new JButton();
+				btn.setPreferredSize(new Dimension(0, 0));
+				btn.setMinimumSize(new Dimension(0, 0));
+				btn.setMaximumSize(new Dimension(0, 0));
+				return btn;
+			}
+
+			@Override
+			protected JButton createDecreaseButton(int orientation) {
+				JButton btn = new JButton();
+				btn.setPreferredSize(new Dimension(0, 0));
+				btn.setMinimumSize(new Dimension(0, 0));
+				btn.setMaximumSize(new Dimension(0, 0));
+				return btn;
+			}
+
+			@Override
+			protected void configureScrollBarColors() {
+				this.thumbColor = Color.ORANGE;
+				this.trackColor = Color.white;
+			}
+		});
+
 		DefaultTableCellRenderer centerAlign = new DefaultTableCellRenderer();
 		centerAlign.setHorizontalAlignment(JLabel.CENTER);
 		table.setFont(new Font("Noto Sans KR", Font.BOLD, 15));
@@ -260,7 +338,7 @@ public class RestaurantListFrame extends JFrame {
 	public static void main(String[] args) {
 		RestaurantDAO dao = new RestaurantDAO();
 		try {
-			new RestaurantListFrame(dao.getRestaurantsByLocation(7), new CustomerDAO().authenticatePhone("01067871703"), LOCATION);
+			new RestaurantListFrame(dao.getAllRestaurants(1), new CustomerDAO().authenticatePhone("01067871703"), LOCATION_ALL);
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
