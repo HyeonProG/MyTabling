@@ -14,12 +14,10 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
 import tabling.dao.CustomerDAO;
 import tabling.dao.CustomerReservationDAO;
-import tabling.dao.MenuDAO;
 import tabling.dao.ReservationDAO;
 import tabling.dao.RestaurantDAO;
 import tabling.dao.RestaurantReservationDAO;
@@ -33,7 +31,7 @@ public class CustomerReservationStatusFrame extends JFrame {
 	private JPanel reservationPanel;
 	private JButton backBtn;
 	private JButton cancelBtn;
-	private JButton detailBtn;
+	 private JButton detailBtn;
 	private CustomerDTO customerDTO;
 	private JLabel customerId;
 	private JLabel phone;
@@ -42,7 +40,7 @@ public class CustomerReservationStatusFrame extends JFrame {
 	private JLabel reservationState;
 	private JLabel restaurantId;
 	private ReservationDTO reservationDTO;
-	private ReservationDAO reservationDAO;
+	private ReservationDAO reservationDAO;  
 	private RestaurantDAO restaurantDAO;
 
 	public CustomerReservationStatusFrame(CustomerDTO customerDTO) {
@@ -52,19 +50,13 @@ public class CustomerReservationStatusFrame extends JFrame {
 		initListener();
 	}
 
-	
 	private void initData() {
 		reservationDAO = new ReservationDAO();
-		restaurantDAO =new RestaurantDAO();
-		
 		try {
-			List<RestaurantDTO> list=restaurantDAO.getAllRestaurants(customerDTO.getCustomerId());
 			reservationDTO = reservationDAO.getReservationByCustomer(customerDTO.getCustomerId());
-			
-			int count = reservationDAO.checkReservation
-					(reservationDTO.getRestaurantId(),reservationDTO.getReservationId());
-			String name=list.get(0).getRestaurantName();
-			
+			int count = reservationDAO.checkReservation(reservationDTO.getRestaurantId(),
+					reservationDTO.getReservationId());
+
 			setTitle("예약 현황");
 			setSize(500, 700);
 			setResizable(false);
@@ -78,7 +70,6 @@ public class CustomerReservationStatusFrame extends JFrame {
 			cancelBtn = new JButton("예약 취소");
 			detailBtn = new JButton("상세 이동");
 			customerId = new JLabel(String.valueOf(count));
-			restaurantId=new JLabel(name);
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -105,14 +96,9 @@ public class CustomerReservationStatusFrame extends JFrame {
 		customerId.setBounds(150, 50, 100, 30);
 		customerId.setBorder(null);
 		customerId.setFont(new Font("Noto Sans KR", Font.BOLD, 15));
-		reservationPanel.add(customerId);
-		
-		restaurantId.setBounds(150, 100, 100, 30);
-		restaurantId.setBorder(null);
-		restaurantId.setFont(new Font("Noto Sans KR", Font.BOLD, 15));
-		reservationPanel.add(restaurantId);
-		
-		detailBtn.setBounds(250, 100, 100, 30);
+		reservationPanel.add(customerId)
+		;
+		detailBtn.setBounds(250, 50, 100, 30);
 		detailBtn.setBorder(null);
 		detailBtn.setFont(new Font("Noto Sans KR", Font.BOLD, 15));
 		reservationPanel.add(detailBtn);
@@ -137,11 +123,13 @@ public class CustomerReservationStatusFrame extends JFrame {
 				try {
 					reservationDTO = reservationDAO.getReservationByCustomer(customerDTO.getCustomerId());
 					System.out.println(reservationDTO.getCustomerId()+"번 ID "+ reservationDTO.getRestaurantId()+"번 음식점 취소완료");
-					customerReservationDAO.candel(reservationDTO.getCustomerId(), reservationDTO.getRestaurantId());
+					customerReservationDAO.cancel(reservationDTO.getCustomerId(), reservationDTO.getRestaurantId());
 					JOptionPane.showMessageDialog(null, "예약 취소 되었습니다.", "성공", JOptionPane.WARNING_MESSAGE);
 				} catch (SQLException e1) {
 					e1.printStackTrace();
 				}
+
+
 			}
 		});
 		
@@ -149,23 +137,23 @@ public class CustomerReservationStatusFrame extends JFrame {
 			@Override
 			public void mousePressed(MouseEvent e) {
 				reservationDAO = new ReservationDAO();
+				restaurantDAO= new RestaurantDAO();
 				CustomerReservationDAO customerReservationDAO = new CustomerReservationDAO();
 				try {
-					List<RestaurantDTO> list=restaurantDAO.getAllRestaurants(customerDTO.getCustomerId());
 					reservationDTO = reservationDAO.getReservationByCustomer(customerDTO.getCustomerId());
-					RestaurantDTO dto=list.get(0);
-					MenuDAO dao= new MenuDAO();
-					new RestaurantFrame(dto, dao.getMenuById(dto.getCategoryId()));
+					System.out.println(reservationDTO.getCustomerId()+"번 ID "+ reservationDTO.getRestaurantId()+"번 음식점 취소완료");
+					List<RestaurantDTO> list = restaurantDAO.getAllRestaurants(customerDTO.getCustomerId());
+		            reservationDTO = reservationDAO.getReservationByCustomer(customerDTO.getCustomerId());
+		            RestaurantDTO dto=list.get(0);
+		            new RestaurantFrame(customerDTO, dto);
 				} catch (SQLException e1) {
 					e1.printStackTrace();
 				}
+				
+				
 			}
 		});
-		
-		
-		
 	}
-	
 
 	private class BackgroundPanel extends JPanel {
 		private JPanel backgroundPanel;

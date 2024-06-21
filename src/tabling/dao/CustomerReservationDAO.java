@@ -42,7 +42,7 @@ public class CustomerReservationDAO {
 
 	// 예약취소
 
-	public void candel(int customerId, int restaurantId) throws SQLException {
+	public void cancel(int customerId, int restaurantId) throws SQLException {
 
 		try (Connection conn = DBConnectionManager.getInstance().getConnection()) {
 			conn.setAutoCommit(false);

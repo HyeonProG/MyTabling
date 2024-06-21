@@ -37,4 +37,5 @@ public class Define {
 	public static final int LOCATION_GIJANGGUN = 16;
 	
 	// 쿼리문
+	public static final String SELECT_CATEGORY_BY_CATEGORYID=" SELECT * FROM category WHERE category_id = ? ";
 }
