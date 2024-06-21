@@ -2,10 +2,10 @@ package tabling.util;
 
 public class Define {
 	// 카테고리 인덱스
-	public static final int CATEGORY_ALL=0;
+	public static final int CATEGORY_ALL = 0;
 	public static final int CATEGORY_GYOUNGYANG = 1;
 	public static final int CATEGORY_CAFE = 2;
-	public static final int CATEGORY_BOONSIK=3;
+	public static final int CATEGORY_BOONSIK = 3;
 	public static final int CATEGORY_GUI = 4;
 	public static final int CATEGORY_JOONGSIK = 5;
 	public static final int CATEGORY_FASTFOOD = 6;
@@ -16,7 +16,7 @@ public class Define {
 	public static final int CATEGORY_ILSIK = 11;
 	public static final int CATEGORY_NAENGMYUN = 12;
 	public static final int CATEGORY_HOF = 13;
-	
+
 	// 로케이션 인덱스
 	public static final int LOCATION_ALL = 0;
 	public static final int LOCATION_GANGSEOGU = 1;
@@ -35,7 +35,21 @@ public class Define {
 	public static final int LOCATION_GEUMJEONGGU = 14;
 	public static final int LOCATION_HAEUNDAEGU = 15;
 	public static final int LOCATION_GIJANGGUN = 16;
-	
+
 	// 쿼리문
-	public static final String SELECT_CATEGORY_BY_CATEGORYID=" SELECT * FROM category WHERE category_id = ? ";
+	public static final String SELECT_CATEGORY_BY_CATEGORYID = " SELECT * FROM category WHERE category_id = ? ";
+	public static final String SELECT_CUSTOMER_BY_PHONE = " SELECT * FROM customer WHERE phone = ? ";
+	public static final String SELECT_LIKES_BY_CUSTOMER_AND_RESTAURANT = " SELECT * FROM likes WHERE customer_id = ? AND restaurant_id = ? ";
+	public static final String SELECT_LIKES_COUNT_BY_RESTAURANT = " SELECT count(*) FROM likes WHERE restaurant_id = ? ";
+	
+	public static final String INSERT_CUSTOMER = " INSERT INTO customer(customer_name, phone, location_id) VALUES(?, ?, ?) ";
+	public static final String INSERT_RESERVATION = " INSERT INTO reservation(reservation_state, reservation_time, customer_id, restaurant_id) VALUES ('Y', current_timestamp(), ?, ?) ";
+	public static final String INSERT_LIKES = " INSERT INTO likes VALUES(?, ?) ";
+	
+	public static final String UPDATE_CUSTOMER_INFO = " UPDATE customer SET customer_name = ?, location_id = ? WHERE phone = ? ";
+	public static final String UPDATE_CUSTOMER_STATE_Y = " UPDATE customer SET state='Y' WHERE customer_id = ? ";
+	public static final String UPDATE_CUSTOMER_STATE_N = " UPDATE customer SET state='N' WHERE customer_id = ? ";
+	public static final String UPDATE_RESERVATION_STATE_N = " UPDATE reservation SET reservation_state='N' WHERE customer_id = ? AND restaurant_id = ? ";
+	
+	public static final String DELETE_LIKES = " DELETE FROM likes WHERE customer_id = ? AND restaurant_id = ? ";
 }

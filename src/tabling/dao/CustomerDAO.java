@@ -9,22 +9,25 @@ import java.util.List;
 
 import tabling.dto.CustomerDTO;
 import tabling.util.DBConnectionManager;
+import tabling.util.Define;
 
 public class CustomerDAO {
 
-	public void addUser(String name, String phone, int local) throws SQLException {
-		String query = " INSERT INTO customer(customer_name,phone,location_id) VALUES(?, ?, ?) ";
+	// 회원가입 메서드
+	public void addCustomer(String name, String phone, int locationId) throws SQLException {
+		
+		String query = " INSERT INTO customer(customer_name, phone, location_id) VALUES(?, ?, ?) ";
 
 		try (Connection conn = DBConnectionManager.getInstance().getConnection()) {
 			PreparedStatement pstmt = conn.prepareStatement(query);
 			pstmt.setString(1, name);
 			pstmt.setString(2, phone);
-			pstmt.setInt(3, local);
+			pstmt.setInt(3, locationId);
 			pstmt.executeUpdate();
-			System.out.println("UserDAOImpl : 데이터베이스에 입력하기 성공");
 		}
 	}
-
+	
+	// TODO 최종에 안쓰면 지워야됨
 	public List<CustomerDTO> getAllUsers() throws SQLException {
 
 		List<CustomerDTO> list = new ArrayList<>();
@@ -50,51 +53,54 @@ public class CustomerDAO {
 		return list;
 	}
 
-	public CustomerDTO authenticatePhone(String phone) {
+	// 전화번호 중복 확인 메서드
+	public CustomerDTO authenticatePhone(String phone) throws SQLException {
 		CustomerDTO dto;
-		String query = "  SELECT * FROM customer WHERE phone = ?  ";
+		String query = Define.SELECT_CUSTOMER_BY_PHONE;
 
 		try (Connection conn = DBConnectionManager.getInstance().getConnection()) {
 			PreparedStatement pstmt = conn.prepareStatement(query);
 			pstmt.setString(1, phone);
 			ResultSet rs = pstmt.executeQuery();
 
-			// result = rs.next();
 			if (rs.next()) {
-				dto = new CustomerDTO(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getInt(5));
+				dto = new CustomerDTO().builder() //
+						.customerId(rs.getInt(1)) //
+						.customerName(rs.getString(2)) //
+						.phone(rs.getString(3)) //
+						.state(rs.getString(4)) //
+						.locationId(rs.getInt(5)) //
+						.build(); 
 				return dto;
 			}
 			
-		} catch (SQLException e) {
-			e.printStackTrace();
 		}
 
 		return null;
 	}
 
-	public boolean authenticateAll(String name, String phone) throws SQLException {
-		
-		String query = "  SELECT customer_name FROM customer WHERE phone = ?  ";
-		boolean result = false;
-
-		try (Connection conn = DBConnectionManager.getInstance().getConnection()) {
-			PreparedStatement pstmt = conn.prepareStatement(query);
-			pstmt.setString(1, phone);
-			ResultSet rs = pstmt.executeQuery();
-
-			result = rs.next();
-
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-
-		return result;
-
-	}
+//	public boolean authenticateAll(String name, String phone) throws SQLException {
+//		
+//		String query = "  SELECT customer_name FROM customer WHERE phone = ?  ";
+//		boolean result = false;
+//
+//		try (Connection conn = DBConnectionManager.getInstance().getConnection()) {
+//			PreparedStatement pstmt = conn.prepareStatement(query);
+//			pstmt.setString(1, phone);
+//			ResultSet rs = pstmt.executeQuery();
+//
+//			result = rs.next();
+//
+//		} catch (SQLException e) {
+//			e.printStackTrace();
+//		}
+//
+//		return result;
+//
+//	}
 	
-	// TODO - 회원정보 수정/ 파라미터값으로 DTO를 받아와야할지
 	public void updateCustomer(String name, int location, String phone) throws SQLException{
-		String query = "  UPDATE customer SET customer_name = ?, location_id = ? WHERE phone = ?  ";
+		String query = " UPDATE customer SET customer_name = ?, location_id = ? WHERE phone = ? ";
 		
 		try (Connection conn = DBConnectionManager.getInstance().getConnection()){
 			PreparedStatement pstmt = conn.prepareStatement(query);
@@ -104,7 +110,6 @@ public class CustomerDAO {
 			pstmt.executeUpdate();
 		}
 		
-		// throws SQLException 해서 catch 삭제
 	}
 	
 	// TODO - 회원정보 삭제

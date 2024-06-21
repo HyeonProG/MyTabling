@@ -5,114 +5,57 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
 import tabling.util.DBConnectionManager;
+import tabling.util.Define;
 
 public class CustomerReservationDAO {
-	// 예약하기(Reservation)
+
+	/**
+	 * 예약하기 <BR>
+	 * 예약 테이블에 INSERT, 고객 예약 상태 UPDATE 동시 진행
+	 */
 	public void reservation(int customerId, int restaurantId) throws SQLException {
 
 		try (Connection conn = DBConnectionManager.getInstance().getConnection()) {
 			conn.setAutoCommit(false);
-			String queryInsert = " insert into reservation(reservation_state,reservation_time,customer_id,restaurant_id)\r\n"
-					+ "values ('Y',current_timestamp(),?,?) ";
-			PreparedStatement pstmt = conn.prepareCall(queryInsert);
+			String queryInsert = Define.INSERT_RESERVATION;
+			PreparedStatement pstmt = conn.prepareStatement(queryInsert);
 			pstmt.setInt(1, customerId);
 			pstmt.setInt(2, restaurantId);
 			pstmt.executeUpdate();
 
-			String query2 = " update customer set  state='Y' where customer_id=?   ";
-			PreparedStatement pstmt2 = conn.prepareCall(query2);
+			String queryUpdate = Define.UPDATE_CUSTOMER_STATE_Y;
+			PreparedStatement pstmt2 = conn.prepareStatement(queryUpdate);
 			pstmt2.setInt(1, customerId);
 			pstmt2.executeUpdate();
 
 			conn.commit();
 
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+		} 
 
 	}
 
-	// 예약취소
-
+	/**
+	 * 예약이행 or 취소 <BR>
+	 * 예약 테이블, 고객 테이블 예약 상태 UPDATE 동시 진행
+	 */
 	public void cancel(int customerId, int restaurantId) throws SQLException {
 
 		try (Connection conn = DBConnectionManager.getInstance().getConnection()) {
 			conn.setAutoCommit(false);
-			String query1 = " update reservation set  reservation_state='N' where customer_id=? and restaurant_id=? ";
-			PreparedStatement pstmt = conn.prepareCall(query1);
+			String queryReservation = Define.UPDATE_RESERVATION_STATE_N;
+			PreparedStatement pstmt = conn.prepareStatement(queryReservation);
 			pstmt.setInt(1, customerId);
 			pstmt.setInt(2, restaurantId);
 			pstmt.executeUpdate();
 
-			String query2 = " update customer set  state='N' where customer_id=?   ";
-			PreparedStatement pstmt2 = conn.prepareCall(query2);
+			String queryCustomer = Define.UPDATE_CUSTOMER_STATE_N;
+			PreparedStatement pstmt2 = conn.prepareStatement(queryCustomer);
 			pstmt2.setInt(1, customerId);
 			pstmt2.executeUpdate();
 
-				conn.commit();
+			conn.commit();
 
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+		} 
 	}
-
-	// 백업
-//	public void addReservation(int customerId, int restaurantId) throws SQLException {
-//	customerId=1;
-//	restaurantId=1;
-//	String query = " insert into reservation(reservation_state,reservation_time,customer_id,restaurant_id)\r\n"
-//				+ "values ('Y',current_timestamp(),?,?) ";
-//		try (Connection conn = DBConnectionManager.getInstance().getConnection()) {
-//			PreparedStatement pstmt = conn.prepareCall(query);
-//			pstmt.setInt(1, customerId);
-//			pstmt.setInt(2, restaurantId);
-//			pstmt.executeUpdate();
-//			System.out.println("완료1");
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//		}
-//
-//	}
-//
-//	public void updateCustomerReservationY(int customerId) throws SQLException {
-//		customerId=1;
-//		String query = " update customer set  state='Y' where customer_id=?   ";
-//		try (Connection conn = DBConnectionManager.getInstance().getConnection()) {
-//			PreparedStatement pstmt = conn.prepareCall(query);
-//			pstmt.setInt(1, customerId);
-//			pstmt.executeUpdate();
-//			System.out.println("완료2");
-//		}catch (Exception e) {
-//			e.printStackTrace();
-//		}
-//	}
-
-//	public void updateReservation(int customerId, int restaurantId) throws SQLException {
-//		customerId=1;
-//		restaurantId=1;
-//		String query = " update reservation set  reservation_state='N' where customer_id=? and restaurant_id=? ";
-//		try (Connection conn = DBConnectionManager.getInstance().getConnection()) {
-//			PreparedStatement pstmt = conn.prepareCall(query);
-//			pstmt.setInt(1, customerId);
-//			pstmt.setInt(2, restaurantId);
-//			pstmt.executeUpdate();
-//			System.out.println("완료3");
-//		}catch (Exception e) {
-//			e.printStackTrace();
-//		}
-//	}
-//
-//	public void updateCustomerReservationN(int customerId) throws SQLException {
-//		customerId=1;
-//		String query = " update customer set  state='N' where customer_id=?   ";
-//		try (Connection conn = DBConnectionManager.getInstance().getConnection()) {
-//			PreparedStatement pstmt = conn.prepareCall(query);
-//			pstmt.setInt(1, customerId);
-//			pstmt.executeUpdate();
-//			System.out.println("완료4");
-//		}catch (Exception e) {
-//			e.printStackTrace();
-//		}
-//	}
 
 }

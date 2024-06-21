@@ -1,6 +1,7 @@
 package tabling.frame;
 
 import java.awt.Choice;
+import java.awt.HeadlessException;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
@@ -109,7 +110,7 @@ public class SignInFrame extends JFrame {
 						JOptionPane.showMessageDialog(null, "전화번호는 비워둘 수 없습니다.", "경고", JOptionPane.WARNING_MESSAGE);
 					} else {
 						try {
-							signin.addUser(userName.getText(), localTel.getSelectedItem() + userPhone.getText(), myLocation.getSelectedIndex() + 1);
+							signin.addCustomer(userName.getText(), localTel.getSelectedItem() + userPhone.getText(), myLocation.getSelectedIndex() + 1);
 							JOptionPane.showMessageDialog(null, "회원가입 성공!", "경고", JOptionPane.WARNING_MESSAGE);
 							setVisible(false);
 						} catch (SQLException e1) {
@@ -127,12 +128,18 @@ public class SignInFrame extends JFrame {
 
 				if (userPhone.getText().length() == 8 && canCheck == true) {
 
-					if (signin.authenticatePhone(localTel.getSelectedItem() + userPhone.getText()) != null) {
-						JOptionPane.showMessageDialog(null, "중복되는 번호입니다.", "경고", JOptionPane.WARNING_MESSAGE);
-					} else {
-						JOptionPane.showMessageDialog(null, "가입 가능한 전화번호입니다.", "경고", JOptionPane.WARNING_MESSAGE);
-						signInBtn.setEnabled(true);
-						canLogin = true;
+					try {
+						if (signin.authenticatePhone(localTel.getSelectedItem() + userPhone.getText()) != null) {
+							JOptionPane.showMessageDialog(null, "중복되는 번호입니다.", "경고", JOptionPane.WARNING_MESSAGE);
+						} else {
+							JOptionPane.showMessageDialog(null, "가입 가능한 전화번호입니다.", "경고", JOptionPane.WARNING_MESSAGE);
+							signInBtn.setEnabled(true);
+							canLogin = true;
+						}
+					} catch (HeadlessException e1) {
+						e1.printStackTrace();
+					} catch (SQLException e1) {
+						e1.printStackTrace();
 					}
 
 				} else if (canCheck == true) {

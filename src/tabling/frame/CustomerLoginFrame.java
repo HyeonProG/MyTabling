@@ -2,6 +2,7 @@ package tabling.frame;
 
 import java.awt.Font;
 import java.awt.Graphics;
+import java.awt.HeadlessException;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -99,12 +100,18 @@ public class CustomerLoginFrame extends JFrame {
 			public void mousePressed(MouseEvent e) {
 
 				if (!phoneText.getText().equals("")) {
-					if ((customerDTO = userDao.authenticatePhone(phoneText.getText())) != null) {
-						JOptionPane.showMessageDialog(null, "로그인 되었습니다.", "성공", JOptionPane.WARNING_MESSAGE);
-						setVisible(false);
-						new CustomerMainMenuFrame(customerDTO);
-					} else {
-						JOptionPane.showMessageDialog(null, "존재하지 않는 유저 정보입니다.", "경고", JOptionPane.WARNING_MESSAGE);
+					try {
+						if ((customerDTO = userDao.authenticatePhone(phoneText.getText())) != null) {
+							JOptionPane.showMessageDialog(null, "로그인 되었습니다.", "성공", JOptionPane.WARNING_MESSAGE);
+							setVisible(false);
+							new CustomerMainMenuFrame(customerDTO);
+						} else {
+							JOptionPane.showMessageDialog(null, "존재하지 않는 유저 정보입니다.", "경고", JOptionPane.WARNING_MESSAGE);
+						}
+					} catch (HeadlessException e1) {
+						e1.printStackTrace();
+					} catch (SQLException e1) {
+						e1.printStackTrace();
 					}
 				}
 			}
