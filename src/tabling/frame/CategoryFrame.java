@@ -100,50 +100,40 @@ public class CategoryFrame extends JFrame implements MouseListener {
 	@Override
 	public void mousePressed(MouseEvent e) {
 		try {
-<<<<<<< HEAD
-=======
-			
-	for(int i=0;i<3;i++) {
-		 if (i==0) {			 
-			 if(e.getSource() == categoryImgs[i]  ) {
-				 
+			for (int i = Define.CATEGORY_ALL; i <= Define.CATEGORY_HOF; i++) {
+				if (e.getSource() == categoryImgs[Define.CATEGORY_ALL]) {
 					RestaurantDAO dao = new RestaurantDAO();
-					List<RestaurantDTO> list = dao.getAllRestaurants();
-					new RestaurantListFrame(list, customerDTO, RestaurantListFrame.CATEGORY);	
-			 }
-		} else {
-	 
-		  if (e.getSource() == categoryImgs[i]  ) {
-			RestaurantDAO dao = new RestaurantDAO();
-				List<RestaurantDTO> list = dao.getRestaurantsByCategory(i);
-				new RestaurantListFrame(list, customerDTO, RestaurantListFrame.CATEGORY);
-		  			}
-		 	}  
-		 
-		 
-		 if(e.getSource() == homeLable) {
-			 new CustomerMainMenuFrame(customerDTO);
->>>>>>> 144db223015c3b70623162be5db9d1b569580a56
-
-			for (int i = Define.CATEGORY_ALL; i < Define.CATEGORY_HOF; i++) {
-				if (e.getSource() == categoryImgs[i]) {
-					if (i == Define.CATEGORY_ALL) {
-						RestaurantDAO dao = new RestaurantDAO();
-						List<RestaurantDTO> list = dao.getAllRestaurants();
-						new RestaurantListFrame(list);
-						break;
-
-					} else {
-						RestaurantDAO dao = new RestaurantDAO();
-						List<RestaurantDTO> list = dao.getRestaurantsByCategory(i);
-						new RestaurantListFrame(list);
-						break;
-					}
+					List<RestaurantDTO> list = dao.getAllRestaurants(customerDTO.getCustomerId());
+					new RestaurantListFrame(list,customerDTO,RestaurantListFrame.CATEGORY_ALL);
+					setVisible(false);
+					break;
 				}
+				if (e.getSource() == categoryImgs[i]) {
+					RestaurantDAO dao = new RestaurantDAO();
+					List<RestaurantDTO> list = dao.getRestaurantsByCategory(i);
+					new RestaurantListFrame(list,customerDTO,RestaurantListFrame.CATEGORY);
+					setVisible(false);
+					break;
+				}
+//				if (e.getSource() == categoryImgs[i]) {
+//					if (i == Define.CATEGORY_ALL) {
+//						RestaurantDAO dao = new RestaurantDAO();
+//						List<RestaurantDTO> list = dao.getAllRestaurants(customerDTO.getCustomerId());
+//						new RestaurantListFrame(list,customerDTO,RestaurantListFrame.CATEGORY_ALL);
+//						break;
+//
+//					} else {
+//						RestaurantDAO dao = new RestaurantDAO();
+//						List<RestaurantDTO> list = dao.getRestaurantsByCategory(i);
+//						new RestaurantListFrame(list,customerDTO,RestaurantListFrame.CATEGORY);
+//						break;
+//					}
+//				}
 			}
-			
+
 			if (e.getSource() == homeLable) {
 				new CustomerMainMenuFrame(customerDTO);
+				setVisible(false);
 			}
 
 		} catch (SQLException e1) {

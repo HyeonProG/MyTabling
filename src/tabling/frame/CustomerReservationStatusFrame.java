@@ -16,6 +16,7 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 
 import tabling.dao.CustomerDAO;
+import tabling.dao.CustomerReservationDAO;
 import tabling.dao.ReservationDAO;
 import tabling.dao.RestaurantReservationDAO;
 import tabling.dto.CustomerDTO;
@@ -38,40 +39,31 @@ public class CustomerReservationStatusFrame extends JFrame {
 	private ReservationDAO reservationDAO;
 
 	public CustomerReservationStatusFrame(CustomerDTO customerDTO) {
-		this.customerDTO=customerDTO;
+		this.customerDTO = customerDTO;
 		initData();
 		setInitLayout();
 		initListener();
 	}
 
 	private void initData() {
-		reservationDAO=new ReservationDAO();
-		ReservationDTO reservationId;
+		reservationDAO = new ReservationDAO();
 		try {
-			reservationId = reservationDAO.getReservationByCustomer(customerDTO.getCustomerId());
-			int count=reservationDAO.checkReservation(reservationId.getRestaurantId(),reservationId.getReservationId());
-	
+			reservationDTO = reservationDAO.getReservationByCustomer(customerDTO.getCustomerId());
+			int count = reservationDAO.checkReservation(reservationDTO.getRestaurantId(),
+					reservationDTO.getReservationId());
 
+			setTitle("예약 현황");
+			setSize(500, 700);
+			setResizable(false);
+			setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+			setLocationRelativeTo(null);
+			setVisible(true);
 
-				
-
-		
-			
-		
-		
-		
-		setTitle("예약 현황");
-		setSize(500, 700);
-		setResizable(false);
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setLocationRelativeTo(null);
-		setVisible(true);
-		
-		backgroundPanel = new BackgroundPanel();
-		reservationPanel = new JPanel();
-		backBtn = new JButton("뒤로가기");
-		cancelBtn = new JButton("예약 취소");
-		customerId=new JLabel(String.valueOf(count));
+			backgroundPanel = new BackgroundPanel();
+			reservationPanel = new JPanel();
+			backBtn = new JButton("뒤로가기");
+			cancelBtn = new JButton("예약 취소");
+			customerId = new JLabel(String.valueOf(count));
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -82,36 +74,51 @@ public class CustomerReservationStatusFrame extends JFrame {
 		backgroundPanel.setSize(getWidth(), getHeight());
 		backgroundPanel.setLayout(null);
 		add(backgroundPanel);
-		
+
 		reservationPanel.setBounds(40, 200, 300, 300);
 		reservationPanel.setSize(410, 300);
 		backgroundPanel.add(reservationPanel);
-		
+
 		backBtn.setBounds(350, 20, 50, 50);
 		backBtn.setSize(100, 50);
 		backgroundPanel.add(backBtn);
-		
+
 		cancelBtn.setBounds(350, 520, 50, 50);
 		cancelBtn.setSize(100, 50);
 		backgroundPanel.add(cancelBtn);
 
-		customerId.setBounds(30, 260, 100, 30);
+		customerId.setBounds(150, 50, 100, 30);
 		customerId.setBorder(null);
 		customerId.setFont(new Font("Noto Sans KR", Font.BOLD, 15));
 		reservationPanel.add(customerId);
-		
 
-
-		
 	}
 
 	private void initListener() {
 		backBtn.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mousePressed(MouseEvent e) {
-				JOptionPane.showMessageDialog(null, "예약 취소 되었습니다.", "성공", JOptionPane.WARNING_MESSAGE);
+
 				new CustomerMainMenuFrame(customerDTO);
 				setVisible(false);
+			}
+		});
+
+		cancelBtn.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mousePressed(MouseEvent e) {
+				reservationDAO = new ReservationDAO();
+				CustomerReservationDAO customerReservationDAO = new CustomerReservationDAO();
+				try {
+					reservationDTO = reservationDAO.getReservationByCustomer(customerDTO.getCustomerId());
+					System.out.println(reservationDTO.getCustomerId()+"번 ID "+ reservationDTO.getRestaurantId()+"번 음식점 취소완료");
+					customerReservationDAO.candel(reservationDTO.getCustomerId(), reservationDTO.getRestaurantId());
+					JOptionPane.showMessageDialog(null, "예약 취소 되었습니다.", "성공", JOptionPane.WARNING_MESSAGE);
+				} catch (SQLException e1) {
+					e1.printStackTrace();
+				}
+
+
 			}
 		});
 	}
