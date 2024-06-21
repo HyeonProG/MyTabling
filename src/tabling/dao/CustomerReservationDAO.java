@@ -115,14 +115,4 @@ public class CustomerReservationDAO {
 //		}
 //	}
 
-	// 임시
-	public static void main(String[] args) {
-		CustomerReservationDAO dao = new CustomerReservationDAO();
-		try {
-//		dao.reservation(1, 47);
-			dao.candel(6, 47);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
 }
