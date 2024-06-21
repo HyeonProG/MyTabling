@@ -191,7 +191,8 @@ public class RestaurantFrame extends JFrame {
 		reservationBtn.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mousePressed(MouseEvent e) {
-				new ReservationFrame(restaurantDTO);
+				new ReservationFrame(customerDTO, restaurantDTO);
+				setVisible(false);
 			}
 		});
 		

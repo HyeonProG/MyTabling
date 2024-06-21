@@ -100,6 +100,7 @@ public class CategoryFrame extends JFrame implements MouseListener {
 	@Override
 	public void mousePressed(MouseEvent e) {
 		try {
+<<<<<<< HEAD
 			for (int i = Define.CATEGORY_ALL; i <= Define.CATEGORY_HOF; i++) {
 				if (e.getSource() == categoryImgs[Define.CATEGORY_ALL]) {
 					RestaurantDAO dao = new RestaurantDAO();
@@ -107,6 +108,46 @@ public class CategoryFrame extends JFrame implements MouseListener {
 					new RestaurantListFrame(list,customerDTO,RestaurantListFrame.CATEGORY_ALL);
 					setVisible(false);
 					break;
+=======
+
+			
+	for(int i=0;i<3;i++) {
+		 if (i==0) {			 
+			 if(e.getSource() == categoryImgs[i]  ) {
+				 
+					RestaurantDAO dao = new RestaurantDAO();
+					List<RestaurantDTO> list = dao.getAllRestaurants();
+					new RestaurantListFrame(list, customerDTO, RestaurantListFrame.CATEGORY);	
+			 }
+		} else {
+	 
+		  if (e.getSource() == categoryImgs[i]  ) {
+			RestaurantDAO dao = new RestaurantDAO();
+				List<RestaurantDTO> list = dao.getRestaurantsByCategory(i);
+				new RestaurantListFrame(list, customerDTO, RestaurantListFrame.CATEGORY);
+		  			}
+		 	}  
+		 
+		 
+		 if(e.getSource() == homeLable) {
+			 new CustomerMainMenuFrame(customerDTO);
+
+
+			for (int i = Define.CATEGORY_ALL; i < Define.CATEGORY_HOF; i++) {
+				if (e.getSource() == categoryImgs[i]) {
+					if (i == Define.CATEGORY_ALL) {
+						RestaurantDAO dao = new RestaurantDAO();
+						List<RestaurantDTO> list = dao.getAllRestaurants();
+						new RestaurantListFrame(list);
+						break;
+
+					} else {
+						RestaurantDAO dao = new RestaurantDAO();
+						List<RestaurantDTO> list = dao.getRestaurantsByCategory(i);
+						new RestaurantListFrame(list);
+						break;
+					}
+>>>>>>> c5bd54d696df7125cbb6f79d9197eccf3052bb4f
 				}
 				if (e.getSource() == categoryImgs[i]) {
 					RestaurantDAO dao = new RestaurantDAO();
@@ -138,6 +179,8 @@ public class CategoryFrame extends JFrame implements MouseListener {
 
 		} catch (SQLException e1) {
 			e1.printStackTrace();
+		}
+	}
 		}
 	}
 
