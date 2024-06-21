@@ -1,8 +1,10 @@
 package tabling.frame;
 
 
+import java.awt.Button;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.sql.SQLException;
@@ -47,7 +49,7 @@ public class LocationFrame extends JFrame implements ActionListener {
 	
 	private JButton Allselect; // 지역구 음식점 모두 검색 
 	
-	private JButton back;
+	private JLabel  back;
 	
 	public LocationFrame(CustomerDTO customerDTO) {
 		this.customerDTO = customerDTO;
@@ -69,6 +71,12 @@ public class LocationFrame extends JFrame implements ActionListener {
 		// 413, 355
 		background.setSize(413, 355);
 		background.setLocation(35,50);
+		
+		Icon icon2 = new ImageIcon("img/quitBtn2.png");
+		back = new JLabel(icon2);
+		
+		back.setSize(40, 40);
+		back.setLocation(34, 40);
 		
 		locationbutton[Define.LOCATION_ALL] = new JButton("전체 검색"); // 지역구 모두 검색 (전체 검색)
 		locationbutton[Define.LOCATION_ALL].setBounds(190, 460, 120, 40); // 190, 460, 120, 40
@@ -169,9 +177,12 @@ public class LocationFrame extends JFrame implements ActionListener {
 		locationbutton[Define.LOCATION_GIJANGGUN].setContentAreaFilled(false); 
 		locationbutton[Define.LOCATION_GIJANGGUN].setFocusPainted(false);
 		
-	
-		back = new JButton("뒤로 가기");
-		back.setBounds(40, 60, 90, 40);
+		
+		
+//		back.setBounds(80, 50, 80, 80);
+//		back.setBorderPainted(false); 
+//		back.setContentAreaFilled(false); 
+//		back.setFocusPainted(false);
 		
 	} // end of initData
 	
@@ -181,13 +192,13 @@ public class LocationFrame extends JFrame implements ActionListener {
 		add(background);
 		setVisible(true);
 		setResizable(false);
+		add(back);
 		
 		for (int i =1 ; i < 17; i++) {
 			background.add(locationbutton[i]);
 			System.out.println(i);
 		}
 		add(locationbutton[Define.LOCATION_ALL]);
-		add(back);
 		
 	}
 	
@@ -215,8 +226,14 @@ public class LocationFrame extends JFrame implements ActionListener {
 		locationbutton[Define.LOCATION_HAEUNDAEGU].addActionListener(this);
 		locationbutton[Define.LOCATION_GIJANGGUN].addActionListener(this);
 		
-		
-		back.addActionListener(this);
+		back.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mousePressed(MouseEvent e) {
+				new CustomerMainMenuFrame(customerDTO);
+				setVisible(false);
+				dispose();
+			}
+		});
 		
 	}	
 	@Override
@@ -253,10 +270,21 @@ public class LocationFrame extends JFrame implements ActionListener {
 					}
 				}
 		
-		if(e.getSource() == back) {
-			new CustomerMainMenuFrame(customerDTO);
-			setVisible(false);
-			}
+//		if(e.getSource() == back) {
+//			new CustomerMainMenuFrame(customerDTO);
+//			setVisible(false);
+//			}
+		
+//		back.addMouseListener(new MouseAdapter() {
+//
+//			@Override
+//			public void mousePressed(MouseEvent e) {
+//				new CustomerMainMenuFrame(customerDTO);
+//				super.mousePressed(e);
+//			}
+//			
+//		});
+		
 		} // end of actionPerformed
 	
 	
@@ -264,7 +292,7 @@ public class LocationFrame extends JFrame implements ActionListener {
 	
 	// TODO TEST
 	public static void main(String[] args) {
-		new LocationFrame(new CustomerDAO().authenticatePhone("01067871703"));
+		new LocationFrame(new CustomerDAO().authenticatePhone(""));
 	} // end of main 
 
 } // end of class
