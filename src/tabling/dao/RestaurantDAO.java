@@ -16,15 +16,21 @@ import tabling.util.Time;
 public class RestaurantDAO {
 
 	private boolean openFilter;
+	private boolean likeFilter;
 	private Time currentTime;
 
 	public List<RestaurantDTO> getAllRestaurants(int customerId) throws SQLException {
 		List<RestaurantDTO> list = new ArrayList<>();
-		// String query = " SELECT * FROM restaurant ";
 		String query = " SELECT * FROM restaurant ORDER BY CASE WHEN location_id = (SELECT location_id FROM customer WHERE customer_id = ? ) THEN 0 ELSE 1 END ";
+		if (likeFilter) {
+			query = " SELECT * FROM restaurant WHERE restaurant_id IN (SELECT restaurant_id FROM likes WHERE customer_id = ?) ORDER BY CASE WHEN location_id = (SELECT location_id FROM customer WHERE customer_id = ? ) THEN 0 ELSE 1 END ";
+		}
 		try (Connection conn = DBConnectionManager.getInstance().getConnection()) {
 			PreparedStatement pstmt = conn.prepareStatement(query);
 			pstmt.setInt(1, customerId);
+			if (likeFilter) {
+				pstmt.setInt(2, customerId);
+			}
 			try (ResultSet rs = pstmt.executeQuery()) {
 				while (rs.next()) {
 					RestaurantDTO dto = new RestaurantDTO().builder() //
@@ -54,12 +60,18 @@ public class RestaurantDAO {
 		return list;
 	}
 
-	public List<RestaurantDTO> getRestaurantsByCategory(int categoryId) throws SQLException {
+	public List<RestaurantDTO> getRestaurantsByCategory(int categoryId, int customerId) throws SQLException {
 		List<RestaurantDTO> list = new ArrayList<>();
 		String query = " SELECT * FROM restaurant where category_id = ? ";
+		if (likeFilter) {
+			query = " SELECT * FROM restaurant where category_id = ? AND restaurant_id IN (SELECT restaurant_id FROM likes WHERE customer_id = ?); ";
+		}
 		try (Connection conn = DBConnectionManager.getInstance().getConnection()) {
 			PreparedStatement pstmt = conn.prepareStatement(query);
 			pstmt.setInt(1, categoryId);
+			if (likeFilter) {
+				pstmt.setInt(2, customerId);
+			}
 			try (ResultSet rs = pstmt.executeQuery()) {
 				while (rs.next()) {
 					RestaurantDTO dto = new RestaurantDTO().builder() //
@@ -90,12 +102,18 @@ public class RestaurantDAO {
 
 	}
 
-	public List<RestaurantDTO> getRestaurantsByLocation(int locationId) throws SQLException {
+	public List<RestaurantDTO> getRestaurantsByLocation(int locationId, int customerId) throws SQLException {
 		List<RestaurantDTO> list = new ArrayList<>();
 		String query = " SELECT * FROM restaurant where location_id = ? ";
+		if (likeFilter) {
+			query = " SELECT * FROM restaurant where location_id = ? AND restaurant_id IN (SELECT restaurant_id FROM likes WHERE customer_id = ?); ";
+		}
 		try (Connection conn = DBConnectionManager.getInstance().getConnection()) {
 			PreparedStatement pstmt = conn.prepareStatement(query);
 			pstmt.setInt(1, locationId);
+			if (likeFilter) {
+				pstmt.setInt(2, customerId);
+			}
 			try (ResultSet rs = pstmt.executeQuery()) {
 				while (rs.next()) {
 					RestaurantDTO dto = new RestaurantDTO().builder() //
