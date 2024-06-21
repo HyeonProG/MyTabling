@@ -6,6 +6,7 @@ import java.awt.Image;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.sql.SQLException;
+import java.util.List;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -13,14 +14,18 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
 import tabling.dao.CustomerDAO;
 import tabling.dao.CustomerReservationDAO;
+import tabling.dao.MenuDAO;
 import tabling.dao.ReservationDAO;
+import tabling.dao.RestaurantDAO;
 import tabling.dao.RestaurantReservationDAO;
 import tabling.dto.CustomerDTO;
 import tabling.dto.ReservationDTO;
+import tabling.dto.RestaurantDTO;
 
 public class CustomerReservationStatusFrame extends JFrame {
 
@@ -28,6 +33,7 @@ public class CustomerReservationStatusFrame extends JFrame {
 	private JPanel reservationPanel;
 	private JButton backBtn;
 	private JButton cancelBtn;
+	private JButton detailBtn;
 	private CustomerDTO customerDTO;
 	private JLabel customerId;
 	private JLabel phone;
@@ -37,6 +43,7 @@ public class CustomerReservationStatusFrame extends JFrame {
 	private JLabel restaurantId;
 	private ReservationDTO reservationDTO;
 	private ReservationDAO reservationDAO;
+	private RestaurantDAO restaurantDAO;
 
 	public CustomerReservationStatusFrame(CustomerDTO customerDTO) {
 		this.customerDTO = customerDTO;
@@ -45,13 +52,19 @@ public class CustomerReservationStatusFrame extends JFrame {
 		initListener();
 	}
 
+	
 	private void initData() {
 		reservationDAO = new ReservationDAO();
+		restaurantDAO =new RestaurantDAO();
+		
 		try {
+			List<RestaurantDTO> list=restaurantDAO.getAllRestaurants(customerDTO.getCustomerId());
 			reservationDTO = reservationDAO.getReservationByCustomer(customerDTO.getCustomerId());
-			int count = reservationDAO.checkReservation(reservationDTO.getRestaurantId(),
-					reservationDTO.getReservationId());
-
+			
+			int count = reservationDAO.checkReservation
+					(reservationDTO.getRestaurantId(),reservationDTO.getReservationId());
+			String name=list.get(0).getRestaurantName();
+			
 			setTitle("예약 현황");
 			setSize(500, 700);
 			setResizable(false);
@@ -63,7 +76,9 @@ public class CustomerReservationStatusFrame extends JFrame {
 			reservationPanel = new JPanel();
 			backBtn = new JButton("뒤로가기");
 			cancelBtn = new JButton("예약 취소");
+			detailBtn = new JButton("상세 이동");
 			customerId = new JLabel(String.valueOf(count));
+			restaurantId=new JLabel(name);
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -91,6 +106,16 @@ public class CustomerReservationStatusFrame extends JFrame {
 		customerId.setBorder(null);
 		customerId.setFont(new Font("Noto Sans KR", Font.BOLD, 15));
 		reservationPanel.add(customerId);
+		
+		restaurantId.setBounds(150, 100, 100, 30);
+		restaurantId.setBorder(null);
+		restaurantId.setFont(new Font("Noto Sans KR", Font.BOLD, 15));
+		reservationPanel.add(restaurantId);
+		
+		detailBtn.setBounds(250, 100, 100, 30);
+		detailBtn.setBorder(null);
+		detailBtn.setFont(new Font("Noto Sans KR", Font.BOLD, 15));
+		reservationPanel.add(detailBtn);
 
 	}
 
@@ -117,11 +142,30 @@ public class CustomerReservationStatusFrame extends JFrame {
 				} catch (SQLException e1) {
 					e1.printStackTrace();
 				}
-
-
 			}
 		});
+		
+		detailBtn.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mousePressed(MouseEvent e) {
+				reservationDAO = new ReservationDAO();
+				CustomerReservationDAO customerReservationDAO = new CustomerReservationDAO();
+				try {
+					List<RestaurantDTO> list=restaurantDAO.getAllRestaurants(customerDTO.getCustomerId());
+					reservationDTO = reservationDAO.getReservationByCustomer(customerDTO.getCustomerId());
+					RestaurantDTO dto=list.get(0);
+					MenuDAO dao= new MenuDAO();
+					new RestaurantFrame(dto, dao.getMenuById(dto.getCategoryId()));
+				} catch (SQLException e1) {
+					e1.printStackTrace();
+				}
+			}
+		});
+		
+		
+		
 	}
+	
 
 	private class BackgroundPanel extends JPanel {
 		private JPanel backgroundPanel;
