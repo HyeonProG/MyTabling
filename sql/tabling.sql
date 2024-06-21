@@ -30,7 +30,6 @@ create table restaurant(
     open_time time,
     close_time time,
     rating decimal(2, 1),
-    likes int default 0,
     rest_day varchar(5),
     location_id int,
     category_id int,
