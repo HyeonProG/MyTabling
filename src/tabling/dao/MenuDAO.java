@@ -28,7 +28,7 @@ public class MenuDAO {
 		return name;
 	}
 	
-	public List<MenuDTO> getMenuById(int restaurtantId) throws SQLException {
+	public List<MenuDTO> getMenuByRestaurantId(int restaurtantId) throws SQLException {
 		List<MenuDTO> list = new ArrayList<>();
 		String query = " select * from menu where restaurant_id = ? ";
 		try (Connection conn = DBConnectionManager.getInstance().getConnection()) {

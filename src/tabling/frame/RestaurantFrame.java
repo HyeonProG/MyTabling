@@ -27,10 +27,10 @@ import tabling.dto.MenuDTO;
 import tabling.dto.RestaurantDTO;
 
 public class RestaurantFrame extends JFrame {
-	RestaurantDTO restaurantDTO;
-	List<MenuDTO> menuDTO = new ArrayList<>();
-	MenuDAO menuDAO;
-	CustomerDTO customerDTO;
+	private RestaurantDTO restaurantDTO;
+	private List<MenuDTO> menuList = new ArrayList<>();
+	private MenuDAO menuDAO;
+	private CustomerDTO customerDTO;
 	
 	private JLabel imageLabel;
 	private JLabel ratingLabel;
@@ -50,13 +50,17 @@ public class RestaurantFrame extends JFrame {
 	private JTextArea restaurantDetail;
 	private JScrollPane detailScroll;
 	
-	private LikeDTO likeDTO;
 	private LikeDAO likeDAO;
 
-	public RestaurantFrame(RestaurantDTO restaurantDTO, List<MenuDTO> menuDTO) {
-		// this.customerDTO = customerDTO;
+	public RestaurantFrame(CustomerDTO customerDTO, RestaurantDTO restaurantDTO) {
+		this.customerDTO = customerDTO;
 		this.restaurantDTO = restaurantDTO;
-		this.menuDTO = menuDTO;
+		menuDAO = new MenuDAO();
+		try {
+			this.menuList = menuDAO.getMenuByRestaurantId(restaurantDTO.getRestaurantId());
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 		initData();
 		setInitLayout();
 		addEventListener();
@@ -93,14 +97,12 @@ public class RestaurantFrame extends JFrame {
 		restaurantDetail.append(restaurantDTO.getContent() + "\n");
 		restaurantDetail.setEditable(false);
 
-		menuDAO = new MenuDAO();
-
 		head.add("메뉴 이름");
 		head.add("가격");
-		for (int i = 0; i < menuDTO.size(); i++) {
+		for (int i = 0; i < menuList.size(); i++) {
 			contents.add(new Vector<>());
-			int price = menuDTO.get(i).getPrice();
-			int foodId = menuDTO.get(i).getFoodId();
+			int price = menuList.get(i).getPrice();
+			int foodId = menuList.get(i).getFoodId();
 			String menuName = null;
 			try {
 				menuName = menuDAO.getMenuName(foodId);
@@ -224,7 +226,7 @@ public class RestaurantFrame extends JFrame {
 
 	public static void main(String[] args) {
 		try {
-			new RestaurantFrame(new RestaurantDAO().getAllRestaurants(1).get(93), new MenuDAO().getMenuById(93));
+			//new RestaurantFrame(new RestaurantDAO().getAllRestaurants(1).get(93), new MenuDAO().getMenuById(93));
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}

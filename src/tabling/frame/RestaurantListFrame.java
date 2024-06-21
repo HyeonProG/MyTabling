@@ -65,11 +65,12 @@ public class RestaurantListFrame extends JFrame {
 	public static final int LOCATION_ALL = 3;
 
 	private final String RESET = "초기화";
+	private final String OPEN = "영업중";
+	private final String LIKE = "좋아요만";
 	private final String GANADA_UP = "가나다순";
 	private final String GANADA_DOWN = "가나다역순";
 	private final String RATING_UP = "평점역순";
 	private final String RATING_DOWN = "평점순";
-	private final String OPEN = "영업중";
 
 	private Time currentTime;
 	private List<RestaurantDTO> restaurantList = new ArrayList<>();
@@ -123,11 +124,12 @@ public class RestaurantListFrame extends JFrame {
 		filter.setFont(new Font("Noto Sans KR", Font.BOLD, 15));
 
 		filter.addItem(RESET);
+		filter.addItem(OPEN);
+		filter.addItem(LIKE);
 		filter.addItem(GANADA_UP);
 		filter.addItem(GANADA_DOWN);
 		filter.addItem(RATING_DOWN);
 		filter.addItem(RATING_UP);
-		filter.addItem(OPEN);
 
 		add(filterBtn);
 		filterBtn.setLocation(400, 120);
@@ -179,6 +181,25 @@ public class RestaurantListFrame extends JFrame {
 					}
 					tableSet();
 					break;
+				case OPEN:
+					try {
+						restaurantDAO.setOpenFilter(true);
+						restaurantDAO.setCurrentTime(currentTime);
+						if (type == LOCATION) {
+							restaurantList = restaurantDAO.getRestaurantsByLocation(locationId);
+						} else if (type == CATEGORY) {
+							restaurantList = restaurantDAO.getRestaurantsByCategory(categoryId);
+						} else {
+							restaurantList = restaurantDAO.getAllRestaurants(customerDTO.getCustomerId());
+						}
+						tableSet();
+					} catch (SQLException e1) {
+						e1.printStackTrace();
+					}
+					break;
+				case LIKE:
+					
+					break;
 				case GANADA_UP:
 					RestaurantDTO.setSortType(RestaurantDTO.GANADA);
 					Collections.sort(restaurantList, Collections.reverseOrder());
@@ -198,22 +219,6 @@ public class RestaurantListFrame extends JFrame {
 					RestaurantDTO.setSortType(RestaurantDTO.RATING);
 					Collections.sort(restaurantList, Collections.reverseOrder());
 					tableSet();
-					break;
-				case OPEN:
-					try {
-						restaurantDAO.setOpenFilter(true);
-						restaurantDAO.setCurrentTime(currentTime);
-						if (type == LOCATION) {
-							restaurantList = restaurantDAO.getRestaurantsByLocation(locationId);
-						} else if (type == CATEGORY) {
-							restaurantList = restaurantDAO.getRestaurantsByCategory(categoryId);
-						} else {
-							restaurantList = restaurantDAO.getAllRestaurants(customerDTO.getCustomerId());
-						}
-						tableSet();
-					} catch (SQLException e1) {
-						e1.printStackTrace();
-					}
 					break;
 				}
 			}
@@ -409,12 +414,7 @@ public class RestaurantListFrame extends JFrame {
 						return;
 					}
 					MenuDAO dao = new MenuDAO();
-					// RestaurantDTO dto = restaurantList.get(rowNum);
-					try {
-						new RestaurantFrame(dto, dao.getMenuById(dto.getRestaurantId()));
-					} catch (SQLException e1) {
-						e1.printStackTrace();
-					}
+					new RestaurantFrame(customerDTO, dto);
 				}
 			}
 		});
