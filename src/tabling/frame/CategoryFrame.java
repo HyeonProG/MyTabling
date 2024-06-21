@@ -1,10 +1,8 @@
 package tabling.frame;
 
-import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.GridLayout;
 import java.awt.Image;
-import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.sql.SQLException;
@@ -15,9 +13,7 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-import javax.swing.JTextField;
 
-import tabling.dao.CustomerDAO;
 import tabling.dao.RestaurantDAO;
 import tabling.dto.CustomerDTO;
 import tabling.dto.RestaurantDTO;
@@ -104,6 +100,30 @@ public class CategoryFrame extends JFrame implements MouseListener {
 	@Override
 	public void mousePressed(MouseEvent e) {
 		try {
+<<<<<<< HEAD
+=======
+			
+	for(int i=0;i<3;i++) {
+		 if (i==0) {			 
+			 if(e.getSource() == categoryImgs[i]  ) {
+				 
+					RestaurantDAO dao = new RestaurantDAO();
+					List<RestaurantDTO> list = dao.getAllRestaurants();
+					new RestaurantListFrame(list, customerDTO, RestaurantListFrame.CATEGORY);	
+			 }
+		} else {
+	 
+		  if (e.getSource() == categoryImgs[i]  ) {
+			RestaurantDAO dao = new RestaurantDAO();
+				List<RestaurantDTO> list = dao.getRestaurantsByCategory(i);
+				new RestaurantListFrame(list, customerDTO, RestaurantListFrame.CATEGORY);
+		  			}
+		 	}  
+		 
+		 
+		 if(e.getSource() == homeLable) {
+			 new CustomerMainMenuFrame(customerDTO);
+>>>>>>> 144db223015c3b70623162be5db9d1b569580a56
 
 			for (int i = Define.CATEGORY_ALL; i < Define.CATEGORY_HOF; i++) {
 				if (e.getSource() == categoryImgs[i]) {

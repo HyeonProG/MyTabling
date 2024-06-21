@@ -91,5 +91,32 @@ public class CustomerDAO {
 		return result;
 
 	}
+	
+	// TODO - 회원정보 수정/ 파라미터값으로 DTO를 받아와야할지
+	public void updateCustomer(String name, int location) throws SQLException{
+		String query = "  UPDATE customer SET customer_name = ?, locationId = ? WHERE phone = ?  ";
+		
+		try (Connection conn = DBConnectionManager.getInstance().getConnection()){
+			PreparedStatement pstmt = conn.prepareStatement(query);
+			pstmt.setString(1,name);
+			pstmt.setInt(2,location);
+//			pstmt.setString(3);
+			pstmt.executeUpdate();
+		}
+		
+		// throws SQLException 해서 catch 삭제
+	}
+	
+	// TODO - 회원정보 삭제
+	public void deleteCustomer(String phone)throws SQLException{
+		String query = "  DELECT FROM customer WHERE phone = ?  ";
+	
+		try (Connection conn = DBConnectionManager.getInstance().getConnection()){
+			PreparedStatement pstmt = conn.prepareStatement(query);
+			pstmt.setString(1, phone);
+			pstmt.executeUpdate();
+		}
+		// throws SQLException 해서 catch 삭제
+	}
 
 }

@@ -1,7 +1,6 @@
 package tabling.frame;
 
 
-import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.sql.SQLException;
@@ -13,7 +12,9 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 
+import tabling.dao.CustomerDAO;
 import tabling.dao.RestaurantDAO;
+import tabling.dto.CustomerDTO;
 import tabling.dto.RestaurantDTO;
 import tabling.util.Define;
 
@@ -22,6 +23,7 @@ public class LocationFrame extends JFrame implements MouseListener {
 	private JLabel background;
 	
 	private JButton[] locationbutton;
+	private CustomerDTO customerDTO;
 	
 	private JButton Gangseogu; // 강서구 Gangseo-gu
 	private JButton Sahagu; // 사하구 Saha-gu
@@ -44,10 +46,12 @@ public class LocationFrame extends JFrame implements MouseListener {
 	
 	private JButton back;
 	
-	public LocationFrame() {
+	public LocationFrame(CustomerDTO customerDTO) {
+		this.customerDTO = customerDTO;
 		initData();
 		setInitLayout();
 		addEventListener();
+		
 	}
 	
 	private void initData() {
@@ -216,7 +220,7 @@ public class LocationFrame extends JFrame implements MouseListener {
 			RestaurantDAO dao = new RestaurantDAO();
 			try {
 				List<RestaurantDTO> list = dao.getRestaurantsByLocation(Define.LOCATION_GANGSEOGU);
-				new RestaurantListFrame(list);
+				new RestaurantListFrame(list, customerDTO, RestaurantListFrame.LOCATION);
 			} catch (SQLException e1) {
 				// TODO: handle exception
 				e1.printStackTrace();
@@ -227,7 +231,7 @@ public class LocationFrame extends JFrame implements MouseListener {
 				RestaurantDAO dao = new RestaurantDAO();
 				try {
 					List<RestaurantDTO> list = dao.getRestaurantsByLocation(Define.LOCATION_SAHAGU);
-					new RestaurantListFrame(list);
+					new RestaurantListFrame(list, customerDTO, RestaurantListFrame.LOCATION);
 				} catch (Exception e1) {
 					// TODO: handle exception
 					e1.printStackTrace();
@@ -237,7 +241,7 @@ public class LocationFrame extends JFrame implements MouseListener {
 				RestaurantDAO dao = new RestaurantDAO();
 				try {
 					List<RestaurantDTO> list = dao.getRestaurantsByLocation(Define.LOCATION_SASANGGU);
-					new RestaurantListFrame(list);
+					new RestaurantListFrame(list, customerDTO, RestaurantListFrame.LOCATION);
 				} catch (Exception e1) {
 					// TODO: handle exception
 					e1.printStackTrace();
@@ -248,7 +252,7 @@ public class LocationFrame extends JFrame implements MouseListener {
 				RestaurantDAO dao = new RestaurantDAO();
 				try {
 					List<RestaurantDTO> list = dao.getRestaurantsByLocation(Define.LOCATION_BUKGU);
-					new RestaurantListFrame(list);
+					new RestaurantListFrame(list, customerDTO, RestaurantListFrame.LOCATION);
 				} catch (SQLException e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
@@ -257,7 +261,7 @@ public class LocationFrame extends JFrame implements MouseListener {
 				RestaurantDAO dao = new RestaurantDAO();
 				try {
 					List<RestaurantDTO> list = dao.getRestaurantsByLocation(Define.LOCATION_SEOGU);
-					new RestaurantListFrame(list);
+					new RestaurantListFrame(list, customerDTO, RestaurantListFrame.LOCATION);
 				} catch (SQLException e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
@@ -267,7 +271,7 @@ public class LocationFrame extends JFrame implements MouseListener {
 				try {
 					List<RestaurantDTO> list = dao.getRestaurantsByLocation(Define.LOCATION_JUNGGU);
 					System.out.println(list);
-					new RestaurantListFrame(list);
+					new RestaurantListFrame(list, customerDTO, RestaurantListFrame.LOCATION);
 				} catch (SQLException e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
@@ -276,7 +280,7 @@ public class LocationFrame extends JFrame implements MouseListener {
 				RestaurantDAO dao = new RestaurantDAO();
 				try {
 					List<RestaurantDTO> list = dao.getRestaurantsByLocation(Define.LOCATION_DONGGU);
-					new RestaurantListFrame(list);
+					new RestaurantListFrame(list, customerDTO, RestaurantListFrame.LOCATION);
 				} catch (SQLException e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
@@ -285,7 +289,7 @@ public class LocationFrame extends JFrame implements MouseListener {
 				RestaurantDAO dao = new RestaurantDAO();
 				try {
 					List<RestaurantDTO> list = dao.getRestaurantsByLocation(Define.LOCATION_BUSANSGINGU);
-					new RestaurantListFrame(list);
+					new RestaurantListFrame(list, customerDTO, RestaurantListFrame.LOCATION);
 				} catch (SQLException e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
@@ -294,7 +298,7 @@ public class LocationFrame extends JFrame implements MouseListener {
 				RestaurantDAO dao = new RestaurantDAO();
 				try {
 					List<RestaurantDTO> list = dao.getRestaurantsByLocation(Define.LOCATION_YEONGDOGU);
-					new RestaurantListFrame(list);
+					new RestaurantListFrame(list, customerDTO, RestaurantListFrame.LOCATION);
 				} catch (SQLException e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
@@ -303,7 +307,7 @@ public class LocationFrame extends JFrame implements MouseListener {
 				RestaurantDAO dao = new RestaurantDAO();
 				try {
 					List<RestaurantDTO> list = dao.getRestaurantsByLocation(Define.LOCATION_NAMGU);
-					new RestaurantListFrame(list);
+					new RestaurantListFrame(list, customerDTO, RestaurantListFrame.LOCATION);
 				} catch (SQLException e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
@@ -312,7 +316,7 @@ public class LocationFrame extends JFrame implements MouseListener {
 				RestaurantDAO dao = new RestaurantDAO();
 				try {
 					List<RestaurantDTO> list = dao.getRestaurantsByLocation(Define.LOCATION_DONGNAEGU);
-					new RestaurantListFrame(list);
+					new RestaurantListFrame(list, customerDTO, RestaurantListFrame.LOCATION);
 				} catch (SQLException e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
@@ -321,7 +325,7 @@ public class LocationFrame extends JFrame implements MouseListener {
 				RestaurantDAO dao = new RestaurantDAO();
 				try {
 					List<RestaurantDTO> list = dao.getRestaurantsByLocation(Define.LOCATION_YEONJEGU);
-					new RestaurantListFrame(list);
+					new RestaurantListFrame(list, customerDTO, RestaurantListFrame.LOCATION);
 				} catch (SQLException e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
@@ -330,7 +334,7 @@ public class LocationFrame extends JFrame implements MouseListener {
 				RestaurantDAO dao = new RestaurantDAO();
 				try {
 					List<RestaurantDTO> list = dao.getRestaurantsByLocation(Define.LOCATION_SUYEONGGU);
-					new RestaurantListFrame(list);
+					new RestaurantListFrame(list, customerDTO, RestaurantListFrame.LOCATION);
 				} catch (SQLException e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
@@ -339,7 +343,7 @@ public class LocationFrame extends JFrame implements MouseListener {
 				RestaurantDAO dao = new RestaurantDAO();
 				try {
 					List<RestaurantDTO> list = dao.getRestaurantsByLocation(Define.LOCATION_GEUMJEONGGU);
-					new RestaurantListFrame(list);
+					new RestaurantListFrame(list, customerDTO, RestaurantListFrame.LOCATION);
 				} catch (SQLException e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
@@ -348,7 +352,7 @@ public class LocationFrame extends JFrame implements MouseListener {
 				RestaurantDAO dao = new RestaurantDAO();
 				try {
 					List<RestaurantDTO> list = dao.getRestaurantsByLocation(Define.LOCATION_HAEUNDAEGU);
-					new RestaurantListFrame(list);
+					new RestaurantListFrame(list, customerDTO, RestaurantListFrame.LOCATION);
 				} catch (SQLException e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
@@ -357,7 +361,7 @@ public class LocationFrame extends JFrame implements MouseListener {
 				RestaurantDAO dao = new RestaurantDAO();
 				try {
 					List<RestaurantDTO> list = dao.getRestaurantsByLocation(Define.LOCATION_GIJANGGUN);
-					new RestaurantListFrame(list);
+					new RestaurantListFrame(list, customerDTO, RestaurantListFrame.LOCATION);
 				} catch (SQLException e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
@@ -367,13 +371,12 @@ public class LocationFrame extends JFrame implements MouseListener {
 				RestaurantDAO dao = new RestaurantDAO();
 				try {
 					List<RestaurantDTO> list = dao.getAllRestaurants();
-					new RestaurantListFrame(list);
+					new RestaurantListFrame(list, customerDTO, RestaurantListFrame.LOCATION);
 				} catch (SQLException e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				}
 			}
-		
 		
 	} // end of mousePressed
 
@@ -403,7 +406,7 @@ public class LocationFrame extends JFrame implements MouseListener {
 	
 	// TODO TEST
 	public static void main(String[] args) {
-		new LocationFrame();
+		new LocationFrame(new CustomerDAO().authenticatePhone("01067871703"));
 	} // end of main 
 	
 } // end of class

@@ -17,7 +17,7 @@ public class Define {
 	public static final int CATEGORY_NAENGMYUN = 12;
 	public static final int CATEGORY_HOF = 13;
 	
-	
+	// 로케이션 인덱스
 	public static final int LOCATION_ALL = 0;
 	public static final int LOCATION_GANGSEOGU = 1;
 	public static final int LOCATION_SAHAGU = 2;
@@ -36,5 +36,5 @@ public class Define {
 	public static final int LOCATION_HAEUNDAEGU = 15;
 	public static final int LOCATION_GIJANGGUN = 16;
 	
-	
+	// 쿼리문
 }

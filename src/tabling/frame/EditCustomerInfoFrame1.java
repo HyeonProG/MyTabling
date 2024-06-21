@@ -11,17 +11,19 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
+import tabling.dao.CustomerDAO;
 import tabling.dto.CustomerDTO;
 
-public class EditCustomerInfo extends JFrame {
+public class EditCustomerInfoFrame1 extends JFrame {
 
 	private BackgroundPanel backgroundPanel;
 	private CustomerDTO customerDTO;
+	private CustomerDAO customerDAO; // TODO
 	private JTextField phoneCheckField;
 	private JLabel checkBtn;
 	private JLabel quitBtn;
 
-	public EditCustomerInfo(CustomerDTO customerDTO) {
+	public EditCustomerInfoFrame1(CustomerDTO customerDTO) {
 		this.customerDTO = customerDTO;
 		initData();
 		setInitLayout();
@@ -70,7 +72,14 @@ public class EditCustomerInfo extends JFrame {
 		checkBtn.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mousePressed(MouseEvent e) {
-
+				
+				// TODO - 정보수정 전 본인확인을 위한 전화번호 체크
+				if(!phoneCheckField.getText().equals("")) {
+					if((customerDTO = customerDAO.authenticatePhone(phoneCheckField.getText()))!= null) {
+						
+					}
+				}
+				
 			}
 		});
 
@@ -92,10 +101,6 @@ public class EditCustomerInfo extends JFrame {
 			g.drawImage(backgroundImage, 0, 0, getWidth(), getHeight(), null);
 		}
 
-	}
-
-	public static void main(String[] args) {
-		new RestaurantLoginFrame();
 	}
 
 }
