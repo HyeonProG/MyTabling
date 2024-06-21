@@ -11,6 +11,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.regex.PatternSyntaxException;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -19,6 +20,12 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.JTextField;
+import javax.swing.RowFilter;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 import javax.swing.plaf.basic.BasicScrollBarUI;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
@@ -35,14 +42,16 @@ import tabling.util.Time;
 
 public class RestaurantListFrame extends JFrame {
 
+	private RestaurantListFrame frame;
+
 	private JTable table;
 	private JScrollPane scroll;
 	private JComboBox<String> filter;
 	private JButton filterBtn;
-	private JButton homeBtn;
-	private JButton categoryBtn;
-	private JButton locationBtn;
+	private JButton searchBtn;
+	private JLabel homeBtn;
 	private JLabel backBtn;
+	private JTextField searchField;
 	private LocationDAO locationDAO;
 	private CategoryDAO categoryDAO;
 	private RestaurantDAO restaurantDAO;
@@ -84,6 +93,7 @@ public class RestaurantListFrame extends JFrame {
 	}
 
 	private void initData() {
+		frame = this;
 		locationDAO = new LocationDAO();
 		categoryDAO = new CategoryDAO();
 		restaurantDAO = new RestaurantDAO();
@@ -93,10 +103,10 @@ public class RestaurantListFrame extends JFrame {
 		tableSet();
 		filter = new JComboBox<String>();
 		filterBtn = new JButton("적용");
-		homeBtn = new JButton("홈");
-		categoryBtn = new JButton("카테고리");
-		locationBtn = new JButton("지역");
+		homeBtn = new JLabel(new ImageIcon("img/home.png"));
 		backBtn = new JLabel(new ImageIcon("img/quitBtn2.png"));
+		searchBtn = new JButton("검색");
+		searchField = new JTextField();
 	}
 
 	private void setInitLayout() {
@@ -108,8 +118,8 @@ public class RestaurantListFrame extends JFrame {
 		setLocationRelativeTo(null); // JFrame을 모니터 가운데 자동 배치
 
 		add(filter);
-		filter.setLocation(230, 120);
-		filter.setSize(150, 30);
+		filter.setLocation(270, 120);
+		filter.setSize(110, 30);
 		filter.setFont(new Font("Noto Sans KR", Font.BOLD, 15));
 
 		filter.addItem(RESET);
@@ -125,41 +135,33 @@ public class RestaurantListFrame extends JFrame {
 		filterBtn.setFont(new Font("Noto Sans KR", Font.BOLD, 15));
 
 		add(homeBtn);
-
-		add(categoryBtn);
-
-		add(locationBtn);
+		homeBtn.setLocation(210, 620);
+		homeBtn.setSize(70, 70);
 
 		add(backBtn);
 		backBtn.setLocation(20, 20);
 		backBtn.setSize(15, 24);
+
+		add(searchBtn);
+		searchBtn.setLocation(180, 120);
+		searchBtn.setSize(70, 30);
+		searchBtn.setFont(new Font("Noto Sans KR", Font.BOLD, 15));
+
+		add(searchField);
+		searchField.setLocation(20, 120);
+		searchField.setSize(140, 30);
+		searchField.setFont(new Font("Noto Sans KR", Font.BOLD, 15));
 
 		setVisible(true);
 	}
 
 	private void addEventListener() {
 
-		table.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent e) {
-				// 더블 클릭시
-				if (e.getClickCount() == 2) {
-					int rowNum = table.getSelectedRow();
-					MenuDAO dao = new MenuDAO();
-					RestaurantDTO dto = restaurantList.get(rowNum);
-					try {
-						new RestaurantFrame(dto, dao.getMenuById(dto.getCategoryId()));
-					} catch (SQLException e1) {
-						e1.printStackTrace();
-					}
-				}
-			}
-		});
-
 		filterBtn.addActionListener(new ActionListener() {
-
+			
 			@Override
 			public void actionPerformed(ActionEvent e) {
+				searchField.setText("");
 				System.out.println(filter.getSelectedItem().toString());
 				switch (filter.getSelectedItem().toString()) {
 				case RESET:
@@ -178,14 +180,22 @@ public class RestaurantListFrame extends JFrame {
 					tableSet();
 					break;
 				case GANADA_UP:
+					RestaurantDTO.setSortType(RestaurantDTO.GANADA);
+					Collections.sort(restaurantList, Collections.reverseOrder());
+					tableSet();
 					break;
 				case GANADA_DOWN:
+					RestaurantDTO.setSortType(RestaurantDTO.GANADA);
+					Collections.sort(restaurantList);
+					tableSet();
 					break;
 				case RATING_DOWN:
+					RestaurantDTO.setSortType(RestaurantDTO.RATING);
 					Collections.sort(restaurantList);
 					tableSet();
 					break;
 				case RATING_UP:
+					RestaurantDTO.setSortType(RestaurantDTO.RATING);
 					Collections.sort(restaurantList, Collections.reverseOrder());
 					tableSet();
 					break;
@@ -213,21 +223,68 @@ public class RestaurantListFrame extends JFrame {
 			public void mousePressed(MouseEvent e) {
 				switch (type) {
 				case CATEGORY:
-					setVisible(false);
+					frame.setVisible(false);
+					frame.dispose();
 					new CategoryFrame(customerDTO);
 					break;
 				case LOCATION:
-					setVisible(false);
+					frame.setVisible(false);
+					frame.dispose();
 					new LocationFrame(customerDTO);
 					break;
 				case CATEGORY_ALL:
-					setVisible(false);
+					frame.setVisible(false);
+					frame.dispose();
 					new CategoryFrame(customerDTO);
 					break;
 				case LOCATION_ALL:
-					setVisible(false);
+					frame.setVisible(false);
+					frame.dispose();
 					new LocationFrame(customerDTO);
 					break;
+				}
+			}
+		});
+		homeBtn.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mousePressed(MouseEvent e) {
+				frame.setVisible(false);
+				frame.dispose();
+				new CustomerMainMenuFrame(customerDTO);
+			}
+		});
+
+		searchField.getDocument().addDocumentListener(new DocumentListener() {
+
+			@Override
+			public void removeUpdate(DocumentEvent e) {
+				search();
+			}
+
+			@Override
+			public void insertUpdate(DocumentEvent e) {
+				search();
+			}
+
+			@Override
+			public void changedUpdate(DocumentEvent e) {
+				search();
+			}
+
+			private void search() {
+				String searchText = searchField.getText().trim();
+
+				// 검색어가 없으면 모든 행을 다시 보여준다.
+				if (searchText.isEmpty()) {
+					sorter.setRowFilter(null);
+
+				} else {
+					try {
+						sorter.setRowFilter(RowFilter.regexFilter("(?i)" + searchText));
+					} catch (PatternSyntaxException ex) {
+						// 검색어가 정규식으로 변환되지 않으면 모든 행을 보여준다.
+						sorter.setRowFilter(null);
+					}
 				}
 			}
 		});
@@ -332,6 +389,51 @@ public class RestaurantListFrame extends JFrame {
 		table.getColumn("평점").setPreferredWidth(30);
 		table.getColumn("평점").setCellRenderer(centerAlign);
 		repaint();
+
+		table.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				// 더블 클릭시
+				if (e.getClickCount() == 2) {
+					int rowNum = table.getSelectedRow();
+					int currentRowNum = table.convertRowIndexToModel(rowNum);
+					String name = tableModel.getValueAt(currentRowNum, 0).toString();
+					System.out.println(name);
+					RestaurantDTO dto = null;
+					for (RestaurantDTO restaurantDTO : restaurantList) {
+						if (restaurantDTO.getRestaurantName().equals(name)) {
+							dto = restaurantDTO;
+						}
+					}
+					if (dto == null) {
+						return;
+					}
+					MenuDAO dao = new MenuDAO();
+					// RestaurantDTO dto = restaurantList.get(rowNum);
+					try {
+						new RestaurantFrame(dto, dao.getMenuById(dto.getRestaurantId()));
+					} catch (SQLException e1) {
+						e1.printStackTrace();
+					}
+				}
+			}
+		});
+//		table.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
+//            @Override
+//            public void valueChanged(ListSelectionEvent e) {
+//                // 선택된 행이 변경되면 호출.
+//                int selectedRow = table.getSelectedRow();
+//                if (selectedRow != -1) {
+//                    // 선택된 행의 인덱스를 모델에서의 인덱스로 변환합니다.
+//                    int modelRow = table.convertRowIndexToModel(selectedRow);
+//                    // 모델에서 선택된 행의 데이터를 가져옵니다.
+//                    String name = tableModel.getValueAt(modelRow, 0).toString();
+//                    // 선택된 행의 데이터를 출력
+//                    System.out.println("Selected row: " + name);
+//                }
+//            }
+//        });
+
 	}
 
 	// 테스트 코드

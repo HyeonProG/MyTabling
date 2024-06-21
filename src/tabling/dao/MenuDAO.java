@@ -33,7 +33,7 @@ public class MenuDAO {
 		String query = " select * from menu where restaurant_id = ? ";
 		try (Connection conn = DBConnectionManager.getInstance().getConnection()) {
 			PreparedStatement pstmt = conn.prepareStatement(query);
-			pstmt.setInt(1, 2);
+			pstmt.setInt(1, restaurtantId);
 			ResultSet rs = pstmt.executeQuery();
 			
 			while(rs.next()) {

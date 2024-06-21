@@ -14,7 +14,11 @@ import lombok.ToString;
 @ToString
 @Builder
 public class RestaurantDTO implements Comparable<RestaurantDTO> {
-	
+
+	public static final int RATING = 0;
+	public static final int GANADA = 1;
+	private static int sortType = RATING;
+
 	private int restaurantId; // 가게 id
 	private String restaurantName; // 가게 이름
 	private String phone; // 가게 번호
@@ -28,10 +32,31 @@ public class RestaurantDTO implements Comparable<RestaurantDTO> {
 	private int locationId; // 가게 위치
 	private int categoryId; // 가게 카테고리
 	
+	public static void setSortType(int sortType) {
+		RestaurantDTO.sortType = sortType;
+	}
+	
 	@Override
 	public int compareTo(RestaurantDTO dto) {
-		return (int)(dto.getRating() * 10 - rating * 10);
+		if (sortType < 0) {
+			sortType = 0;
+		}
+		switch (sortType) {
+		case RATING:
+			return (int) (dto.getRating() * 10 - rating * 10);
+		case GANADA:
+			StringBuilder str1 = new StringBuilder();
+			StringBuilder str2 = new StringBuilder();
+			for (char c : dto.getRestaurantName().toCharArray()) {
+				str1.append(c);
+			}
+			for (char c : restaurantName.toCharArray()) {
+				str2.append(c);
+			}
+			return str1.toString().compareTo(str2.toString());
+		default:
+			return 0;
+		}
 	}
-
 
 }
