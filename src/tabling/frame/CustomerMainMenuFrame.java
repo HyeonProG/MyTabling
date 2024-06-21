@@ -23,7 +23,12 @@ public class CustomerMainMenuFrame extends JFrame {
 	private JLabel locationBtn;
 	private JLabel reservationBtn;
 	private JLabel userInfoBtn;
-
+	private JLabel homeBtn;
+	private JLabel underReservationBtn;
+	private JLabel underCategoryBtn;
+	private JLabel underLocationBtn;
+	private JLabel userInfoBtn2;
+	
 	private CustomerDTO customerDTO;
 	public CustomerMainMenuFrame(CustomerDTO customerDTO) {
 		this.customerDTO = customerDTO;
@@ -45,6 +50,12 @@ public class CustomerMainMenuFrame extends JFrame {
 		categoryBtn = new JLabel(new ImageIcon("img/categoryBtn.png"));
 		locationBtn = new JLabel(new ImageIcon("img/locationBtn.png"));
 		userInfoBtn = new JLabel(new ImageIcon("img/gearSolid.png"));
+		
+		homeBtn = new JLabel(new ImageIcon("img/house-solid.png"));
+		underReservationBtn = new JLabel(new ImageIcon("img/utensils-solid.png"));
+		underCategoryBtn = new JLabel(new ImageIcon("img/list-solid.png"));
+		underLocationBtn = new JLabel(new ImageIcon("img/location-dot-solid.png"));
+		userInfoBtn2 = new JLabel(new ImageIcon("img/user-solid.png"));
 	}
 
 	private void setInitLayout() {
@@ -68,6 +79,17 @@ public class CustomerMainMenuFrame extends JFrame {
 		userInfoBtn.setBounds(430, 20, 30, 30);
 		backgroundPanel.add(userInfoBtn);
 
+		homeBtn.setBounds(50, 600, 50, 50);
+		backgroundPanel.add(homeBtn);
+		underReservationBtn.setBounds(130, 600, 50, 50);
+		backgroundPanel.add(underReservationBtn);
+		underCategoryBtn.setBounds(220, 600, 50, 50);
+		backgroundPanel.add(underCategoryBtn);
+		underLocationBtn.setBounds(300, 600, 50, 50);
+		backgroundPanel.add(underLocationBtn);
+		userInfoBtn2.setBounds(390, 600, 50, 50);
+		backgroundPanel.add(userInfoBtn2);
+		
 	}
 
 	private void initListener() {
