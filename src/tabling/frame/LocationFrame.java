@@ -241,7 +241,7 @@ public class LocationFrame extends JFrame implements ActionListener {
 					RestaurantDAO dao = new RestaurantDAO();
 					setVisible(false);
 					try {
-						List<RestaurantDTO> list = dao.getRestaurantsByLocation(i);
+						List<RestaurantDTO> list = dao.getRestaurantsByLocation(i, customerDTO.getCustomerId());
 						new RestaurantListFrame(list, customerDTO, RestaurantListFrame.LOCATION);
 						setVisible(false);
 						break;
