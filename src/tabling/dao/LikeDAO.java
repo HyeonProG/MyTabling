@@ -6,11 +6,13 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import tabling.util.DBConnectionManager;
+import tabling.util.Define;
 
 public class LikeDAO {
 
-	public boolean readLike(int customerId, int restaurantId) throws SQLException {
-		String query = " select * from likes where customer_id = ? and restaurant_id = ? ";
+	// 식당 상세 페이지 오픈시 좋아요 누른 식당인지 확인
+	public boolean getLike(int customerId, int restaurantId) throws SQLException {
+		String query = Define.SELECT_LIKES_BY_CUSTOMER_AND_RESTAURANT;
 		try (Connection conn = DBConnectionManager.getInstance().getConnection()) {
 			PreparedStatement pstmt = conn.prepareStatement(query);
 			pstmt.setInt(1, customerId);
@@ -21,8 +23,9 @@ public class LikeDAO {
 		}
 	}
 	
-	public int getLike(int customerId, int restaurantId) throws SQLException {
-		String query = " insert into likes values(?, ?)  ";
+	// 좋아요 테이블에 INSERT -> 해당 식당의 변경된 좋아요 수 받아옴
+	public int addLike(int customerId, int restaurantId) throws SQLException {
+		String query = Define.INSERT_LIKES;
 		int likeCount = 0;
 		try (Connection conn = DBConnectionManager.getInstance().getConnection()) {
 			PreparedStatement pstmt = conn.prepareStatement(query);
@@ -34,10 +37,9 @@ public class LikeDAO {
 		return likeCount;
 	}
 	
-	
-	
-	public int getUnlike(int customerId, int restaurantId) throws SQLException {
-		String query = " delete from likes where customer_id = ? and restaurant_id = ? ";
+	// 좋아요 테이블에서 DELETE -> 해당 식당의 변경된 좋아요 수 받아옴
+	public int deleteLike(int customerId, int restaurantId) throws SQLException {
+		String query = Define.DELETE_LIKES;
 		int unlikeCount = 0;
 		try (Connection conn = DBConnectionManager.getInstance().getConnection()) {
 			PreparedStatement pstmt = conn.prepareStatement(query);
@@ -49,8 +51,9 @@ public class LikeDAO {
 		return unlikeCount;
 	}
 	
+	// 좋아요 테이블에서 한 식당의 좋아요수 count
 	public int getLikeCount(int restaurantId) throws SQLException {
-		String query = " select count(*) from likes where restaurant_id = ? ";
+		String query = Define.SELECT_LIKES_COUNT_BY_RESTAURANT;
 		int result = 0;
 		try(Connection conn = DBConnectionManager.getInstance().getConnection()) {
 			PreparedStatement pstmt = conn.prepareStatement(query);

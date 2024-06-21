@@ -27,7 +27,6 @@ public class RestaurantDTO implements Comparable<RestaurantDTO> {
 	private String openTime; // 가게 오픈 시간
 	private String closeTime; // 가게 폐점 시간
 	private double rating; // 가게 평점
-	private int likes; // 가게 종아요
 	private String restDay; // 가게 휴무일
 	private int locationId; // 가게 위치
 	private int categoryId; // 가게 카테고리

@@ -287,12 +287,10 @@ public class LocationFrame extends JFrame implements ActionListener {
 		
 		} // end of actionPerformed
 	
-	
-	
-	
 	// TODO TEST
 	public static void main(String[] args) {
-		new LocationFrame(new CustomerDAO().authenticatePhone(""));
+//		new LocationFrame(new CustomerDAO().authenticatePhone(""));
 	} // end of main 
+
 
 } // end of class
