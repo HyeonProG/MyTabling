@@ -160,7 +160,7 @@ public class RestaurantListFrame extends JFrame {
 	private void addEventListener() {
 
 		filterBtn.addActionListener(new ActionListener() {
-			
+
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				searchField.setText("");
@@ -168,37 +168,20 @@ public class RestaurantListFrame extends JFrame {
 				switch (filter.getSelectedItem().toString()) {
 				case RESET:
 					restaurantDAO.setOpenFilter(false);
-					try {
-						if (type == LOCATION) {
-							restaurantList = restaurantDAO.getRestaurantsByLocation(locationId);
-						} else if (type == CATEGORY) {
-							restaurantList = restaurantDAO.getRestaurantsByCategory(categoryId);
-						} else {
-							restaurantList = restaurantDAO.getAllRestaurants(customerDTO.getCustomerId());
-						}
-					} catch (Exception e2) {
-						e2.printStackTrace();
-					}
+					restaurantDAO.setLikeFilter(false);
+					setRestaurantList();
 					tableSet();
 					break;
 				case OPEN:
-					try {
-						restaurantDAO.setOpenFilter(true);
-						restaurantDAO.setCurrentTime(currentTime);
-						if (type == LOCATION) {
-							restaurantList = restaurantDAO.getRestaurantsByLocation(locationId);
-						} else if (type == CATEGORY) {
-							restaurantList = restaurantDAO.getRestaurantsByCategory(categoryId);
-						} else {
-							restaurantList = restaurantDAO.getAllRestaurants(customerDTO.getCustomerId());
-						}
-						tableSet();
-					} catch (SQLException e1) {
-						e1.printStackTrace();
-					}
+					restaurantDAO.setOpenFilter(true);
+					restaurantDAO.setCurrentTime(currentTime);
+					setRestaurantList();
+					tableSet();
 					break;
 				case LIKE:
-					
+					restaurantDAO.setLikeFilter(true);
+					setRestaurantList();
+					tableSet();
 					break;
 				case GANADA_UP:
 					RestaurantDTO.setSortType(RestaurantDTO.GANADA);
@@ -418,22 +401,20 @@ public class RestaurantListFrame extends JFrame {
 				}
 			}
 		});
-//		table.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
-//            @Override
-//            public void valueChanged(ListSelectionEvent e) {
-//                // 선택된 행이 변경되면 호출.
-//                int selectedRow = table.getSelectedRow();
-//                if (selectedRow != -1) {
-//                    // 선택된 행의 인덱스를 모델에서의 인덱스로 변환합니다.
-//                    int modelRow = table.convertRowIndexToModel(selectedRow);
-//                    // 모델에서 선택된 행의 데이터를 가져옵니다.
-//                    String name = tableModel.getValueAt(modelRow, 0).toString();
-//                    // 선택된 행의 데이터를 출력
-//                    System.out.println("Selected row: " + name);
-//                }
-//            }
-//        });
+	}
 
+	private void setRestaurantList() {
+		try {
+			if (type == LOCATION) {
+				restaurantList = restaurantDAO.getRestaurantsByLocation(locationId, customerDTO.getCustomerId());
+			} else if (type == CATEGORY) {
+				restaurantList = restaurantDAO.getRestaurantsByCategory(categoryId, customerDTO.getCustomerId());
+			} else {
+				restaurantList = restaurantDAO.getAllRestaurants(customerDTO.getCustomerId());
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 	}
 
 	// 테스트 코드
