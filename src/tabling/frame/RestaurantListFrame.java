@@ -43,12 +43,12 @@ import tabling.util.Time;
 public class RestaurantListFrame extends JFrame {
 
 	private RestaurantListFrame frame;
-
+	private RestaurantFrame restaurantFrame;
+	
 	private JTable table;
 	private JScrollPane scroll;
 	private JComboBox<String> filter;
 	private JButton filterBtn;
-	private JButton searchBtn;
 	private JLabel homeBtn;
 	private JLabel backBtn;
 	private JTextField searchField;
@@ -106,7 +106,6 @@ public class RestaurantListFrame extends JFrame {
 		filterBtn = new JButton("적용");
 		homeBtn = new JLabel(new ImageIcon("img/home.png"));
 		backBtn = new JLabel(new ImageIcon("img/quitBtn2.png"));
-		searchBtn = new JButton("검색");
 		searchField = new JTextField();
 	}
 
@@ -119,7 +118,7 @@ public class RestaurantListFrame extends JFrame {
 		setLocationRelativeTo(null); // JFrame을 모니터 가운데 자동 배치
 
 		add(filter);
-		filter.setLocation(270, 120);
+		filter.setLocation(270, 80);
 		filter.setSize(110, 30);
 		filter.setFont(new Font("Noto Sans KR", Font.BOLD, 15));
 
@@ -132,26 +131,21 @@ public class RestaurantListFrame extends JFrame {
 		filter.addItem(RATING_UP);
 
 		add(filterBtn);
-		filterBtn.setLocation(400, 120);
+		filterBtn.setLocation(400, 80);
 		filterBtn.setSize(70, 30);
 		filterBtn.setFont(new Font("Noto Sans KR", Font.BOLD, 15));
 
 		add(homeBtn);
-		homeBtn.setLocation(210, 620);
+		homeBtn.setLocation(200, 590);
 		homeBtn.setSize(70, 70);
 
 		add(backBtn);
 		backBtn.setLocation(20, 20);
 		backBtn.setSize(15, 24);
 
-		add(searchBtn);
-		searchBtn.setLocation(180, 120);
-		searchBtn.setSize(70, 30);
-		searchBtn.setFont(new Font("Noto Sans KR", Font.BOLD, 15));
-
 		add(searchField);
-		searchField.setLocation(20, 120);
-		searchField.setSize(140, 30);
+		searchField.setLocation(20, 80);
+		searchField.setSize(202, 30);
 		searchField.setFont(new Font("Noto Sans KR", Font.BOLD, 15));
 
 		setVisible(true);
@@ -335,7 +329,7 @@ public class RestaurantListFrame extends JFrame {
 		scroll = new JScrollPane(table);
 		add(scroll);
 		scroll.setSize(450, 450);
-		scroll.setLocation(20, 170);
+		scroll.setLocation(20, 130);
 		scroll.getVerticalScrollBar().setUI(new BasicScrollBarUI() {
 			@Override
 			protected JButton createIncreaseButton(int orientation) {
@@ -386,7 +380,6 @@ public class RestaurantListFrame extends JFrame {
 					int rowNum = table.getSelectedRow();
 					int currentRowNum = table.convertRowIndexToModel(rowNum);
 					String name = tableModel.getValueAt(currentRowNum, 0).toString();
-					System.out.println(name);
 					RestaurantDTO dto = null;
 					for (RestaurantDTO restaurantDTO : restaurantList) {
 						if (restaurantDTO.getRestaurantName().equals(name)) {
@@ -396,8 +389,11 @@ public class RestaurantListFrame extends JFrame {
 					if (dto == null) {
 						return;
 					}
-					MenuDAO dao = new MenuDAO();
-					new RestaurantFrame(customerDTO, dto);
+					if (restaurantFrame != null) {
+						restaurantFrame.setVisible(true);
+						restaurantFrame.dispose();
+					}
+					restaurantFrame = new RestaurantFrame(customerDTO, dto);
 				}
 			}
 		});

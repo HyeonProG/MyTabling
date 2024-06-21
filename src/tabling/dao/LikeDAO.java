@@ -28,8 +28,8 @@ public class LikeDAO {
 			PreparedStatement pstmt = conn.prepareStatement(query);
 			pstmt.setInt(1, customerId);
 			pstmt.setInt(2, restaurantId);
-			likeCount = pstmt.executeUpdate();
-			
+			pstmt.executeUpdate();
+			likeCount = getLikeCount(restaurantId);
 		}
 		return likeCount;
 	}
@@ -43,20 +43,21 @@ public class LikeDAO {
 			PreparedStatement pstmt = conn.prepareStatement(query);
 			pstmt.setInt(1, customerId);
 			pstmt.setInt(2, restaurantId);
-			unlikeCount = pstmt.executeUpdate();
+			pstmt.executeUpdate();
+			unlikeCount = getLikeCount(restaurantId);
 		}
 		return unlikeCount;
 	}
 	
-	public String getLikeCount(int restaurantId) throws SQLException {
+	public int getLikeCount(int restaurantId) throws SQLException {
 		String query = " select count(*) from likes where restaurant_id = ? ";
-		String result = null;
+		int result = 0;
 		try(Connection conn = DBConnectionManager.getInstance().getConnection()) {
 			PreparedStatement pstmt = conn.prepareStatement(query);
 			pstmt.setInt(1, restaurantId);
 			try(ResultSet rs = pstmt.executeQuery()) {
 				if (rs.next()) {
-					result = rs.getString(restaurantId);
+					result = rs.getInt(1);
 				}
 			}
 		}

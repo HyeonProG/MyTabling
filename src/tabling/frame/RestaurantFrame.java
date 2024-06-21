@@ -27,6 +27,8 @@ import tabling.dto.MenuDTO;
 import tabling.dto.RestaurantDTO;
 
 public class RestaurantFrame extends JFrame {
+	private RestaurantFrame frame;
+	
 	private RestaurantDTO restaurantDTO;
 	private List<MenuDTO> menuList = new ArrayList<>();
 	private MenuDAO menuDAO;
@@ -68,6 +70,8 @@ public class RestaurantFrame extends JFrame {
 	}
 
 	private void initData() {
+		frame = this;
+		
 		setTitle("음식점 상세페이지");
 		setSize(500, 700);
 		setResizable(false);
@@ -75,9 +79,8 @@ public class RestaurantFrame extends JFrame {
 		setLayout(null);
 		
 		likeDAO = new LikeDAO();
-		// TODO 커스터머 id 변경 예정
 		try {
-			checkLike = likeDAO.readLike(1, restaurantDTO.getRestaurantId());
+			checkLike = likeDAO.readLike(customerDTO.getCustomerId(), restaurantDTO.getRestaurantId());
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -141,7 +144,7 @@ public class RestaurantFrame extends JFrame {
 		
 		likeCountLabel = new JLabel();
 		try {
-			likeCountLabel.setText(likeDAO.getLikeCount(restaurantDTO.getRestaurantId()));
+			likeCountLabel.setText(String.valueOf(likeDAO.getLikeCount(restaurantDTO.getRestaurantId())));
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -206,7 +209,8 @@ public class RestaurantFrame extends JFrame {
 			@Override
 			public void mousePressed(MouseEvent e) {
 				new ReservationFrame(customerDTO, restaurantDTO);
-				setVisible(false);
+				frame.setVisible(false);
+				frame.dispose();
 			}
 		});
 		
@@ -215,8 +219,8 @@ public class RestaurantFrame extends JFrame {
 			public void mousePressed(MouseEvent e) {
 				if (checkLike == false) {
 					try {
-						likeDAO.getLike(1, restaurantDTO.getRestaurantId());
-						likeDAO.getLikeCount(restaurantDTO.getRestaurantId());
+						int likeCount = likeDAO.getLike(customerDTO.getCustomerId(), restaurantDTO.getRestaurantId());
+						likeCountLabel.setText(String.valueOf(likeCount));
 					} catch (SQLException e1) {
 						e1.printStackTrace();
 					}
@@ -224,8 +228,8 @@ public class RestaurantFrame extends JFrame {
 					checkLike = true;
 				} else {
 					try {
-						likeDAO.getUnlike(1, restaurantDTO.getRestaurantId());
-						likeDAO.getLikeCount(restaurantDTO.getRestaurantId());
+						int likeCount = likeDAO.getUnlike(1, restaurantDTO.getRestaurantId());
+						likeCountLabel.setText(String.valueOf(likeCount));
 					} catch (SQLException e1) {
 						e1.printStackTrace();
 					}
@@ -236,13 +240,5 @@ public class RestaurantFrame extends JFrame {
 		});		
 
 	}
-
-//	public static void main(String[] args) {
-//		try {
-//			new RestaurantFrame(new CustomerDTO().getCustomerId(), new RestaurantDAO().getAllRestaurants(1).get(93), new MenuDAO().getMenuByRestaurantId(93));
-//		} catch (SQLException e) {
-//			e.printStackTrace();
-//		}
-//	}
 
 }
