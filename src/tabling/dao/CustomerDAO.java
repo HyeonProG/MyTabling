@@ -28,7 +28,7 @@ public class CustomerDAO {
 	}
 	
 	// TODO 최종에 안쓰면 지워야됨
-	public List<CustomerDTO> getAllUsers() throws SQLException {
+	public List<CustomerDTO> getAllCustomers() throws SQLException {
 
 		List<CustomerDTO> list = new ArrayList<>();
 
@@ -53,8 +53,8 @@ public class CustomerDAO {
 		return list;
 	}
 
-	// 전화번호 중복 확인 메서드
-	public CustomerDTO authenticatePhone(String phone) throws SQLException {
+	// 전화번호로 고객 정보를 얻는 메서드
+	public CustomerDTO getCustomerByPhone(String phone) throws SQLException {
 		CustomerDTO dto;
 		String query = Define.SELECT_CUSTOMER_BY_PHONE;
 
@@ -78,27 +78,8 @@ public class CustomerDAO {
 
 		return null;
 	}
-
-//	public boolean authenticateAll(String name, String phone) throws SQLException {
-//		
-//		String query = "  SELECT customer_name FROM customer WHERE phone = ?  ";
-//		boolean result = false;
-//
-//		try (Connection conn = DBConnectionManager.getInstance().getConnection()) {
-//			PreparedStatement pstmt = conn.prepareStatement(query);
-//			pstmt.setString(1, phone);
-//			ResultSet rs = pstmt.executeQuery();
-//
-//			result = rs.next();
-//
-//		} catch (SQLException e) {
-//			e.printStackTrace();
-//		}
-//
-//		return result;
-//
-//	}
 	
+	// 회원 수정 시 호출 되는 메서드
 	public void updateCustomer(String name, int location, String phone) throws SQLException{
 		String query = " UPDATE customer SET customer_name = ?, location_id = ? WHERE phone = ? ";
 		

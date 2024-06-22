@@ -11,11 +11,11 @@ import lombok.ToString;
 @AllArgsConstructor
 @Builder
 @ToString
-public class ReservationDTO2 {
+public class ReservationForRestaurantDTO {
 
-	private String cName;
-	private String cPhone;
-	private String revTime;
+	private String customerName;
+	private String customerPhone;
+	private String reservationTime;
 	private String state;
 	
 }
