@@ -1,19 +1,17 @@
 package tabling.dto;
 
 import lombok.AllArgsConstructor;
-import lombok.Getter;
+import lombok.Builder;
+import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
 
-@Getter
-@Setter
+@Data
 @AllArgsConstructor
 @NoArgsConstructor
-@ToString
+@Builder
 public class LikeDTO {
 	
-	private int customerId;
-	private int restaurantId;
+	private int customerId; // 고객id
+	private int restaurantId; // 식당id
 
 }

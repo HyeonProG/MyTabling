@@ -4,17 +4,15 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.ToString;
 
-@Data  // getter setter 동시에 사용할수 있다.
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@ToString
 public class MenuDTO {
-	
-	private int restaurantId;
-	private int foodId;
-	private int price;
+
+	private int restaurantId; // 식당 id
+	private int foodId; // 음식 id
+	private int price; // 음식 가격
 
 }

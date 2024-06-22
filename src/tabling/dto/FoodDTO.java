@@ -4,17 +4,15 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.ToString;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@ToString
 public class FoodDTO {
 	
-	private int foodId;
-	private String foodName;
-	private int categoryId;
+	private int foodId; // 음식 id
+	private String foodName; // 음식 이름
+	private int categoryId; // 카테고리 id
 
 }
