@@ -3,6 +3,7 @@ package tabling.frame;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Image;
+import java.awt.event.MouseAdapter;
 import java.sql.SQLException;
 import java.util.List;
 
@@ -54,8 +55,8 @@ public class RestaurantMainMenuFrame extends JFrame {
 	private void initData() {
 		// 테이블에 담는 메소드
 		tableSet();
-		restDAO = new RestaurantReservationDAO();
 		setCList();
+		restDAO = new RestaurantReservationDAO();
 		backgroundPanel = new BackgroundPanel();
 
 		resetBtn = new JLabel(new ImageIcon("img/새로고침.png"));
@@ -85,11 +86,23 @@ public class RestaurantMainMenuFrame extends JFrame {
 	}
 
 	private void initListener() {
-		// TODO Auto-generated method stub
 
+		// 새로고침
+		resetBtn.addMouseListener(new MouseAdapter() {
+			// 리스트를 다시 담아야 한다. select만.
+			DefaultTableModel tableModel = (DefaultTableModel)table.getModel();
+		
+		});
+		
+		// 예약종료
+		endReserBtn.addMouseListener(new MouseAdapter() {
+			// row를 하나만 선택한 상태에서 update & select 해야 한다.
+		});
+		
 	}
 
-	private void tableSet() {
+	
+	public void tableSet() {
 
 		// 리스트 값
 		contents = new String[reserList.size()][head.length];
@@ -148,6 +161,7 @@ public class RestaurantMainMenuFrame extends JFrame {
 
 	}
 
+	// List<>에 값을 담는 메소드
 	private void setCList() {
 		try {
 			reserList = restDAO.costomerList(restDTO.getRestaurantId());
@@ -173,5 +187,70 @@ public class RestaurantMainMenuFrame extends JFrame {
 		}
 
 	}
+	
+	// TODO - 테이블 초기화 메소드
+	private void resetTable() {
+		// 리스트 값
+		contents = new String[reserList.size()][head.length];
 
+		for (int i = 0; i < reserList.size(); i++) {
+
+			String cName = reserList.get(i).getCName();
+			String cPhone = reserList.get(i).getCPhone();
+			String time = reserList.get(i).getRevTime();
+			contents[i][0] = cName;
+			contents[i][1] = cPhone;
+			contents[i][2] = time.substring(5, 16);
+
+			if ((reserList.get(i).getState()).equals("Y")) {
+				String state = "대기중";
+				contents[i][3] = state;
+			} else {
+				String state = "예약종료";
+				contents[i][3] = state;
+			}
+
+		}
+
+		// 테이블
+		DefaultTableModel tableModel = new DefaultTableModel(contents, head); // 모델과 데이터 연결
+		table = new JTable(tableModel) {
+			@Override
+			public boolean isCellEditable(int row, int column) {
+				return false;
+			}
+		};
+
+		// 스크롤
+		scroll = new JScrollPane(table);
+		add(scroll);
+		scroll.setSize(450, 450);
+		scroll.setLocation(20, 115);
+
+		// 테이블에 개별 셀을 표시하기 위한 클래스
+		DefaultTableCellRenderer centerAlign = new DefaultTableCellRenderer();
+		centerAlign.setHorizontalAlignment(JLabel.CENTER);
+
+		// 테이블 폰트
+		table.setFont(new Font("Noto Sans KR", Font.BOLD, 15));
+		table.setRowHeight(25);
+		table.getTableHeader().setReorderingAllowed(false); // 컬럼 이동 불가
+
+		// 테이블에 컬럼 추가
+		table.getColumn("고객 닉네임").setPreferredWidth(120);
+		table.getColumn("고객 전화번호").setPreferredWidth(120);
+		table.getColumn("예약시간").setPreferredWidth(80);
+		table.getColumn("예약상태").setPreferredWidth(90);
+
+		//
+		repaint();
+	
+		try {
+			reserList = restDAO.costomerList(restDTO.getRestaurantId());
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	
+	}
+	
 }
