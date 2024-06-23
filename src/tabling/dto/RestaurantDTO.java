@@ -2,17 +2,16 @@ package tabling.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Getter;
+import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import lombok.ToString;
 
-@Getter
+@Data
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@ToString
 @Builder
+// 식당 리스트를 정렬 하기 위해 Comparable 인터페이스를 구현함
 public class RestaurantDTO implements Comparable<RestaurantDTO> {
 
 	public static final int RATING = 0;

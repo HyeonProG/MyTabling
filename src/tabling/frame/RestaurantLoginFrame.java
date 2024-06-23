@@ -19,7 +19,7 @@ import javax.swing.JTextField;
 import tabling.dao.ReservationDAO;
 import tabling.dao.RestaurantDAO;
 import tabling.dao.RestaurantReservationDAO;
-import tabling.dto.ReservationDTO2;
+import tabling.dto.ReservationForRestaurantDTO;
 import tabling.dto.RestaurantDTO;
 
 public class RestaurantLoginFrame extends JFrame {
@@ -35,7 +35,7 @@ public class RestaurantLoginFrame extends JFrame {
 	private int restaurantId;
 	
 	//
-	private List<ReservationDTO2> reserList = new ArrayList<>();;
+	private List<ReservationForRestaurantDTO> reserList = new ArrayList<>();;
 	private RestaurantReservationDAO dao = new RestaurantReservationDAO();
 	
 	public RestaurantLoginFrame() {

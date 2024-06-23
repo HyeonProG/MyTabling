@@ -4,21 +4,17 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.concurrent.CountDownLatch;
 
 import tabling.dto.ReservationDTO;
-import tabling.dto.RestaurantDTO;
 import tabling.util.DBConnectionManager;
+import tabling.util.Define;
 
 public class ReservationDAO {
 
+	// 한 식당에 대해서 나를 포함하여 나보다 앞선, 유효한 예약이 몇개인지 확인하는 메서드
 	public int checkReservation(int restaurantId, int reservationId) throws SQLException {
 		int count = 0;
-
-		String query = " select count(*) from reservation\r\n"
-				+ "where reservation_state='Y' and restaurant_id=? and reservation_id<=? ";
+		String query = Define.SELECT_RESERVATION_COUNT_BY_RESTID_AND_RESERID;
 
 		try (Connection conn = DBConnectionManager.getInstance().getConnection()) {
 
@@ -29,7 +25,6 @@ public class ReservationDAO {
 
 			while (rs.next()) {
 				count = rs.getInt("count(*)");
-//					System.out.println("대기 "+ count+"번 차례 입니다");
 			}
 
 		} catch (SQLException e) {
@@ -38,9 +33,10 @@ public class ReservationDAO {
 		return count;
 	}
 
+	// 해당 고객의 예약 테이블을 확인하는 메서드
 	public ReservationDTO getReservationByCustomer(int customerId) throws SQLException {
-		ReservationDTO dto = new ReservationDTO();
-		String query = " select * from reservation where customer_id=? and reservation_state='Y'  ";
+		ReservationDTO dto = null;
+		String query = " SELECT * FROM reservation WHERE customer_id = ? and reservation_state = 'Y'  ";
 		try (Connection conn = DBConnectionManager.getInstance().getConnection()) {
 			PreparedStatement pstmt = conn.prepareStatement(query);
 			pstmt.setInt(1, customerId);
@@ -58,16 +54,5 @@ public class ReservationDAO {
 		}
 		return dto;
 	}
-
-//public static void main(String[] args) {
-//	
-//	ReservationDAO dao= new ReservationDAO();
-//	try {
-//		dao.checkReservation(55, 13);
-//		
-//	} catch (Exception e) {
-//		e.printStackTrace();
-//	}
-//}
 
 }

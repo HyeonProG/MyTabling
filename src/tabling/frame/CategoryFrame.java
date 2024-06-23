@@ -22,14 +22,12 @@ import tabling.util.Define;
 public class CategoryFrame extends JFrame implements MouseListener {
 
 	private JLabel[] categoryImgs;
-	private JLabel[] categoryTexts;
 
 	private JLabel homeLable;
 
 	private BackgroundPanel backgroundPanel;
 	private MainPanel mainPanel;
 	private JScrollPane scrollPane;
-	private CustomerLoginFrame customerLoginFrame;
 	private CustomerDTO customerDTO;
 
 	public CategoryFrame(CustomerDTO customerDTO) {

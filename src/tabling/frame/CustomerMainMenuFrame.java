@@ -4,16 +4,15 @@ import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.sql.SQLException;
 
 import javax.swing.ImageIcon;
-import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
+import tabling.dao.ReservationDAO;
 import tabling.dto.CustomerDTO;
-import tabling.dto.ReservationDTO;
-import tabling.dto.RestaurantDTO;
 
 public class CustomerMainMenuFrame extends JFrame {
 
@@ -34,7 +33,7 @@ public class CustomerMainMenuFrame extends JFrame {
 		this.customerDTO = customerDTO;
 		initData();
 		setInitLayout();
-		initListener();
+		addEventListener();
 	}
 
 	private void initData() {
@@ -65,15 +64,12 @@ public class CustomerMainMenuFrame extends JFrame {
 		add(backgroundPanel);
 
 		reservationBtn.setBounds(50, 330, 80, 120);
-//		reservationBtn.setSize(70, 100);
 		backgroundPanel.add(reservationBtn);
 
 		categoryBtn.setBounds(210, 335, 70, 120);
-//		categoryBtn.setSize(330, 130);
 		backgroundPanel.add(categoryBtn);
 
 		locationBtn.setBounds(360, 335, 70, 120);
-//		locationBtn.setSize(330, 130);
 		backgroundPanel.add(locationBtn);
 
 		userInfoBtn.setBounds(430, 20, 30, 30);
@@ -92,13 +88,21 @@ public class CustomerMainMenuFrame extends JFrame {
 		
 	}
 
-	private void initListener() {
+	private void addEventListener() {
 		reservationBtn.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mousePressed(MouseEvent e) {
-				new CustomerReservationStatusFrame(customerDTO);
-				setVisible(false);
-
+				try {
+					if (new ReservationDAO().getReservationByCustomer(customerDTO.getCustomerId()) != null) {
+						new CustomerReservationStatusFrame(customerDTO);
+						setVisible(false);
+						dispose();
+					} else {
+						// TODO 현재 예약 중이 아님을 알려주는 메세지 띄워야됨
+					}
+				} catch (SQLException e1) {
+					e1.printStackTrace();
+				}
 			}
 		});
 		categoryBtn.addMouseListener(new MouseAdapter() {
@@ -106,6 +110,7 @@ public class CustomerMainMenuFrame extends JFrame {
 			public void mousePressed(MouseEvent e) {
 				new CategoryFrame(customerDTO);
 				setVisible(false);
+				dispose();
 			}
 		});
 		locationBtn.addMouseListener(new MouseAdapter() {
@@ -113,15 +118,16 @@ public class CustomerMainMenuFrame extends JFrame {
 			public void mousePressed(MouseEvent e) {
 				new LocationFrame(customerDTO);
 				setVisible(false);
+				dispose();
 			}
 		});
 		
 		userInfoBtn.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mousePressed(MouseEvent e) {
-				
-				new EditCustomerInfoFrame1(customerDTO);
+				new EditCustomerInfoFrame(customerDTO);
 				setVisible(false);
+				dispose();
 			}
 		});
 	}
@@ -142,10 +148,6 @@ public class CustomerMainMenuFrame extends JFrame {
 			g.drawImage(backgroundImage, 0, 0, getWidth(), getHeight(), null);
 		}
 
-	}
-
-	public static void main(String[] args) {
-		// new MainMenuFrame();
 	}
 
 }

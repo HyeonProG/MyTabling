@@ -18,7 +18,7 @@ import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 
 import tabling.dao.RestaurantReservationDAO;
-import tabling.dto.ReservationDTO2;
+import tabling.dto.ReservationForRestaurantDTO;
 import tabling.dto.RestaurantDTO;
 
 public class RestaurantMainMenuFrame extends JFrame {
@@ -33,7 +33,7 @@ public class RestaurantMainMenuFrame extends JFrame {
 	private String[] head = { "고객 닉네임", "고객 전화번호", "예약시간", "예약상태" };
 	private String[][] contents;
 	// 리스트
-	private List<ReservationDTO2> reserList;
+	private List<ReservationForRestaurantDTO> reserList;
 	//
 	private JLabel resetBtn;
 	private JLabel endReserBtn;
