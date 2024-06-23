@@ -60,7 +60,7 @@ public class CategoryFrame extends JFrame implements MyMouseListener {
 		mainPanel = new MainPanel();
 		scrollPane = new JScrollPane(mainPanel);
 
-		homeLable = new JLabel(new ImageIcon("img/home.png"));
+		homeLable = new JLabel(new ImageIcon("img/house-solid.png"));
 
 		for (int i = 0; i < 14; i++) {
 			mainPanel.add(categoryImgs[i]);
@@ -76,14 +76,14 @@ public class CategoryFrame extends JFrame implements MyMouseListener {
 		setVisible(true);
 		setResizable(false);
 
-		homeLable.setBounds(40, 5, 70, 70);
+		homeLable.setBounds(215,588, 70, 70);
 		add(homeLable);
 
 		backgroundPanel.setSize(getWidth(), getHeight());
 		backgroundPanel.setLayout(null);
 		add(backgroundPanel);
 
-		scrollPane.setBounds(40, 120, 400, 420);
+		scrollPane.setBounds(48, 120, 400, 420);
 		backgroundPanel.add(scrollPane);
 
 		mainPanel.setLayout(new GridLayout(0, 1));
@@ -134,7 +134,7 @@ public class CategoryFrame extends JFrame implements MyMouseListener {
 		private Image backgroundImage;
 
 		public BackgroundPanel() {
-			backgroundImage = new ImageIcon("img/backgroundimage.jpg").getImage();
+			backgroundImage = new ImageIcon("img/categoryFrameBg.jpg").getImage();
 		}
 
 		@Override
@@ -148,7 +148,7 @@ public class CategoryFrame extends JFrame implements MyMouseListener {
 		private Image backgroundImage;
 
 		public MainPanel() {
-			backgroundImage = new ImageIcon("img/backgroundimage.jpg").getImage();
+			backgroundImage = new ImageIcon("img/scrollPaneBg.jpg").getImage();
 		}
 
 		@Override

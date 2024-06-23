@@ -66,7 +66,7 @@ public class CustomerMainMenuFrame extends JFrame {
 		userInfoBtn.setBounds(430, 15, 30, 30);
 		backgroundPanel.add(userInfoBtn);
 
-		homeBtn.setBounds(217, 595, 50, 50);
+		homeBtn.setBounds(217, 605, 50, 50);
 		backgroundPanel.add(homeBtn);
 		
 	}

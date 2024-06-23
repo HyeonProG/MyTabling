@@ -3,7 +3,9 @@ package tabling.frame;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Image;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.sql.SQLException;
 import java.util.List;
 
@@ -14,6 +16,8 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.event.AncestorEvent;
+import javax.swing.event.AncestorListener;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 
@@ -23,6 +27,7 @@ import tabling.dto.RestaurantDTO;
 
 public class RestaurantMainMenuFrame extends JFrame {
 
+	private RestaurantMainMenuFrame frame; // TODO
 	private BackgroundPanel backgroundPanel;
 	private RestaurantDTO restDTO;
 	private RestaurantReservationDAO restDAO;
@@ -53,9 +58,10 @@ public class RestaurantMainMenuFrame extends JFrame {
 	}
 
 	private void initData() {
+		 frame = this;
 		// 테이블에 담는 메소드
 		tableSet();
-		setCList();
+		setList();
 		restDAO = new RestaurantReservationDAO();
 		backgroundPanel = new BackgroundPanel();
 
@@ -87,16 +93,26 @@ public class RestaurantMainMenuFrame extends JFrame {
 
 	private void initListener() {
 
-		// 새로고침
+		// TODO - 새로고침
 		resetBtn.addMouseListener(new MouseAdapter() {
-			// 리스트를 다시 담아야 한다. select만.
-			DefaultTableModel tableModel = (DefaultTableModel)table.getModel();
-		
+			// 리스트 다시 담기.
+			@Override
+			public void mousePressed(MouseEvent e) {
+				setList();
+			}
 		});
 		
-		// 예약종료
+		// TODO - 예약종료
 		endReserBtn.addMouseListener(new MouseAdapter() {
 			// row를 하나만 선택한 상태에서 update & select 해야 한다.
+			
+			@Override
+			public void mousePressed(MouseEvent e) {
+				if(table.getRowCount() == 1) {
+					
+				}
+			}
+			
 		});
 		
 	}
@@ -152,9 +168,16 @@ public class RestaurantMainMenuFrame extends JFrame {
 
 		// 테이블에 컬럼 추가
 		table.getColumn("고객 닉네임").setPreferredWidth(120);
+		table.getColumn("고객 닉네임").setCellRenderer(centerAlign);
 		table.getColumn("고객 전화번호").setPreferredWidth(120);
+		table.getColumn("고객 전화번호").setCellRenderer(centerAlign);
 		table.getColumn("예약시간").setPreferredWidth(80);
+		table.getColumn("예약시간").setCellRenderer(centerAlign);
 		table.getColumn("예약상태").setPreferredWidth(90);
+		table.getColumn("예약상태").setCellRenderer(centerAlign);
+		
+		// 컬럼 이동 불가
+		table.getTableHeader().setReorderingAllowed(false);
 
 		//
 		repaint();
@@ -162,7 +185,7 @@ public class RestaurantMainMenuFrame extends JFrame {
 	}
 
 	// List<>에 값을 담는 메소드
-	private void setCList() {
+	private void setList() {
 		try {
 			reserList = restDAO.getCustomerInfoByReservation(restDTO.getRestaurantId());
 		} catch (SQLException e) {
@@ -186,71 +209,6 @@ public class RestaurantMainMenuFrame extends JFrame {
 			g.drawImage(backgroundImage, 0, 0, getWidth(), getHeight(), null);
 		}
 
-	}
-	
-	// TODO - 테이블 초기화 메소드
-	private void resetTable() {
-		// 리스트 값
-		contents = new String[reserList.size()][head.length];
-
-		for (int i = 0; i < reserList.size(); i++) {
-
-			String cName = reserList.get(i).getCustomerName();
-			String cPhone = reserList.get(i).getCustomerPhone();
-			String time = reserList.get(i).getReservationTime();
-			contents[i][0] = cName;
-			contents[i][1] = cPhone;
-			contents[i][2] = time.substring(5, 16);
-
-			if ((reserList.get(i).getState()).equals("Y")) {
-				String state = "대기중";
-				contents[i][3] = state;
-			} else {
-				String state = "예약종료";
-				contents[i][3] = state;
-			}
-
-		}
-
-		// 테이블
-		DefaultTableModel tableModel = new DefaultTableModel(contents, head); // 모델과 데이터 연결
-		table = new JTable(tableModel) {
-			@Override
-			public boolean isCellEditable(int row, int column) {
-				return false;
-			}
-		};
-
-		// 스크롤
-		scroll = new JScrollPane(table);
-		add(scroll);
-		scroll.setSize(450, 450);
-		scroll.setLocation(20, 115);
-
-		// 테이블에 개별 셀을 표시하기 위한 클래스
-		DefaultTableCellRenderer centerAlign = new DefaultTableCellRenderer();
-		centerAlign.setHorizontalAlignment(JLabel.CENTER);
-
-		// 테이블 폰트
-		table.setFont(new Font("Noto Sans KR", Font.BOLD, 15));
-		table.setRowHeight(25);
-		table.getTableHeader().setReorderingAllowed(false); // 컬럼 이동 불가
-
-		// 테이블에 컬럼 추가
-		table.getColumn("고객 닉네임").setPreferredWidth(120);
-		table.getColumn("고객 전화번호").setPreferredWidth(120);
-		table.getColumn("예약시간").setPreferredWidth(80);
-		table.getColumn("예약상태").setPreferredWidth(90);
-
-		//
-		repaint();
-	
-		try {
-			reserList = restDAO.getCustomerInfoByReservation(restDTO.getRestaurantId());
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-	
 	}
 	
 }
