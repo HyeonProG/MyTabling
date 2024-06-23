@@ -117,7 +117,6 @@ public class CustomerLoginFrame extends JFrame {
 			@Override
 			public void keyPressed(KeyEvent e) {
 				if (e.getKeyCode() == KeyEvent.VK_ENTER) {
-					System.out.println("엔터입력");
 					rogin();
 				}
 			}

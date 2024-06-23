@@ -35,7 +35,7 @@ public class ReservationDAO {
 
 	// 해당 고객의 예약 테이블을 확인하는 메서드
 	public ReservationDTO getReservationByCustomer(int customerId) throws SQLException {
-		ReservationDTO dto = new ReservationDTO();
+		ReservationDTO dto = null;
 		String query = " SELECT * FROM reservation WHERE customer_id = ? and reservation_state = 'Y'  ";
 		try (Connection conn = DBConnectionManager.getInstance().getConnection()) {
 			PreparedStatement pstmt = conn.prepareStatement(query);

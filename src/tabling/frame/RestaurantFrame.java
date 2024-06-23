@@ -28,6 +28,7 @@ import tabling.dto.RestaurantDTO;
 
 public class RestaurantFrame extends JFrame {
 	private RestaurantFrame frame;
+	private RestaurantListFrame restaurantListFrame;
 	
 	private RestaurantDTO restaurantDTO;
 	private List<MenuDTO> menuList = new ArrayList<>();
@@ -55,9 +56,10 @@ public class RestaurantFrame extends JFrame {
 	private LikeDAO likeDAO;
 	private JLabel likeCountLabel;
 
-	public RestaurantFrame(CustomerDTO customerDTO, RestaurantDTO restaurantDTO) {
+	public RestaurantFrame(CustomerDTO customerDTO, RestaurantDTO restaurantDTO, RestaurantListFrame restaurantListFrame) {
 		this.customerDTO = customerDTO;
 		this.restaurantDTO = restaurantDTO;
+		this.restaurantListFrame = restaurantListFrame;
 		menuDAO = new MenuDAO();
 		try {
 			this.menuList = menuDAO.getMenuByRestaurantId(restaurantDTO.getRestaurantId());
@@ -108,7 +110,7 @@ public class RestaurantFrame extends JFrame {
 			int foodId = menuList.get(i).getFoodId();
 			String menuName = null;
 			try {
-				menuName = menuDAO.getMenuName(foodId);
+				menuName = menuDAO.getFoodName(foodId);
 			} catch (SQLException e) {
 				e.printStackTrace();
 			}
@@ -208,7 +210,7 @@ public class RestaurantFrame extends JFrame {
 		reservationBtn.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mousePressed(MouseEvent e) {
-				new ReservationFrame(customerDTO, restaurantDTO);
+				new ReservationFrame(customerDTO, restaurantDTO, restaurantListFrame);
 				frame.setVisible(false);
 				frame.dispose();
 			}

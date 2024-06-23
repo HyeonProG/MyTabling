@@ -17,28 +17,29 @@ import javax.swing.JTextField;
 import tabling.dao.CustomerDAO;
 import tabling.dto.CustomerDTO;
 
-public class EditCustomerInfoFrame1 extends JFrame {
+public class EditCustomerInfoFrame extends JFrame {
 
 	private BackgroundPanel backgroundPanel;
 	private CustomerDTO customerDTO;
-	private CustomerDAO dao = new CustomerDAO(); // TODO
+	private CustomerDAO dao;
 	private JTextField nameField;
 	private JTextField locationField;
 	private JTextField phoneField;
-	private JLabel checkBtn;
+	private JLabel editBtn;
 	private JLabel quitBtn;
 
 	private Choice myLocation;
 	private String[] localArray;
 
-	public EditCustomerInfoFrame1(CustomerDTO customerDTO) {
+	public EditCustomerInfoFrame(CustomerDTO customerDTO) {
 		this.customerDTO = customerDTO;
 		initData();
 		setInitLayout();
-		initListener();
+		addEventListener();
 	}
 
 	private void initData() {
+		dao = new CustomerDAO();
 		setTitle("메인 메뉴 " + customerDTO.getCustomerName() + "님"); // 제목 타이틀
 		setSize(500, 700);
 		setResizable(false);
@@ -50,7 +51,7 @@ public class EditCustomerInfoFrame1 extends JFrame {
 		nameField = new JTextField();
 		phoneField = new JTextField();
 		locationField = new JTextField();
-		checkBtn = new JLabel(new ImageIcon("img/그룹 20.png")); // 수정 버튼
+		editBtn = new JLabel(new ImageIcon("img/그룹 20.png")); // 수정 버튼
 		quitBtn = new JLabel(new ImageIcon("img/quitBtn2.png")); // 뒤로가기 버튼
 
 		nameField = new JTextField();
@@ -63,11 +64,13 @@ public class EditCustomerInfoFrame1 extends JFrame {
 		backgroundPanel.setLayout(null);
 		add(backgroundPanel);
 
-		nameField.setBounds(90, 155, 300, 30); // 닉네임 필드 텍스트
+		// 닉네임 필드 텍스트
+		nameField.setBounds(90, 155, 300, 30); 
 		nameField.setText(customerDTO.getCustomerName());
 		backgroundPanel.add(nameField);
 
-		phoneField.setBounds(90, 260, 300, 30); // 전화번호 필드 텍스트 (수정불가)
+		// 전화번호 필드 텍스트 (수정불가)
+		phoneField.setBounds(90, 260, 300, 30); 
 		phoneField.setText(customerDTO.getPhone());
 		phoneField.setEditable(false);
 		backgroundPanel.add(phoneField);
@@ -83,37 +86,49 @@ public class EditCustomerInfoFrame1 extends JFrame {
 
 		backgroundPanel.add(locationField);
 
-		checkBtn.setBounds(85, 480, 314, 46); // 수정하기
-		backgroundPanel.add(checkBtn);
+		editBtn.setBounds(85, 480, 314, 46); // 수정하기
+		backgroundPanel.add(editBtn);
 
 		quitBtn.setBounds(10, 30, 15, 24);
 		backgroundPanel.add(quitBtn);
 
 	}
 
-	private void initListener() {
+	private void addEventListener() {
 
 		quitBtn.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mousePressed(MouseEvent e) {
 				new CustomerMainMenuFrame(customerDTO);
-				System.out.println("quitBtn");
 				setVisible(false);
+				dispose();
 			}
 		});
 
-		checkBtn.addMouseListener(new MouseAdapter() {
+		editBtn.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mousePressed(MouseEvent e) {
-				System.out.println(nameField.getText());
 
 				try {
-					dao.updateCustomer(nameField.getText(), myLocation.getSelectedIndex() + 1, customerDTO.getPhone()); 
-					JOptionPane.showMessageDialog(null, "수정이 완료되었습니다.", "PLAIN_MESSAGE", JOptionPane.PLAIN_MESSAGE);
-					customerDTO = dao.authenticatePhone(customerDTO.getPhone());
-					setVisible(false);
-					dispose();
-					new CustomerMainMenuFrame(customerDTO);
+					if (nameField.getText().matches("^\\s.*")) {
+						JOptionPane.showMessageDialog(null, "닉네임은 공백으로 시작할 수 없습니다.", "경고", JOptionPane.WARNING_MESSAGE);
+						nameField.setText("");
+						return;
+					} else if (nameField.getText().matches("\\s*$")) {
+						JOptionPane.showMessageDialog(null, "닉네임은 공백으로 끝날 수 없습니다.", "경고", JOptionPane.WARNING_MESSAGE);
+						nameField.setText("");
+						return;
+					} else if (nameField.getText().length() > 50) {
+						JOptionPane.showMessageDialog(null, "닉네임은 50자까지만 기입 가능합니다.", "경고", JOptionPane.WARNING_MESSAGE);
+						nameField.setText("");
+					} else {
+						dao.updateCustomer(nameField.getText(), myLocation.getSelectedIndex() + 1, customerDTO.getPhone()); 
+						JOptionPane.showMessageDialog(null, "수정이 완료되었습니다.", "PLAIN_MESSAGE", JOptionPane.PLAIN_MESSAGE);
+						customerDTO = dao.getCustomerByPhone(customerDTO.getPhone());
+						new CustomerMainMenuFrame(customerDTO);
+						setVisible(false);
+						dispose();
+					}
 					
 				} catch (SQLException e1) {
 					e1.printStackTrace();
@@ -121,7 +136,7 @@ public class EditCustomerInfoFrame1 extends JFrame {
 			}
 		});
 
-	} // end of initListener()
+	}
 
 	private class BackgroundPanel extends JPanel { // 배경화면 패널
 		private JPanel backgroundPanel;

@@ -7,6 +7,7 @@ import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.sql.SQLException;
+import java.util.regex.Pattern;
 
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
@@ -20,8 +21,8 @@ import tabling.dao.CustomerDAO;
 public class SignInFrame extends JFrame {
 
 	private JLabel Bg;
-	private JTextField userName;
-	private JTextField userPhone;
+	private JTextField nameField;
+	private JTextField phoneField;
 	private JLabel duplicateCheck;
 	private JLabel signInBtn;
 
@@ -51,7 +52,7 @@ public class SignInFrame extends JFrame {
 
 		setContentPane(Bg);
 
-		userName = new JTextField(20);
+		nameField = new JTextField(20);
 
 		localTel = new Choice();
 		localTelArray = new String[] { "010", "011", "016", "017", "018", "019" };
@@ -59,7 +60,7 @@ public class SignInFrame extends JFrame {
 			localTel.add(localTelArray[i]);
 		}
 
-		userPhone = new JTextField();
+		phoneField = new JTextField();
 
 		myLocation = new Choice();
 		localArray = new String[] { "강서구", "사하구", "사상구", "북구", "서구", "중구", "동구", "부산진구", "영도구", "남구", "동래구", "연제구",
@@ -77,14 +78,14 @@ public class SignInFrame extends JFrame {
 		setLayout(null);
 		setLocationRelativeTo(null);
 
-		add(userName);
-		userName.setBounds(90, 165, 200, 25);
+		add(nameField);
+		nameField.setBounds(90, 165, 200, 25);
 
 		add(localTel);
 		localTel.setBounds(90, 270, 50, 25);
 
-		add(userPhone);
-		userPhone.setBounds(150, 270, 140, 25);
+		add(phoneField);
+		phoneField.setBounds(150, 270, 140, 25);
 
 		add(myLocation);
 		myLocation.setBounds(90, 380, 200, 25);
@@ -103,7 +104,7 @@ public class SignInFrame extends JFrame {
 	private void addEventListener() {
 
 		// 전화번호 8자 이상 입력불가 & 8자 입력시 중복체크 활성화
-		userPhone.addKeyListener(new KeyAdapter() {
+		phoneField.addKeyListener(new KeyAdapter() {
 
 			@Override
 			public void keyPressed(KeyEvent e) {
@@ -111,11 +112,11 @@ public class SignInFrame extends JFrame {
 				canLogin = false;
 				signInBtn.setEnabled(false);
 
-				if (userPhone.getText().length() < 9) {
+				if (phoneField.getText().length() < 9) {
 					duplicateCheck.setEnabled(false);
 					canCheck = false;
 				}
-				if (6 < userPhone.getText().length()) {
+				if (6 < phoneField.getText().length()) {
 					duplicateCheck.setEnabled(true);
 					canCheck = true;
 				}
@@ -123,7 +124,7 @@ public class SignInFrame extends JFrame {
 
 			@Override
 			public void keyTyped(KeyEvent e) {
-				if (userPhone.getText().length() > 7) {
+				if (phoneField.getText().length() > 7) {
 					e.consume();
 				} else if (!(e.getKeyChar() >= '0' && e.getKeyChar() <= '9')) {
 					e.consume();
@@ -137,13 +138,20 @@ public class SignInFrame extends JFrame {
 			public void mousePressed(MouseEvent e) {
 
 				if (canLogin == true) {
-					if (userName.getText().length() > 50) {
+					if (nameField.getText().matches("^\\s.*")) {
+						JOptionPane.showMessageDialog(null, "닉네임은 공백으로 시작할 수 없습니다.", "경고", JOptionPane.WARNING_MESSAGE);
+						nameField.setText("");
+						return;
+					} else if (nameField.getText().matches("\\s*$")) {
+						JOptionPane.showMessageDialog(null, "닉네임은 공백으로 끝날 수 없습니다.", "경고", JOptionPane.WARNING_MESSAGE);
+						nameField.setText("");
+						return;
+					} else if (nameField.getText().length() > 50) {
 						JOptionPane.showMessageDialog(null, "닉네임은 50자까지만 기입 가능합니다.", "경고", JOptionPane.WARNING_MESSAGE);
-					} else if (userPhone.getText().equals("")) {
-						JOptionPane.showMessageDialog(null, "전화번호는 비워둘 수 없습니다.", "경고", JOptionPane.WARNING_MESSAGE);
+						nameField.setText("");
 					} else {
 						try {
-							dao.addCustomer(userName.getText(), localTel.getSelectedItem() + userPhone.getText(),
+							dao.addCustomer(nameField.getText(), localTel.getSelectedItem() + phoneField.getText(),
 									myLocation.getSelectedIndex() + 1);
 							JOptionPane.showMessageDialog(null, "회원가입 성공!", "경고", JOptionPane.WARNING_MESSAGE);
 							setVisible(false);
@@ -160,10 +168,10 @@ public class SignInFrame extends JFrame {
 			@Override
 			public void mousePressed(MouseEvent e) {
 
-				if (userPhone.getText().length() == 8 && canCheck == true) {
+				if (phoneField.getText().length() == 8 && canCheck == true) {
 
 					try {
-						if (dao.getCustomerByPhone(localTel.getSelectedItem() + userPhone.getText()) != null) {
+						if (dao.getCustomerByPhone(localTel.getSelectedItem() + phoneField.getText()) != null) {
 							JOptionPane.showMessageDialog(null, "중복되는 번호입니다.", "경고", JOptionPane.WARNING_MESSAGE);
 						} else {
 							JOptionPane.showMessageDialog(null, "가입 가능한 전화번호입니다.", "경고", JOptionPane.WARNING_MESSAGE);

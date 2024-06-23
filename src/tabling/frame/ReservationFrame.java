@@ -23,11 +23,13 @@ import tabling.dto.RestaurantDTO;
 
 public class ReservationFrame extends JFrame {
 
-	RestaurantDTO restaurantDTO;
-	ReservationDTO reservationDTO;
-	CustomerReservationDAO customerReservationDAO;
-	ReservationDAO reservationDAO;
-	CustomerDTO customerDTO;
+	private RestaurantListFrame restaurantListFrame;
+	
+	private RestaurantDTO restaurantDTO;
+	private ReservationDTO reservationDTO;
+	private CustomerReservationDAO customerReservationDAO;
+	private ReservationDAO reservationDAO;
+	private CustomerDTO customerDTO;
 	private int customerId;
 	private int restaurantId;
 
@@ -36,11 +38,12 @@ public class ReservationFrame extends JFrame {
 	private JTextArea reservationStatus;
 	private JLabel restaurantNameLabel;
 
-	public ReservationFrame(CustomerDTO customerDTO, RestaurantDTO restaurantDTO) {
+	public ReservationFrame(CustomerDTO customerDTO, RestaurantDTO restaurantDTO, RestaurantListFrame restaurantListFrame) {
 		this.customerDTO = customerDTO;
 		this.restaurantDTO = restaurantDTO;
 		customerId = customerDTO.getCustomerId();
 		restaurantId = restaurantDTO.getRestaurantId();
+		this.restaurantListFrame = restaurantListFrame;
 		initData();
 		setInitLayout();
 		initListener();
@@ -105,6 +108,12 @@ public class ReservationFrame extends JFrame {
 							try {
 								JOptionPane.showMessageDialog(null, "예약되었습니다.");
 								customerReservationDAO.reservation(customerId, restaurantId);
+								if (restaurantListFrame != null) {
+									new CustomerMainMenuFrame(customerDTO);
+									restaurantListFrame.setVisible(false);
+									restaurantListFrame.dispose();
+								}
+								setVisible(false);
 								dispose();
 							} catch (SQLException e1) {
 								e1.printStackTrace();
@@ -120,20 +129,12 @@ public class ReservationFrame extends JFrame {
 		backBtn.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mousePressed(MouseEvent e) {
-					new RestaurantFrame(customerDTO, restaurantDTO);
+					new RestaurantFrame(customerDTO, restaurantDTO, restaurantListFrame);
 					setVisible(false);
 					dispose();
 			}
 		});
 
 	}
-
-//	public static void main(String[] args) {
-//		try {
-//			new ReservationFrame(new CustomerDTO().getCustomerId(), new RestaurantDAO().getAllRestaurants().get(93));
-//		} catch (SQLException e) {
-//			e.printStackTrace();
-//		}
-//	}
 
 }

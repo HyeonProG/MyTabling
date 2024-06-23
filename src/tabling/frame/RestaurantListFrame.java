@@ -393,7 +393,7 @@ public class RestaurantListFrame extends JFrame {
 						restaurantFrame.setVisible(true);
 						restaurantFrame.dispose();
 					}
-					restaurantFrame = new RestaurantFrame(customerDTO, dto);
+					restaurantFrame = new RestaurantFrame(customerDTO, dto, frame);
 				}
 			}
 		});
@@ -413,13 +413,4 @@ public class RestaurantListFrame extends JFrame {
 		}
 	}
 
-	// 테스트 코드
-	public static void main(String[] args) {
-		RestaurantDAO dao = new RestaurantDAO();
-		try {
-			new RestaurantListFrame(dao.getAllRestaurants(1), new CustomerDAO().authenticatePhone("01067871703"), LOCATION_ALL);
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-	}
 }
