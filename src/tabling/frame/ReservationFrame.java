@@ -104,10 +104,10 @@ public class ReservationFrame extends JFrame {
 							try {
 								// 방어적 코드 작성
 								if (restaurantListFrame != null) {
+									JOptionPane.showMessageDialog(null, "예약되었습니다.");
 									new CustomerMainMenuFrame(customerDTO);
 									restaurantListFrame.setVisible(false);
 									restaurantListFrame.dispose();
-									JOptionPane.showMessageDialog(null, "예약되었습니다.");
 									customerReservationDAO.reservation(customerId, restaurantId);
 									setVisible(false);
 									dispose();
