@@ -93,16 +93,15 @@ public class CustomerDAO {
 		
 	}
 	
-	// TODO - 회원정보 삭제
+	// 회원 탈퇴 메서드
 	public void deleteCustomer(String phone)throws SQLException{
-		String query = "  DELECT FROM customer WHERE phone = ?  ";
+		String query = Define.DELETE_CUSTOMER;
 	
 		try (Connection conn = DBConnectionManager.getInstance().getConnection()){
 			PreparedStatement pstmt = conn.prepareStatement(query);
 			pstmt.setString(1, phone);
 			pstmt.executeUpdate();
 		}
-		// throws SQLException 해서 catch 삭제
 	}
 
 }

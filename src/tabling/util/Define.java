@@ -64,4 +64,5 @@ public class Define {
 	public static final String UPDATE_RESERVATION_STATE_N = " UPDATE reservation SET reservation_state='N' WHERE customer_id = ? AND restaurant_id = ? ";
 
 	public static final String DELETE_LIKES = " DELETE FROM likes WHERE customer_id = ? AND restaurant_id = ? ";
+	public static final String DELETE_CUSTOMER = " DELETE FROM customer WHERE phone = ? ";
 }

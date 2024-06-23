@@ -15,7 +15,10 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 
 import tabling.dao.CustomerDAO;
+import tabling.dao.CustomerReservationDAO;
+import tabling.dao.ReservationDAO;
 import tabling.dto.CustomerDTO;
+import tabling.dto.ReservationDTO;
 
 public class EditCustomerInfoFrame extends JFrame {
 
@@ -27,6 +30,7 @@ public class EditCustomerInfoFrame extends JFrame {
 	private JTextField phoneField;
 	private JLabel editBtn;
 	private JLabel quitBtn;
+	private JLabel resignBtn;
 
 	private Choice myLocation;
 	private String[] localArray;
@@ -53,6 +57,7 @@ public class EditCustomerInfoFrame extends JFrame {
 		locationField = new JTextField();
 		editBtn = new JLabel(new ImageIcon("img/그룹 20.png")); // 수정 버튼
 		quitBtn = new JLabel(new ImageIcon("img/quitBtn2.png")); // 뒤로가기 버튼
+		resignBtn = new JLabel(new ImageIcon("img/signinBtn.png")); // TODO 이미지 변경예정
 
 		nameField = new JTextField();
 		locationField = new JTextField();
@@ -91,6 +96,9 @@ public class EditCustomerInfoFrame extends JFrame {
 
 		quitBtn.setBounds(10, 30, 15, 24);
 		backgroundPanel.add(quitBtn);
+		
+		resignBtn.setBounds(85, 550, 314, 46);
+		backgroundPanel.add(resignBtn);
 
 	}
 
@@ -132,6 +140,27 @@ public class EditCustomerInfoFrame extends JFrame {
 					
 				} catch (SQLException e1) {
 					e1.printStackTrace();
+				}
+			}
+		});
+		
+		resignBtn.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mousePressed(MouseEvent e) {
+				int result = JOptionPane.showConfirmDialog(null, "탈퇴하시겠습니까", "탈퇴", 2, 1);
+				if (result == JOptionPane.YES_OPTION) {
+					try {
+						ReservationDTO reservationDTO = new ReservationDAO().getReservationByCustomer(customerDTO.getCustomerId());
+						if (reservationDTO != null) {
+							new CustomerReservationDAO().cancel(reservationDTO.getCustomerId(), reservationDTO.getRestaurantId());
+						}
+						dao.deleteCustomer(customerDTO.getPhone());
+						new LoginSelectFrame();
+						setVisible(false);
+						dispose();
+					} catch (SQLException e1) {
+						e1.printStackTrace();
+					}
 				}
 			}
 		});
