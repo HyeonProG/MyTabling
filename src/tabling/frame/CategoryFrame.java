@@ -4,7 +4,6 @@ import java.awt.Graphics;
 import java.awt.GridLayout;
 import java.awt.Image;
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 import java.sql.SQLException;
 import java.util.List;
 
@@ -18,8 +17,9 @@ import tabling.dao.RestaurantDAO;
 import tabling.dto.CustomerDTO;
 import tabling.dto.RestaurantDTO;
 import tabling.util.Define;
+import tabling.util.MyMouseListener;
 
-public class CategoryFrame extends JFrame implements MouseListener {
+public class CategoryFrame extends JFrame implements MyMouseListener {
 
 	private JLabel[] categoryImgs;
 
@@ -29,6 +29,7 @@ public class CategoryFrame extends JFrame implements MouseListener {
 	private MainPanel mainPanel;
 	private JScrollPane scrollPane;
 	private CustomerDTO customerDTO;
+	private RestaurantDAO dao;
 
 	public CategoryFrame(CustomerDTO customerDTO) {
 		this.customerDTO = customerDTO;
@@ -38,6 +39,7 @@ public class CategoryFrame extends JFrame implements MouseListener {
 	}
 
 	private void initData() {
+		dao = new RestaurantDAO();
 		backgroundPanel = new BackgroundPanel();
 		// 그림라벨
 		categoryImgs = new JLabel[14];
@@ -100,46 +102,32 @@ public class CategoryFrame extends JFrame implements MouseListener {
 		try {
 			for (int i = Define.CATEGORY_ALL; i <= Define.CATEGORY_HOF; i++) {
 				if (e.getSource() == categoryImgs[Define.CATEGORY_ALL]) {
-					RestaurantDAO dao = new RestaurantDAO();
 					List<RestaurantDTO> list = dao.getAllRestaurants(customerDTO.getCustomerId());
-					new RestaurantListFrame(list,customerDTO,RestaurantListFrame.CATEGORY_ALL);
+					new RestaurantListFrame(list, customerDTO, RestaurantListFrame.CATEGORY_ALL);
 					setVisible(false);
+					dispose();
 					break;
-				
+
 				}
 				if (e.getSource() == categoryImgs[i]) {
-					RestaurantDAO dao = new RestaurantDAO();
-					List<RestaurantDTO> list = dao.getRestaurantsByCategory(i,customerDTO.getCustomerId());
-					new RestaurantListFrame(list,customerDTO,RestaurantListFrame.CATEGORY);
+					List<RestaurantDTO> list = dao.getRestaurantsByCategory(i, customerDTO.getCustomerId());
+					new RestaurantListFrame(list, customerDTO, RestaurantListFrame.CATEGORY);
 					setVisible(false);
+					dispose();
 					break;
 				}
-//				if (e.getSource() == categoryImgs[i]) {
-//					if (i == Define.CATEGORY_ALL) {
-//						RestaurantDAO dao = new RestaurantDAO();
-//						List<RestaurantDTO> list = dao.getAllRestaurants(customerDTO.getCustomerId());
-//						new RestaurantListFrame(list,customerDTO,RestaurantListFrame.CATEGORY_ALL);
-//						break;
-//
-//					} else {
-//						RestaurantDAO dao = new RestaurantDAO();
-//						List<RestaurantDTO> list = dao.getRestaurantsByCategory(i);
-//						new RestaurantListFrame(list,customerDTO,RestaurantListFrame.CATEGORY);
-//						break;
-//					}
-//				}
 			}
 
 			if (e.getSource() == homeLable) {
 				new CustomerMainMenuFrame(customerDTO);
 				setVisible(false);
+				dispose();
 			}
 
 		} catch (SQLException e1) {
 			e1.printStackTrace();
 		}
-	
-		
+
 	}
 
 	private class BackgroundPanel extends JPanel {
@@ -168,30 +156,6 @@ public class CategoryFrame extends JFrame implements MouseListener {
 			super.paintComponent(g);
 			g.drawImage(backgroundImage, 0, 0, getWidth(), getHeight(), null);
 		}
-	}
-
-	@Override
-	public void mouseClicked(MouseEvent e) {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void mouseReleased(MouseEvent e) {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void mouseEntered(MouseEvent e) {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void mouseExited(MouseEvent e) {
-		// TODO Auto-generated method stub
-
 	}
 
 }
