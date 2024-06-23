@@ -43,7 +43,7 @@ public class RestaurantMainMenuFrame extends JFrame {
 		this.restDTO = restDTO;
 		restDAO = new RestaurantReservationDAO();
 		try {
-			reserList = restDAO.costomerList(restDTO.getRestaurantId());
+			reserList = restDAO.getCustomerInfoByReservation(restDTO.getRestaurantId());
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -109,9 +109,9 @@ public class RestaurantMainMenuFrame extends JFrame {
 
 		for (int i = 0; i < reserList.size(); i++) {
 
-			String cName = reserList.get(i).getCName();
-			String cPhone = reserList.get(i).getCPhone();
-			String time = reserList.get(i).getRevTime();
+			String cName = reserList.get(i).getCustomerName();
+			String cPhone = reserList.get(i).getCustomerPhone();
+			String time = reserList.get(i).getReservationTime();
 			contents[i][0] = cName;
 			contents[i][1] = cPhone;
 			contents[i][2] = time.substring(5, 16);
@@ -164,7 +164,7 @@ public class RestaurantMainMenuFrame extends JFrame {
 	// List<>에 값을 담는 메소드
 	private void setCList() {
 		try {
-			reserList = restDAO.costomerList(restDTO.getRestaurantId());
+			reserList = restDAO.getCustomerInfoByReservation(restDTO.getRestaurantId());
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -195,9 +195,9 @@ public class RestaurantMainMenuFrame extends JFrame {
 
 		for (int i = 0; i < reserList.size(); i++) {
 
-			String cName = reserList.get(i).getCName();
-			String cPhone = reserList.get(i).getCPhone();
-			String time = reserList.get(i).getRevTime();
+			String cName = reserList.get(i).getCustomerName();
+			String cPhone = reserList.get(i).getCustomerPhone();
+			String time = reserList.get(i).getReservationTime();
 			contents[i][0] = cName;
 			contents[i][1] = cPhone;
 			contents[i][2] = time.substring(5, 16);
@@ -246,7 +246,7 @@ public class RestaurantMainMenuFrame extends JFrame {
 		repaint();
 	
 		try {
-			reserList = restDAO.costomerList(restDTO.getRestaurantId());
+			reserList = restDAO.getCustomerInfoByReservation(restDTO.getRestaurantId());
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}

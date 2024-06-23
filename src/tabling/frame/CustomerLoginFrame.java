@@ -132,7 +132,7 @@ public class CustomerLoginFrame extends JFrame {
 				if ((customerDTO = dao.getCustomerByPhone(phoneText.getText())) != null) {
 					JOptionPane.showMessageDialog(null, "로그인 되었습니다.", "성공", JOptionPane.WARNING_MESSAGE);
 					new CustomerMainMenuFrame(customerDTO);
-					setVisible(false);
+					setVisible(false); 
 					dispose();
 				} else {
 					JOptionPane.showMessageDialog(null, "존재하지 않는 유저 정보입니다.", "경고", JOptionPane.WARNING_MESSAGE);

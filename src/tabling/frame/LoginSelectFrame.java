@@ -43,7 +43,7 @@ public class LoginSelectFrame extends JFrame {
 		backgroundPanel.setLayout(null);
 		add(backgroundPanel);
 
-		customerBtn.setBounds(40, 120, 50, 50);
+		customerBtn.setBounds(40, 115, 50, 50);
 		customerBtn.setSize(320, 200);
 		customerBtn.setFont(new Font("Noto Sans KR", Font.BOLD, 15));
 		backgroundPanel.add(customerBtn);
