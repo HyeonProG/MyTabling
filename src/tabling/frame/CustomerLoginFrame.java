@@ -4,17 +4,13 @@ import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.HeadlessException;
 import java.awt.Image;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 import java.sql.SQLException;
 
 import javax.swing.ImageIcon;
-import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -24,35 +20,31 @@ import javax.swing.JTextField;
 import tabling.dao.CustomerDAO;
 import tabling.dto.CustomerDTO;
 
+// 고객 로그인 화면
 public class CustomerLoginFrame extends JFrame {
 
 	private JLabel loginBtn;
 	private JLabel registerBtn;
-	private JLabel quitBtn;
+	private JLabel backBtn;
 	private JTextField phoneText;
-	private boolean loginCheck;
 	private BackgroundPanel backgroundPanel;
-	private SignInFrame signInFrame;
-	private CustomerDAO userDao;
-	private LoginSelectFrame mainLoginF; // TODO
+	private CustomerDAO dao;
 	private CustomerDTO customerDTO;
 
-	public CustomerLoginFrame(LoginSelectFrame mainLoginF) {
-		this.mainLoginF = mainLoginF;
+	public CustomerLoginFrame() {
 		initData();
 		setInitLayout();
-		initListener();
+		addEventListener();
 	}
 
 	private void initData() {
 		backgroundPanel = new BackgroundPanel();
 		loginBtn = new JLabel(new ImageIcon("img/loginBtn.png"));
 		registerBtn = new JLabel(new ImageIcon("img/signInBtn.png"));
-		quitBtn = new JLabel(new ImageIcon("img/quitBtn.png"));
+		backBtn = new JLabel(new ImageIcon("img/quitBtn.png"));
 		phoneText = new JTextField();
 
-		signInFrame = new SignInFrame();
-		userDao = new CustomerDAO();
+		dao = new CustomerDAO();
 	}
 
 	private void setInitLayout() {
@@ -61,7 +53,6 @@ public class CustomerLoginFrame extends JFrame {
 		setLocationRelativeTo(null);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setLayout(null);
-		setVisible(false); // TODO
 		setResizable(false);
 
 		backgroundPanel.setSize(getWidth(), getHeight());
@@ -74,8 +65,8 @@ public class CustomerLoginFrame extends JFrame {
 		registerBtn.setBounds(35, 450, 314, 46);
 		backgroundPanel.add(registerBtn);
 
-		quitBtn.setBounds(10, 10, 30, 50);
-		backgroundPanel.add(quitBtn);
+		backBtn.setBounds(10, 10, 30, 50);
+		backgroundPanel.add(backBtn);
 
 		phoneText.setBounds(90, 260, 100, 30);
 		phoneText.setSize(220, 25);
@@ -83,45 +74,32 @@ public class CustomerLoginFrame extends JFrame {
 		phoneText.setFont(new Font("Noto Sans KR", Font.BOLD, 15));
 		backgroundPanel.add(phoneText);
 
+		setVisible(true);
 	}
 
-	private void initListener() {
+	private void addEventListener() {
 
 		registerBtn.addMouseListener(new MouseAdapter() {
 
 			@Override
 			public void mousePressed(MouseEvent e) {
-				signInFrame.setVisible(true);
+				new SignInFrame();
 			}
 		});
 
 		loginBtn.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mousePressed(MouseEvent e) {
-
-				if (!phoneText.getText().equals("")) {
-					try {
-						if ((customerDTO = userDao.authenticatePhone(phoneText.getText())) != null) {
-							JOptionPane.showMessageDialog(null, "로그인 되었습니다.", "성공", JOptionPane.WARNING_MESSAGE);
-							setVisible(false);
-							new CustomerMainMenuFrame(customerDTO);
-						} else {
-							JOptionPane.showMessageDialog(null, "존재하지 않는 유저 정보입니다.", "경고", JOptionPane.WARNING_MESSAGE);
-						}
-					} catch (HeadlessException e1) {
-						e1.printStackTrace();
-					} catch (SQLException e1) {
-						e1.printStackTrace();
-					}
-				}
+				rogin();
 			}
 		});
-
-		quitBtn.addMouseListener(new MouseAdapter() {
+		
+		backBtn.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mousePressed(MouseEvent e) {
+				new LoginSelectFrame();
 				setVisible(false);
-				mainLoginF.setVisible(true);
+				dispose();
 			}
 		});
 
@@ -136,11 +114,37 @@ public class CustomerLoginFrame extends JFrame {
 					e.consume();
 				}
 			}
+			@Override
+			public void keyPressed(KeyEvent e) {
+				if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+					System.out.println("엔터입력");
+					rogin();
+				}
+			}
 
 		});
 
 	}
 	
+	// 로그인 버튼 클릭시 & 엔터버튼 입력시 호출 
+	private void rogin() {
+		if (!phoneText.getText().equals("")) {
+			try {
+				if ((customerDTO = dao.getCustomerByPhone(phoneText.getText())) != null) {
+					JOptionPane.showMessageDialog(null, "로그인 되었습니다.", "성공", JOptionPane.WARNING_MESSAGE);
+					new CustomerMainMenuFrame(customerDTO);
+					setVisible(false);
+					dispose();
+				} else {
+					JOptionPane.showMessageDialog(null, "존재하지 않는 유저 정보입니다.", "경고", JOptionPane.WARNING_MESSAGE);
+				}
+			} catch (HeadlessException e1) {
+				e1.printStackTrace();
+			} catch (SQLException e1) {
+				e1.printStackTrace();
+			}
+		}
+	}
 
 	private class BackgroundPanel extends JPanel {
 		private JPanel backgroundPanel;
@@ -159,9 +163,5 @@ public class CustomerLoginFrame extends JFrame {
 		}
 
 	}
-
-//	public static void main(String[] args) {
-//		new CustomerLoginFrame();
-//	}
 
 }

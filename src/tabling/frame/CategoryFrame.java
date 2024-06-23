@@ -29,7 +29,6 @@ public class CategoryFrame extends JFrame implements MouseListener {
 	private BackgroundPanel backgroundPanel;
 	private MainPanel mainPanel;
 	private JScrollPane scrollPane;
-	private CustomerLoginFrame customerLoginFrame;
 	private CustomerDTO customerDTO;
 
 	public CategoryFrame(CustomerDTO customerDTO) {
