@@ -15,8 +15,7 @@ public class DBConnectionManager {
 		HikariConfig config = new HikariConfig();
 		config.setJdbcUrl("jdbc:mysql://localhost:3306/tabling?serverTimezone=Asia/Seoul");
 		config.setUsername("root");
-		// config.setPassword("asd123");
-		config.setPassword("194e9w3j");
+		config.setPassword("asd123");
 		config.setMaximumPoolSize(10);
 		dataSource = new HikariDataSource(config);
 	}
