@@ -14,11 +14,8 @@ import javax.swing.JOptionPane;
 import javax.swing.JTextArea;
 
 import tabling.dao.CustomerReservationDAO;
-import tabling.dao.MenuDAO;
 import tabling.dao.ReservationDAO;
-import tabling.dao.RestaurantDAO;
 import tabling.dto.CustomerDTO;
-import tabling.dto.ReservationDTO;
 import tabling.dto.RestaurantDTO;
 
 public class ReservationFrame extends JFrame {
@@ -26,7 +23,6 @@ public class ReservationFrame extends JFrame {
 	private RestaurantListFrame restaurantListFrame;
 	
 	private RestaurantDTO restaurantDTO;
-	private ReservationDTO reservationDTO;
 	private CustomerReservationDAO customerReservationDAO;
 	private ReservationDAO reservationDAO;
 	private CustomerDTO customerDTO;
@@ -106,15 +102,16 @@ public class ReservationFrame extends JFrame {
 							JOptionPane.showMessageDialog(null, "이미 예약된 식당이 있습니다.");
 						} else {
 							try {
-								JOptionPane.showMessageDialog(null, "예약되었습니다.");
-								customerReservationDAO.reservation(customerId, restaurantId);
+								// 방어적 코드 작성
 								if (restaurantListFrame != null) {
 									new CustomerMainMenuFrame(customerDTO);
 									restaurantListFrame.setVisible(false);
 									restaurantListFrame.dispose();
+									JOptionPane.showMessageDialog(null, "예약되었습니다.");
+									customerReservationDAO.reservation(customerId, restaurantId);
+									setVisible(false);
+									dispose();
 								}
-								setVisible(false);
-								dispose();
 							} catch (SQLException e1) {
 								e1.printStackTrace();
 							}						

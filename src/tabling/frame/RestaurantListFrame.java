@@ -24,17 +24,13 @@ import javax.swing.JTextField;
 import javax.swing.RowFilter;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
 import javax.swing.plaf.basic.BasicScrollBarUI;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableRowSorter;
 
 import tabling.dao.CategoryDAO;
-import tabling.dao.CustomerDAO;
 import tabling.dao.LocationDAO;
-import tabling.dao.MenuDAO;
 import tabling.dao.RestaurantDAO;
 import tabling.dto.CustomerDTO;
 import tabling.dto.RestaurantDTO;
@@ -44,7 +40,7 @@ public class RestaurantListFrame extends JFrame {
 
 	private RestaurantListFrame frame;
 	private RestaurantFrame restaurantFrame;
-	
+
 	private JTable table;
 	private JScrollPane scroll;
 	private JComboBox<String> filter;
@@ -64,6 +60,7 @@ public class RestaurantListFrame extends JFrame {
 	public static final int CATEGORY_ALL = 2;
 	public static final int LOCATION_ALL = 3;
 
+	// 필터 콤보 박스용 문자열
 	private final String RESET = "초기화";
 	private final String OPEN = "영업중";
 	private final String LIKE = "좋아요만";
@@ -71,10 +68,10 @@ public class RestaurantListFrame extends JFrame {
 	private final String GANADA_DOWN = "가나다역순";
 	private final String RATING_UP = "평점역순";
 	private final String RATING_DOWN = "평점순";
+	private final String[] COMBOBOX = { RESET, OPEN, LIKE, GANADA_UP, GANADA_DOWN, RATING_UP, RATING_DOWN };
 
 	private Time currentTime;
 	private List<RestaurantDTO> restaurantList = new ArrayList<>();
-	private List<RestaurantDTO> defaultList = new ArrayList<>();
 
 	private String[] head = { "식당명", "카테고리", "지역", "영업중", "평점" };
 	private String[][] contents;
@@ -83,9 +80,6 @@ public class RestaurantListFrame extends JFrame {
 	public RestaurantListFrame(List<RestaurantDTO> restaurantList, CustomerDTO customerDTO, int type) {
 		this.customerDTO = customerDTO;
 		this.restaurantList = restaurantList;
-		for (RestaurantDTO restaurantDTO : restaurantList) {
-			defaultList.add(restaurantDTO);
-		}
 		this.type = type;
 		typeSet();
 		initData();
@@ -98,7 +92,7 @@ public class RestaurantListFrame extends JFrame {
 		locationDAO = new LocationDAO();
 		categoryDAO = new CategoryDAO();
 		restaurantDAO = new RestaurantDAO();
-		// TODO 임시 시간 설정
+		// 임시 시간 설정
 		currentTime = new Time(19, 30, "월요일");
 		// 테이블에 담는 과정
 		tableSet();
@@ -122,13 +116,9 @@ public class RestaurantListFrame extends JFrame {
 		filter.setSize(110, 30);
 		filter.setFont(new Font("Noto Sans KR", Font.BOLD, 15));
 
-		filter.addItem(RESET);
-		filter.addItem(OPEN);
-		filter.addItem(LIKE);
-		filter.addItem(GANADA_UP);
-		filter.addItem(GANADA_DOWN);
-		filter.addItem(RATING_DOWN);
-		filter.addItem(RATING_UP);
+		for (int i = 0; i < COMBOBOX.length; i++) {
+			filter.addItem(COMBOBOX[i]);
+		}
 
 		add(filterBtn);
 		filterBtn.setLocation(400, 80);
@@ -153,14 +143,15 @@ public class RestaurantListFrame extends JFrame {
 
 	private void addEventListener() {
 
+		// 적용 버튼
 		filterBtn.addActionListener(new ActionListener() {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				searchField.setText("");
-				System.out.println(filter.getSelectedItem().toString());
 				switch (filter.getSelectedItem().toString()) {
 				case RESET:
+					// 걸려 있는 필터를 모두 초기화
 					restaurantDAO.setOpenFilter(false);
 					restaurantDAO.setLikeFilter(false);
 					setRestaurantList();
@@ -168,6 +159,10 @@ public class RestaurantListFrame extends JFrame {
 					break;
 				case OPEN:
 					restaurantDAO.setOpenFilter(true);
+					// 현재 시간을 넣어 줄 수 있는데 편의상 설정된 시간을 넣음
+					// currentTime = new Time(LocalDateTime.now().getHour(),
+					// LocalDateTime.now().getMinute(),
+					// LocalDateTime.now().getDayOfWeek().toString());
 					restaurantDAO.setCurrentTime(currentTime);
 					setRestaurantList();
 					tableSet();
@@ -177,6 +172,7 @@ public class RestaurantListFrame extends JFrame {
 					setRestaurantList();
 					tableSet();
 					break;
+					// 테이블의 기능을 이용하면 되긴한데 일단 구현해봄
 				case GANADA_UP:
 					RestaurantDTO.setSortType(RestaurantDTO.GANADA);
 					Collections.sort(restaurantList, Collections.reverseOrder());
@@ -200,42 +196,47 @@ public class RestaurantListFrame extends JFrame {
 				}
 			}
 		});
+		
+		// 뒤로 가기 버튼 (어느 프레임으로 부터 왔는지를 기억하고 그 곳으로 돌아감)
 		backBtn.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mousePressed(MouseEvent e) {
 				switch (type) {
 				case CATEGORY:
+					new CategoryFrame(customerDTO);
 					frame.setVisible(false);
 					frame.dispose();
-					new CategoryFrame(customerDTO);
 					break;
 				case LOCATION:
+					new LocationFrame(customerDTO);
 					frame.setVisible(false);
 					frame.dispose();
-					new LocationFrame(customerDTO);
 					break;
 				case CATEGORY_ALL:
+					new CategoryFrame(customerDTO);
 					frame.setVisible(false);
 					frame.dispose();
-					new CategoryFrame(customerDTO);
 					break;
 				case LOCATION_ALL:
+					new LocationFrame(customerDTO);
 					frame.setVisible(false);
 					frame.dispose();
-					new LocationFrame(customerDTO);
 					break;
 				}
 			}
 		});
+		
+		// 메인 메뉴로 돌아감
 		homeBtn.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mousePressed(MouseEvent e) {
+				new CustomerMainMenuFrame(customerDTO);
 				frame.setVisible(false);
 				frame.dispose();
-				new CustomerMainMenuFrame(customerDTO);
 			}
 		});
 
+		// 테이블에 검색을 적용 시키기 위한 이벤트
 		searchField.getDocument().addDocumentListener(new DocumentListener() {
 
 			@Override
@@ -272,6 +273,9 @@ public class RestaurantListFrame extends JFrame {
 		});
 	}
 
+	/**
+	 * 카테고리를 눌러서 들어왔을 경우 해당 카테고리를 저장 로케이션을 눌러서 들어왔을 경우 해당 로케이션을 저장
+	 */
 	private void typeSet() {
 		if (!restaurantList.isEmpty()) {
 			switch (type) {
@@ -285,12 +289,14 @@ public class RestaurantListFrame extends JFrame {
 		}
 	}
 
+	// 테이블을 세팅하고, 이벤트도 등록하는 메서드
 	private void tableSet() {
 		if (scroll != null) {
 			remove(scroll);
 		}
 		contents = new String[restaurantList.size()][head.length];
-
+		
+		// 테이블 내용 입력
 		for (int i = 0; i < restaurantList.size(); i++) {
 			String isOpen = null;
 			if (currentTime.isOpen(restaurantList.get(i))) {
@@ -317,6 +323,7 @@ public class RestaurantListFrame extends JFrame {
 			contents[i][3] = isOpen;
 			contents[i][4] = String.valueOf(rating);
 		}
+		// 테이블 설정
 		DefaultTableModel tableModel = new DefaultTableModel(contents, head);
 		table = new JTable(tableModel) {
 			@Override
@@ -326,6 +333,8 @@ public class RestaurantListFrame extends JFrame {
 		};
 		sorter = new TableRowSorter<>(tableModel);
 		table.setRowSorter(sorter);
+		
+		// 테이블을 스크롤에 넣고 스크롤 설정
 		scroll = new JScrollPane(table);
 		add(scroll);
 		scroll.setSize(450, 450);
@@ -355,7 +364,8 @@ public class RestaurantListFrame extends JFrame {
 				this.trackColor = Color.white;
 			}
 		});
-
+		
+		// 테이블 스타일 설정
 		DefaultTableCellRenderer centerAlign = new DefaultTableCellRenderer();
 		centerAlign.setHorizontalAlignment(JLabel.CENTER);
 		table.setFont(new Font("Noto Sans KR", Font.BOLD, 15));
@@ -371,7 +381,8 @@ public class RestaurantListFrame extends JFrame {
 		table.getColumn("평점").setPreferredWidth(30);
 		table.getColumn("평점").setCellRenderer(centerAlign);
 		repaint();
-
+		
+		// 테이블 이벤트 설정
 		table.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
@@ -399,6 +410,7 @@ public class RestaurantListFrame extends JFrame {
 		});
 	}
 
+	// 특정 필터가 결렸을때 다시 식당 리스트를 불러 오기 위한 메서드
 	private void setRestaurantList() {
 		try {
 			if (type == LOCATION) {

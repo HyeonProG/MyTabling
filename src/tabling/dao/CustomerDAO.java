@@ -16,7 +16,7 @@ public class CustomerDAO {
 	// 회원가입 메서드
 	public void addCustomer(String name, String phone, int locationId) throws SQLException {
 		
-		String query = " INSERT INTO customer(customer_name, phone, location_id) VALUES(?, ?, ?) ";
+		String query = Define.INSERT_CUSTOMER;
 
 		try (Connection conn = DBConnectionManager.getInstance().getConnection()) {
 			PreparedStatement pstmt = conn.prepareStatement(query);
@@ -81,7 +81,7 @@ public class CustomerDAO {
 	
 	// 회원 수정 시 호출 되는 메서드
 	public void updateCustomer(String name, int location, String phone) throws SQLException{
-		String query = " UPDATE customer SET customer_name = ?, location_id = ? WHERE phone = ? ";
+		String query = Define.UPDATE_CUSTOMER_INFO;
 		
 		try (Connection conn = DBConnectionManager.getInstance().getConnection()){
 			PreparedStatement pstmt = conn.prepareStatement(query);
