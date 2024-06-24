@@ -37,6 +37,7 @@ import tabling.dao.LocationDAO;
 import tabling.dao.RestaurantDAO;
 import tabling.dto.CustomerDTO;
 import tabling.dto.RestaurantDTO;
+import tabling.request.CategoryRequest;
 import tabling.util.Time;
 
 public class RestaurantListFrame extends JFrame {
@@ -54,6 +55,7 @@ public class RestaurantListFrame extends JFrame {
 	private JTextField searchField;
 	private LocationDAO locationDAO;
 	private CategoryDAO categoryDAO;
+	private CategoryRequest categoryRequest;
 	private RestaurantDAO restaurantDAO;
 	private CustomerDTO customerDTO;
 	private int categoryId;
@@ -96,6 +98,7 @@ public class RestaurantListFrame extends JFrame {
 		frame = this;
 		locationDAO = new LocationDAO();
 		categoryDAO = new CategoryDAO();
+		categoryRequest = new CategoryRequest();
 		restaurantDAO = new RestaurantDAO();
 		// 임시 시간 설정
 		currentTime = new Time(19, 30, "월요일");
@@ -321,7 +324,7 @@ public class RestaurantListFrame extends JFrame {
 			String categoryName = null;
 			String locationName = null;
 			try {
-				categoryName = categoryDAO.getCategoryName(categoryId);
+				categoryName = categoryRequest.select(categoryId);
 				locationName = locationDAO.getLocationName(locationId);
 			} catch (SQLException e) {
 				e.printStackTrace();

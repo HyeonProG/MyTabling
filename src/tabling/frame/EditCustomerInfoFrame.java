@@ -152,7 +152,7 @@ public class EditCustomerInfoFrame extends JFrame {
 						if (reservationDTO != null) {
 							new CustomerReservationDAO().cancel(reservationDTO.getCustomerId(), reservationDTO.getRestaurantId());
 						}
-						dao.deleteCustomer(customerDTO.getPhone());
+						request.delete(customerDTO.getPhone());
 						new LoginSelectFrame();
 						setVisible(false);
 						dispose();

@@ -29,7 +29,7 @@ public class CustomerRequest {
 		try {
 			String insertUrl = urlStr + "/" + "insert";
 			url = new URL(insertUrl);
-			HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+			conn = (HttpURLConnection) url.openConnection();
 			conn.setRequestMethod("POST");
 			conn.setDoOutput(true);
 			conn.setRequestProperty("content-type", "application/json");
@@ -54,21 +54,23 @@ public class CustomerRequest {
 			System.out.println(response);
 		} catch (IOException e) {
 			e.printStackTrace();
+		} finally {
+			conn.disconnect();
 		}
 	}
 
 	public CustomerDTO select(String phone) {
 		CustomerDTO dto = null;
 		try {
-			String selectUrl = urlStr + "/" + phone;
+			String selectUrl = urlStr + "/select/" + phone;
 			url = new URL(selectUrl);
-			HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+			conn = (HttpURLConnection) url.openConnection();
 			conn.setRequestMethod("GET");
 			conn.setRequestProperty("content-type", "application/json");
-			
+
 			int responseCode = conn.getResponseCode();
 			System.out.println("response code : " + responseCode);
-			
+
 			BufferedReader reader = new BufferedReader(new InputStreamReader(conn.getInputStream()));
 			String inputLine;
 			StringBuffer bufferStr = new StringBuffer();
@@ -79,15 +81,17 @@ public class CustomerRequest {
 			dto = gson.fromJson(bufferStr.toString(), CustomerDTO.class);
 		} catch (IOException e) {
 			e.printStackTrace();
+		} finally {
+			conn.disconnect();
 		}
 		return dto;
 	}
-	
+
 	public void update(String customerName, String customerPhone, int locationId) {
 		try {
 			String updateUrl = urlStr + "/" + "update";
 			url = new URL(updateUrl);
-			HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+			conn = (HttpURLConnection) url.openConnection();
 			conn.setRequestMethod("POST");
 			conn.setDoOutput(true);
 			conn.setRequestProperty("content-type", "application/json");
@@ -112,8 +116,36 @@ public class CustomerRequest {
 			System.out.println(response);
 		} catch (IOException e) {
 			e.printStackTrace();
+		} finally {
+			conn.disconnect();
+		}
+
+	}
+	
+	public void delete(String phone) {
+
+		try {
+			String selectUrl = urlStr + "/delete/" + phone;
+			url = new URL(selectUrl);
+			conn = (HttpURLConnection) url.openConnection();
+			conn.setRequestMethod("GET");
+			conn.setRequestProperty("content-type", "application/json");
+
+			int responseCode = conn.getResponseCode();
+			System.out.println("response code : " + responseCode);
+
+			BufferedReader reader = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+			String inputLine;
+			StringBuffer bufferStr = new StringBuffer();
+			while ((inputLine = reader.readLine()) != null) {
+				bufferStr.append(inputLine);
+			}
+			reader.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		} finally {
+			conn.disconnect();
 		}
 	
-		
 	}
 }

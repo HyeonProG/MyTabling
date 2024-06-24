@@ -5,6 +5,8 @@ import java.net.InetSocketAddress;
 
 import com.sun.net.httpserver.HttpServer;
 
+import tabling.frame.CategoryFrame;
+import tabling.server.CategoryHandler;
 import tabling.server.CustomerHandler;
 
 
@@ -23,6 +25,7 @@ public class Server {
 
 	private static void setCreateContext(HttpServer httpServer) {
 		httpServer.createContext("/customer", new CustomerHandler());
+		httpServer.createContext("/category", new CategoryHandler());
 	}
 
 }

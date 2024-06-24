@@ -43,15 +43,22 @@ public class CustomerHandler implements HttpHandler {
 	private void handleGetRequest(HttpExchange exchange) {
 		URI uri = exchange.getRequestURI();
 		String path = uri.getPath();
+		String response = null;
 		String[] pathSegments = path.split("/");
-		if (pathSegments.length >= 3) {
-			String customerPhone = pathSegments[2];
+		if (pathSegments.length >= 4) {
+			String type = pathSegments[2];
+			String customerPhone = pathSegments[3];
 			try {
-				CustomerDTO dto = dao.getCustomerByPhone(customerPhone);
-				String response = gson.toJson(dto);
-				byte[] bytes = response.getBytes();
-				exchange.setAttribute("Content-Type", "text/plain; charset=UTF-8");
+				if (type.equalsIgnoreCase("select")) {
+					CustomerDTO dto = dao.getCustomerByPhone(customerPhone);
+					response = gson.toJson(dto);
+				} else if (type.equalsIgnoreCase("delete")) {
+					dao.deleteCustomer(customerPhone);
+					response = "회원 삭제 성공";
+				}
 				try {
+					byte[] bytes = response.getBytes();
+					exchange.setAttribute("Content-Type", "text/plain; charset=UTF-8");
 					exchange.sendResponseHeaders(200, bytes.length);
 					BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(exchange.getResponseBody()));
 					writer.write(response);
@@ -112,5 +119,7 @@ public class CustomerHandler implements HttpHandler {
 			e.printStackTrace();
 		}
 	}
+	
+	// DELETE 요청시 동작
 
 }
