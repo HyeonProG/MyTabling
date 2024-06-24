@@ -1,5 +1,7 @@
 package tabling.frame;
 
+import java.awt.Graphics;
+import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
@@ -12,6 +14,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JPanel;
 
 import tabling.dao.RestaurantDAO;
 import tabling.dto.CustomerDTO;
@@ -20,13 +23,15 @@ import tabling.util.Define;
 
 public class LocationFrame extends JFrame implements ActionListener {
 
+	
+	private BackgroundPanel frame;
 	private JLabel background;
 
 	private JButton[] locationbutton;
 	private CustomerDTO customerDTO;
 	private RestaurantDAO dao;
 
-	private JLabel backBtn;
+//	private JLabel backBtn;
 
 	public LocationFrame(CustomerDTO customerDTO) {
 		this.customerDTO = customerDTO;
@@ -37,6 +42,8 @@ public class LocationFrame extends JFrame implements ActionListener {
 	}
 
 	private void initData() {
+		frame = new BackgroundPanel();
+		
 		dao = new RestaurantDAO();
 		locationbutton = new JButton[17]; // 0 ~ 17 배열
 		setTitle("지역 찾기");
@@ -50,11 +57,11 @@ public class LocationFrame extends JFrame implements ActionListener {
 		background.setSize(413, 355);
 		background.setLocation(35, 50);
 
-		Icon icon2 = new ImageIcon("img/quitBtn2.png");
-		backBtn = new JLabel(icon2);
+//		Icon icon2 = new ImageIcon("img/quitBtn2.png");
+//		backBtn = new JLabel(icon2);
 
-		backBtn.setSize(40, 40);
-		backBtn.setLocation(34, 40);
+//		backBtn.setSize(40, 40);
+//		backBtn.setLocation(34, 40);
 
 		locationbutton[Define.LOCATION_ALL] = new JButton("전체 검색"); // 지역구 모두 검색 (전체 검색)
 		locationbutton[Define.LOCATION_ALL].setBounds(190, 460, 120, 40); // 190, 460, 120, 40
@@ -159,16 +166,19 @@ public class LocationFrame extends JFrame implements ActionListener {
 
 	private void setInitLayout() {
 
-		setLayout(null);
-		add(background);
+		frame.setSize(getWidth(), getHeight());
+		frame.setLayout(null);
+//		setLayout(null);
 		setResizable(false);
-		add(backBtn);
-
+ 
 		for (int i = 1; i < 17; i++) {
 			background.add(locationbutton[i]);
 		}
-		add(locationbutton[Define.LOCATION_ALL]);
+		frame.add(locationbutton[Define.LOCATION_ALL]);
 
+//		frame.add(backBtn);
+		frame.add(background);
+		add(frame);
 		setVisible(true);
 	}
 
@@ -178,14 +188,14 @@ public class LocationFrame extends JFrame implements ActionListener {
 			locationbutton[i].addActionListener(this);
 		}
 
-		backBtn.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mousePressed(MouseEvent e) {
-				new CustomerMainMenuFrame(customerDTO);
-				setVisible(false);
-				dispose();
-			}
-		});
+//		backBtn.addMouseListener(new MouseAdapter() {
+//			@Override
+//			public void mousePressed(MouseEvent e) {
+//				new CustomerMainMenuFrame(customerDTO);
+//				setVisible(false);
+//				dispose();
+//			}
+//		});
 
 	}
 
@@ -219,6 +229,25 @@ public class LocationFrame extends JFrame implements ActionListener {
 			}
 		}
 
+		
 	} // end of actionPerformed
+	
+	private class BackgroundPanel extends JPanel {
+		private JPanel backgroundPanel;
+		private Image backgroundImage;
+		
+		public BackgroundPanel() {
+			backgroundImage = new ImageIcon("img/locationFrameBg.jpg").getImage();
+			backgroundPanel = new JPanel();
+			add(backgroundPanel);
+		}
+		
+		@Override
+		protected void paintComponent(Graphics g) {
+			super.paintComponent(g);
+			g.drawImage(backgroundImage, 0, 0, getWidth(), getHeight(), null);
+		}
+		
+	}
 
 } // end of class

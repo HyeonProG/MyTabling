@@ -58,7 +58,7 @@ public class RestaurantMainMenuFrame extends JFrame {
 	}
 
 	private void initData() {
-		 frame = this;
+		frame = this;
 		// 테이블에 담는 메소드
 		tableSet();
 		setList();
@@ -87,7 +87,7 @@ public class RestaurantMainMenuFrame extends JFrame {
 		backgroundPanel.add(resetBtn);
 		endReserBtn.setBounds(280, 590, 184, 44);
 		backgroundPanel.add(endReserBtn);
-		backBtn.setBounds(10,15,30,30);
+		backBtn.setBounds(10, 15, 30, 30);
 		backgroundPanel.add(backBtn);
 	}
 
@@ -99,25 +99,35 @@ public class RestaurantMainMenuFrame extends JFrame {
 			@Override
 			public void mousePressed(MouseEvent e) {
 				setList();
+				System.out.println("리셋함");
 			}
 		});
 		
+	
+
 		// TODO - 예약종료
 		endReserBtn.addMouseListener(new MouseAdapter() {
 			// row를 하나만 선택한 상태에서 update & select 해야 한다.
-			
-			@Override
-			public void mousePressed(MouseEvent e) {
-				if(table.getRowCount() == 1) {
-					
-				}
+
+//			@Override
+//			public void mousePressed(MouseEvent e) {
+//				if (table.getRowCount() == 1) {
+//					System.out.println("선택된 행 개수 : " + table.getRowCount());
+//				}
+//			}
+			public void mousePressed(java.awt.event.ActionEvent e) {
+				
+				int row = table.getSelectedRow();
+				if(row < 0) return;
+//				DefaultTableModel model = (DefaultTableModel) table.getModel();
+				
 			}
-			
+
 		});
 		
+
 	}
 
-	
 	public void tableSet() {
 
 		// 리스트 값
@@ -175,7 +185,7 @@ public class RestaurantMainMenuFrame extends JFrame {
 		table.getColumn("예약시간").setCellRenderer(centerAlign);
 		table.getColumn("예약상태").setPreferredWidth(90);
 		table.getColumn("예약상태").setCellRenderer(centerAlign);
-		
+
 		// 컬럼 이동 불가
 		table.getTableHeader().setReorderingAllowed(false);
 
@@ -210,5 +220,5 @@ public class RestaurantMainMenuFrame extends JFrame {
 		}
 
 	}
-	
+
 }
