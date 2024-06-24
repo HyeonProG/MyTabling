@@ -13,19 +13,19 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JTextArea;
 
-import tabling.dao.CustomerDAO;
-import tabling.dao.CustomerReservationDAO;
 import tabling.dao.ReservationDAO;
 import tabling.dto.CustomerDTO;
 import tabling.dto.ReservationDTO;
 import tabling.dto.RestaurantDTO;
+import tabling.request.CustomerRequest;
+import tabling.request.ReservationRequest;
 
 public class ReservationFrame extends JFrame {
 
 	private RestaurantListFrame restaurantListFrame;
-	
+
 	private RestaurantDTO restaurantDTO;
-	private CustomerReservationDAO customerReservationDAO;
+	private ReservationRequest reservationRequest;
 	private ReservationDAO reservationDAO;
 	private CustomerDTO customerDTO;
 	private ReservationDTO reservationDTO;
@@ -55,8 +55,8 @@ public class ReservationFrame extends JFrame {
 		setResizable(false);
 		setLocationRelativeTo(null);
 		setLayout(null);
-		
-		customerReservationDAO = new CustomerReservationDAO();
+
+		reservationRequest = new ReservationRequest();
 		reservationDAO = new ReservationDAO();
 		try {
 			reservationDTO = reservationDAO.getReservationByCustomer(customerId);
@@ -115,25 +115,21 @@ public class ReservationFrame extends JFrame {
 						if (customerDTO.getState().equalsIgnoreCase("Y")) {
 							JOptionPane.showMessageDialog(null, "이미 예약된 식당이 있습니다.");
 						} else {
-							try {
-								// 방어적 코드 작성
-								if (restaurantListFrame != null) {
-									JOptionPane.showMessageDialog(null, "예약되었습니다.");
-									customerReservationDAO.reservation(customerId, restaurantId);
-									customerDTO = new CustomerDAO().getCustomerByPhone(customerDTO.getPhone());
-									new CustomerMainMenuFrame(customerDTO);
-									restaurantListFrame.setVisible(false);
-									restaurantListFrame.dispose();
-									setVisible(false);
-									dispose();
-								}
-							} catch (SQLException e1) {
-								e1.printStackTrace();
-							}						
+							// 방어적 코드 작성
+							if (restaurantListFrame != null) {
+								JOptionPane.showMessageDialog(null, "예약되었습니다.");
+								reservationRequest.reservation(customerId, restaurantId);
+								customerDTO = new CustomerRequest().select(customerDTO.getPhone());
+								new CustomerMainMenuFrame(customerDTO);
+								restaurantListFrame.setVisible(false);
+								restaurantListFrame.dispose();
+								setVisible(false);
+								dispose();
+							}
 						}
 					} catch (HeadlessException e1) {
 						e1.printStackTrace();
-					} 
+					}
 				}
 			}
 		});
@@ -141,9 +137,9 @@ public class ReservationFrame extends JFrame {
 		backBtn.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mousePressed(MouseEvent e) {
-					new RestaurantFrame(customerDTO, restaurantDTO, restaurantListFrame);
-					setVisible(false);
-					dispose();
+				new RestaurantFrame(customerDTO, restaurantDTO, restaurantListFrame);
+				setVisible(false);
+				dispose();
 			}
 		});
 

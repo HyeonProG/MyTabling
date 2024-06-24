@@ -1,6 +1,5 @@
 package tabling.json;
 
-import lombok.Builder;
 import lombok.Data;
 
 @Data
@@ -18,5 +17,10 @@ public class JsonDTO {
 		this.customerName = customerName;
 		this.customerPhone = customerPhone;
 		this.locationId = locationId;
+	}
+	
+	public JsonDTO(int customerId, int restaurantId) {
+		this.customerId = customerId;
+		this.restaurantId = restaurantId;
 	}
 }

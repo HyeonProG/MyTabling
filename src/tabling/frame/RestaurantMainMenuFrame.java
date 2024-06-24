@@ -3,11 +3,9 @@ package tabling.frame;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Image;
-import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.sql.SQLException;
-import java.util.Iterator;
 import java.util.List;
 
 import javax.swing.ImageIcon;
@@ -17,19 +15,15 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
-import javax.swing.event.AncestorEvent;
-import javax.swing.event.AncestorListener;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableModel;
 
-import tabling.dao.CustomerDAO;
-import tabling.dao.CustomerReservationDAO;
 import tabling.dao.RestaurantReservationDAO;
 import tabling.dto.CustomerDTO;
 import tabling.dto.ReservationForRestaurantDTO;
 import tabling.dto.RestaurantDTO;
-import tabling.util.Define;
+import tabling.request.CustomerRequest;
+import tabling.request.ReservationRequest;
 
 public class RestaurantMainMenuFrame extends JFrame {
 
@@ -50,12 +44,11 @@ public class RestaurantMainMenuFrame extends JFrame {
 	private JLabel resetBtn;
 	private JLabel endReserBtn;
 	private JLabel backBtn;
+	private ReservationRequest reservationRequest;
 
 	private boolean canEnd;
 	private ReservationForRestaurantDTO dto;
 	private int rowNum;
-	
-	CustomerReservationDAO customerReservationDAO;
 
 	public RestaurantMainMenuFrame(RestaurantDTO restDTO) {
 		this.restDTO = restDTO;
@@ -71,6 +64,7 @@ public class RestaurantMainMenuFrame extends JFrame {
 	}
 
 	private void initData() {
+		reservationRequest = new ReservationRequest();
 		frame = this;
 		// 테이블에 담는 메소드
 		backgroundPanel = new BackgroundPanel();
@@ -82,8 +76,7 @@ public class RestaurantMainMenuFrame extends JFrame {
 		backBtn = new JLabel(new ImageIcon("img/quitBtn.png"));
 
 		canEnd = false;
-		
-		customerReservationDAO = new CustomerReservationDAO();
+
 	}
 
 	private void setInitLayout() {
@@ -126,24 +119,20 @@ public class RestaurantMainMenuFrame extends JFrame {
 				rowNum = table.getSelectedRow();
 				int currentRowNum = table.convertRowIndexToModel(rowNum);
 				String phone = tableModel.getValueAt(currentRowNum, 1).toString();
-				try {
-					CustomerDTO customerDTO = new CustomerDAO().getCustomerByPhone(phone);
-					customerReservationDAO.cancel(customerDTO.getCustomerId(), restDTO.getRestaurantId());
-					setList();
-					tableSet();
-				} catch (SQLException e1) {
-					e1.printStackTrace();
-				}
+				CustomerDTO customerDTO = new CustomerRequest().select(phone);
+				reservationRequest.cancel(customerDTO.getCustomerId(), restDTO.getRestaurantId());
+				setList();
+				tableSet();
 			}
 		});
 
 	}
 
 	public void tableSet() {
-		if(scroll != null) {
+		if (scroll != null) {
 			backgroundPanel.remove(scroll);
 		}
-		
+
 		// 리스트 값
 		contents = new String[reserList.size()][head.length];
 

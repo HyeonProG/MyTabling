@@ -11,39 +11,37 @@ import java.net.URL;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
-import tabling.dto.CustomerDTO;
 import tabling.json.JsonDTO;
 
-public class CustomerRequest {
+public class ReservationRequest {
 	private URL url;
 	private String urlStr;
 	private HttpURLConnection conn;
 	private Gson gson;
-
-	public CustomerRequest() {
-		urlStr = "http://localhost:8080/customer";
+	
+	public ReservationRequest() {
+		urlStr = "http://localhost:8080/reservation";
 		gson = new GsonBuilder().setPrettyPrinting().create();
 	}
-
-	public void insert(String customerName, String customerPhone, int locationId) {
+	
+	public void reservation(int customerId, int restaurantId) {
 		try {
-			String insertUrl = urlStr + "/" + "insert";
-			url = new URL(insertUrl);
+			String reservationUrl = urlStr + "/" + "reservation";
 			conn = (HttpURLConnection) url.openConnection();
 			conn.setRequestMethod("POST");
 			conn.setDoOutput(true);
 			conn.setRequestProperty("content-type", "application/json");
-			JsonDTO dto = new JsonDTO(customerName, customerPhone, locationId);
+			JsonDTO dto = new JsonDTO(customerId, restaurantId);
 			String json = gson.toJson(dto);
-
+			
 			BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(conn.getOutputStream()));
 			writer.write(json);
 			writer.flush();
 			writer.close();
-
+			
 			int responseCode = conn.getResponseCode();
 			System.out.println("response code : " + responseCode);
-
+			
 			BufferedReader reader = new BufferedReader(new InputStreamReader(conn.getInputStream()));
 			String inputLine;
 			StringBuffer response = new StringBuffer();
@@ -54,54 +52,28 @@ public class CustomerRequest {
 			System.out.println(response);
 		} catch (IOException e) {
 			e.printStackTrace();
-		}
+		} 
 	}
+	
+	public void cancel(int customerId, int restaurantId) {
 
-	public CustomerDTO select(String phone) {
-		CustomerDTO dto = null;
 		try {
-			String selectUrl = urlStr + "/select/" + phone;
-			url = new URL(selectUrl);
-			conn = (HttpURLConnection) url.openConnection();
-			conn.setRequestMethod("GET");
-			conn.setRequestProperty("content-type", "application/json");
-
-			int responseCode = conn.getResponseCode();
-			System.out.println("response code : " + responseCode);
-
-			BufferedReader reader = new BufferedReader(new InputStreamReader(conn.getInputStream()));
-			String inputLine;
-			StringBuffer bufferStr = new StringBuffer();
-			while ((inputLine = reader.readLine()) != null) {
-				bufferStr.append(inputLine);
-			}
-			reader.close();
-			dto = gson.fromJson(bufferStr.toString(), CustomerDTO.class);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		return dto;
-	}
-
-	public void update(String customerName, String customerPhone, int locationId) {
-		try {
-			String updateUrl = urlStr + "/" + "update";
-			url = new URL(updateUrl);
+			String cancelUrl = urlStr + "/" + "cancel";
 			conn = (HttpURLConnection) url.openConnection();
 			conn.setRequestMethod("POST");
 			conn.setDoOutput(true);
 			conn.setRequestProperty("content-type", "application/json");
-			JsonDTO dto = new JsonDTO(customerName, customerPhone, locationId);
+			JsonDTO dto = new JsonDTO(customerId, restaurantId);
 			String json = gson.toJson(dto);
-
+			
 			BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(conn.getOutputStream()));
 			writer.write(json);
 			writer.flush();
 			writer.close();
-
+			
 			int responseCode = conn.getResponseCode();
 			System.out.println("response code : " + responseCode);
-
+			
 			BufferedReader reader = new BufferedReader(new InputStreamReader(conn.getInputStream()));
 			String inputLine;
 			StringBuffer response = new StringBuffer();
@@ -112,32 +84,7 @@ public class CustomerRequest {
 			System.out.println(response);
 		} catch (IOException e) {
 			e.printStackTrace();
-		}
-
-	}
-
-	public void delete(String phone) {
-
-		try {
-			String selectUrl = urlStr + "/delete/" + phone;
-			url = new URL(selectUrl);
-			conn = (HttpURLConnection) url.openConnection();
-			conn.setRequestMethod("GET");
-			conn.setRequestProperty("content-type", "application/json");
-
-			int responseCode = conn.getResponseCode();
-			System.out.println("response code : " + responseCode);
-
-			BufferedReader reader = new BufferedReader(new InputStreamReader(conn.getInputStream()));
-			String inputLine;
-			StringBuffer bufferStr = new StringBuffer();
-			while ((inputLine = reader.readLine()) != null) {
-				bufferStr.append(inputLine);
-			}
-			reader.close();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-
+		} 
+	
 	}
 }

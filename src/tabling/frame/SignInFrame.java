@@ -14,7 +14,6 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 
-import tabling.dao.CustomerDAO;
 import tabling.request.CustomerRequest;
 
 // 회원가입 화면
@@ -34,7 +33,6 @@ public class SignInFrame extends JFrame {
 	private boolean canCheck;
 	private boolean canLogin;
 
-	private CustomerDAO dao; // TODO 삭제 예정
 	private CustomerRequest request;
 
 	public SignInFrame() {
@@ -44,7 +42,7 @@ public class SignInFrame extends JFrame {
 	}
 
 	private void initData() {
-		dao = new CustomerDAO();
+		request = new CustomerRequest();
 		setTitle("회원가입");
 		setSize(400, 600);
 		setResizable(false);
@@ -150,7 +148,6 @@ public class SignInFrame extends JFrame {
 						JOptionPane.showMessageDialog(null, "닉네임은 50자까지만 기입 가능합니다.", "경고", JOptionPane.WARNING_MESSAGE);
 						nameField.setText("");
 					} else {
-						request = new CustomerRequest();
 						request.insert(nameField.getText(), localTel.getSelectedItem() + phoneField.getText(), myLocation.getSelectedIndex() + 1);
 						JOptionPane.showMessageDialog(null, "회원가입 성공!", "경고", JOptionPane.WARNING_MESSAGE);
 						setVisible(false);
@@ -168,7 +165,7 @@ public class SignInFrame extends JFrame {
 				if (phoneField.getText().length() == 8 && canCheck == true) {
 
 					try {
-						if (dao.getCustomerByPhone(localTel.getSelectedItem() + phoneField.getText()) != null) {
+						if (request.select(localTel.getSelectedItem() + phoneField.getText()) != null) {
 							JOptionPane.showMessageDialog(null, "중복되는 번호입니다.", "경고", JOptionPane.WARNING_MESSAGE);
 						} else {
 							JOptionPane.showMessageDialog(null, "가입 가능한 전화번호입니다.", "경고", JOptionPane.WARNING_MESSAGE);
@@ -176,8 +173,6 @@ public class SignInFrame extends JFrame {
 							canLogin = true;
 						}
 					} catch (HeadlessException e1) {
-						e1.printStackTrace();
-					} catch (SQLException e1) {
 						e1.printStackTrace();
 					}
 

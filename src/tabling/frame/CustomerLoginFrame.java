@@ -8,7 +8,6 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.sql.SQLException;
 
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
@@ -17,7 +16,6 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
-import tabling.dao.CustomerDAO;
 import tabling.dto.CustomerDTO;
 import tabling.request.CustomerRequest;
 
@@ -29,7 +27,6 @@ public class CustomerLoginFrame extends JFrame {
 	private JLabel backBtn;
 	private JTextField phoneText;
 	private BackgroundPanel backgroundPanel;
-	private CustomerDAO dao;
 	private CustomerRequest request;
 	private CustomerDTO customerDTO;
 
@@ -46,7 +43,6 @@ public class CustomerLoginFrame extends JFrame {
 		backBtn = new JLabel(new ImageIcon("img/quitBtn.png"));
 		phoneText = new JTextField();
 
-		dao = new CustomerDAO();
 		request = new CustomerRequest();
 	}
 
