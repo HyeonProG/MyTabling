@@ -7,6 +7,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.sql.SQLException;
+import java.util.Iterator;
 import java.util.List;
 
 import javax.swing.ImageIcon;
@@ -20,6 +21,7 @@ import javax.swing.event.AncestorEvent;
 import javax.swing.event.AncestorListener;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableModel;
 
 import tabling.dao.RestaurantReservationDAO;
 import tabling.dto.ReservationForRestaurantDTO;
@@ -35,6 +37,7 @@ public class RestaurantMainMenuFrame extends JFrame {
 	private JScrollPane scroll;
 	private JComboBox<String> filter;
 	// DefaultTableModel 클래스 파라미터 값 2개 - head, contents
+	DefaultTableModel tableModel;
 	private String[] head = { "고객 닉네임", "고객 전화번호", "예약시간", "예약상태" };
 	private String[][] contents;
 	// 리스트
@@ -43,6 +46,10 @@ public class RestaurantMainMenuFrame extends JFrame {
 	private JLabel resetBtn;
 	private JLabel endReserBtn;
 	private JLabel backBtn;
+
+	private boolean canEnd;
+	private ReservationForRestaurantDTO dto;
+	private int rowNum;
 
 	public RestaurantMainMenuFrame(RestaurantDTO restDTO) {
 		this.restDTO = restDTO;
@@ -68,6 +75,8 @@ public class RestaurantMainMenuFrame extends JFrame {
 		resetBtn = new JLabel(new ImageIcon("img/새로고침.png"));
 		endReserBtn = new JLabel(new ImageIcon("img/예약종료.png"));
 		backBtn = new JLabel(new ImageIcon("img/quitBtn.png"));
+
+		canEnd = false;
 	}
 
 	private void setInitLayout() {
@@ -99,32 +108,41 @@ public class RestaurantMainMenuFrame extends JFrame {
 			@Override
 			public void mousePressed(MouseEvent e) {
 				setList();
-				System.out.println("리셋함");
 			}
 		});
-		
-	
 
 		// TODO - 예약종료
 		endReserBtn.addMouseListener(new MouseAdapter() {
-			// row를 하나만 선택한 상태에서 update & select 해야 한다.
-
-//			@Override
-//			public void mousePressed(MouseEvent e) {
-//				if (table.getRowCount() == 1) {
-//					System.out.println("선택된 행 개수 : " + table.getRowCount());
-//				}
-//			}
-			public void mousePressed(java.awt.event.ActionEvent e) {
-				
-				int row = table.getSelectedRow();
-				if(row < 0) return;
-//				DefaultTableModel model = (DefaultTableModel) table.getModel();
-				
-			}
-
+			
 		});
-		
+
+		table.addMouseListener(new MouseAdapter() {
+
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				if (e.getClickCount() == 2) {
+					rowNum = table.getSelectedRow();
+					int currentRowNum = table.convertRowIndexToModel(rowNum);
+					String phone = tableModel.getValueAt(currentRowNum, 1).toString();
+					dto = null;
+					for (ReservationForRestaurantDTO rfrdto : reserList) {
+						if (rfrdto.getCustomerPhone().equals(phone)) {
+							dto = rfrdto;
+							try {
+								restDAO.endReservation(dto.getCustomerPhone());
+							} catch (SQLException e1) {
+								e1.printStackTrace();
+							}
+						}
+					}
+
+					//
+					if (dto == null) {
+						return;
+					}
+				}
+			}
+		});
 
 	}
 
@@ -153,7 +171,7 @@ public class RestaurantMainMenuFrame extends JFrame {
 		}
 
 		// 테이블
-		DefaultTableModel tableModel = new DefaultTableModel(contents, head); // 모델과 데이터 연결
+		tableModel = new DefaultTableModel(contents, head); // 모델과 데이터 연결
 		table = new JTable(tableModel) {
 			@Override
 			public boolean isCellEditable(int row, int column) {
