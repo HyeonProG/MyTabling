@@ -6,6 +6,7 @@ import java.awt.HeadlessException;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.sql.SQLException;
+import java.time.LocalDateTime;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -14,11 +15,13 @@ import javax.swing.JOptionPane;
 import javax.swing.JTextArea;
 
 import tabling.dao.ReservationDAO;
+import tabling.dao.RestaurantDAO;
 import tabling.dto.CustomerDTO;
 import tabling.dto.ReservationDTO;
 import tabling.dto.RestaurantDTO;
 import tabling.request.CustomerRequest;
 import tabling.request.ReservationRequest;
+import tabling.util.Time;
 
 public class ReservationFrame extends JFrame {
 
@@ -109,6 +112,11 @@ public class ReservationFrame extends JFrame {
 		reservationBtn.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mousePressed(MouseEvent e) {
+				if (new Time(LocalDateTime.now().getHour(), LocalDateTime.now().getMinute(),
+							LocalDateTime.now().getDayOfWeek().toString()).isOpen(restaurantDTO) == false) {
+					JOptionPane.showMessageDialog(null, "현재 영업중이 아닙니다.");
+					return;
+				}
 				int result = JOptionPane.showConfirmDialog(null, "예약하시겠습니까?", "예약", 2, 1);
 				if (result == JOptionPane.YES_OPTION) {
 					try {
