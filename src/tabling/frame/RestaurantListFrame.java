@@ -424,5 +424,5 @@ public class RestaurantListFrame extends JFrame {
 			e.printStackTrace();
 		}
 	}
-
+	
 }

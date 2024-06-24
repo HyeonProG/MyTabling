@@ -17,6 +17,7 @@ import tabling.dao.CustomerDAO;
 import tabling.dao.CustomerReservationDAO;
 import tabling.dao.ReservationDAO;
 import tabling.dto.CustomerDTO;
+import tabling.dto.ReservationDTO;
 import tabling.dto.RestaurantDTO;
 
 public class ReservationFrame extends JFrame {
@@ -27,6 +28,7 @@ public class ReservationFrame extends JFrame {
 	private CustomerReservationDAO customerReservationDAO;
 	private ReservationDAO reservationDAO;
 	private CustomerDTO customerDTO;
+	private ReservationDTO reservationDTO;
 	private int customerId;
 	private int restaurantId;
 
@@ -55,6 +57,11 @@ public class ReservationFrame extends JFrame {
 		
 		customerReservationDAO = new CustomerReservationDAO();
 		reservationDAO = new ReservationDAO();
+		try {
+			reservationDTO = reservationDAO.getReservationByCustomer(customerId);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 
 		restaurantNameLabel = new JLabel();
 		restaurantNameLabel.setText(restaurantDTO.getRestaurantName());
@@ -78,7 +85,7 @@ public class ReservationFrame extends JFrame {
 		reservationStatus.setBackground(Color.WHITE);
 		reservationStatus.setLineWrap(true);
 		try {
-			reservationStatus.append("현재 가게의 대기 인원은 " + reservationDAO.checkReservation(restaurantId, customerId) + " 명 입니다.");
+			reservationStatus.append("현재 가게의 대기 인원은 " + reservationDAO.checkReservation(restaurantId, reservationDTO.getReservationId()) + " 명 입니다.");
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
