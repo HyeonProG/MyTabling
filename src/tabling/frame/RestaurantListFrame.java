@@ -5,11 +5,10 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Image;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.sql.SQLException;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -100,8 +99,6 @@ public class RestaurantListFrame extends JFrame {
 		categoryDAO = new CategoryDAO();
 		categoryRequest = new CategoryRequest();
 		restaurantDAO = new RestaurantDAO();
-		// 임시 시간 설정
-		currentTime = new Time(19, 30, "월요일");
 		// 테이블에 담는 과정
 		tableSet();
 		filter = new JComboBox<String>();
@@ -174,10 +171,8 @@ public class RestaurantListFrame extends JFrame {
 					break;
 				case OPEN:
 					restaurantDAO.setOpenFilter(true);
-					// 현재 시간을 넣어 줄 수 있는데 편의상 설정된 시간을 넣음
-					// currentTime = new Time(LocalDateTime.now().getHour(),
-					// LocalDateTime.now().getMinute(),
-					// LocalDateTime.now().getDayOfWeek().toString());
+					currentTime = new Time(LocalDateTime.now().getHour(), LocalDateTime.now().getMinute(),
+							LocalDateTime.now().getDayOfWeek().toString());
 					restaurantDAO.setCurrentTime(currentTime);
 					setRestaurantList();
 					tableSet();
