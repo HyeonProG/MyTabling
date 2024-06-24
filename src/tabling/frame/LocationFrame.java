@@ -6,6 +6,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.sql.SQLException;
 import java.util.List;
 
@@ -26,6 +27,7 @@ public class LocationFrame extends JFrame implements ActionListener {
 	
 	private BackgroundPanel frame;
 	private JLabel background;
+	private JLabel home;
 
 	private JButton[] locationbutton;
 	private CustomerDTO customerDTO;
@@ -54,17 +56,34 @@ public class LocationFrame extends JFrame implements ActionListener {
 		Icon icon = new ImageIcon("img/location.png");
 		background = new JLabel(icon);
 		// 413, 355
-		background.setSize(413, 355);
-		background.setLocation(35, 50);
+		background.setSize(420, 370); // 413, 355
+		background.setLocation(32, 100); // 35, 50
 
 //		Icon icon2 = new ImageIcon("img/quitBtn2.png");
 //		backBtn = new JLabel(icon2);
 
 //		backBtn.setSize(40, 40);
 //		backBtn.setLocation(34, 40);
-
-		locationbutton[Define.LOCATION_ALL] = new JButton("전체 검색"); // 지역구 모두 검색 (전체 검색)
-		locationbutton[Define.LOCATION_ALL].setBounds(190, 460, 120, 40); // 190, 460, 120, 40
+		
+		Icon icon4 = new ImageIcon("img/house-solid.png");
+		home = new JLabel(icon4);
+		home.setSize(50,50);
+		home.setLocation(217, 580);
+		
+		// 버튼 이미지 크기 조절 -- 사용안함
+//		ImageIcon icon3 = new ImageIcon("img/지역별전체보기버튼.png");
+//		Image image = icon3.getImage();
+//		Image scaledImage = image.getScaledInstance(410, 60, Image.SCALE_SMOOTH);
+//		ImageIcon scaledIcon = new ImageIcon(scaledImage);
+//		locationbutton[Define.LOCATION_ALL] = new JButton(scaledIcon); // 지역구 모두 검색 (전체 검색)
+//		locationbutton[Define.LOCATION_ALL].setBounds(37, 495, 410, 60); // 190, 460, 120, 40 // 37, 495, 410, 60
+		
+		 Icon icon3 = new ImageIcon("img/지역별전체보기버튼.png");
+		locationbutton[Define.LOCATION_ALL] = new JButton(icon3);
+		locationbutton[Define.LOCATION_ALL].setBounds(37, 495, 410, 60); // 190, 460, 120, 40 // 37, 495, 410, 60
+		locationbutton[Define.LOCATION_ALL].setBorderPainted(false);
+		locationbutton[Define.LOCATION_ALL].setContentAreaFilled(false);
+		locationbutton[Define.LOCATION_ALL].setFocusPainted(false);
 
 		locationbutton[Define.LOCATION_GANGSEOGU] = new JButton(); // 강서구
 		locationbutton[Define.LOCATION_GANGSEOGU].setBounds(40, 220, 70, 50);
@@ -133,7 +152,7 @@ public class LocationFrame extends JFrame implements ActionListener {
 		locationbutton[Define.LOCATION_DONGNAEGU].setFocusPainted(false);
 
 		locationbutton[Define.LOCATION_YEONJEGU] = new JButton(); // 연제구
-		locationbutton[Define.LOCATION_YEONJEGU].setBounds(220, 190, 25, 20);
+		locationbutton[Define.LOCATION_YEONJEGU].setBounds(225, 200, 25, 20);
 		locationbutton[Define.LOCATION_YEONJEGU].setBorderPainted(false);
 		locationbutton[Define.LOCATION_YEONJEGU].setContentAreaFilled(false);
 		locationbutton[Define.LOCATION_YEONJEGU].setFocusPainted(false);
@@ -177,6 +196,7 @@ public class LocationFrame extends JFrame implements ActionListener {
 		frame.add(locationbutton[Define.LOCATION_ALL]);
 
 //		frame.add(backBtn);
+		frame.add(home);
 		frame.add(background);
 		add(frame);
 		setVisible(true);
@@ -196,6 +216,15 @@ public class LocationFrame extends JFrame implements ActionListener {
 //				dispose();
 //			}
 //		});
+		
+		home.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mousePressed(MouseEvent e) {
+				// TODO Auto-generated method stub
+				new CustomerMainMenuFrame(customerDTO);
+				super.mousePressed(e);
+			}
+		});
 
 	}
 
