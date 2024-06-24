@@ -5,9 +5,9 @@ import java.net.InetSocketAddress;
 
 import com.sun.net.httpserver.HttpServer;
 
-import tabling.frame.CategoryFrame;
 import tabling.server.CategoryHandler;
 import tabling.server.CustomerHandler;
+import tabling.server.LikeHandler;
 import tabling.server.ReservationHandler;
 
 
@@ -28,6 +28,7 @@ public class Server {
 		httpServer.createContext("/customer", new CustomerHandler());
 		httpServer.createContext("/category", new CategoryHandler());
 		httpServer.createContext("/reservation", new ReservationHandler());
+		httpServer.createContext("/like", new LikeHandler());
 	}
 
 }

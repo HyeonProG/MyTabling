@@ -119,6 +119,4 @@ public class CustomerHandler implements HttpHandler {
 		}
 	}
 	
-	// DELETE 요청시 동작
-
 }
