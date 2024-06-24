@@ -12,7 +12,7 @@ public class Define {
 	public static final int CATEGORY_HANSIK = 7;
 	public static final int CATEGORY_CHICKEN = 8;
 	public static final int CATEGORY_HOE = 9;
-	public static final int CATEGORY_FAMILIY = 10;
+	public static final int CATEGORY_FAMILY = 10;
 	public static final int CATEGORY_ILSIK = 11;
 	public static final int CATEGORY_NAENGMYUN = 12;
 	public static final int CATEGORY_HOF = 13;
