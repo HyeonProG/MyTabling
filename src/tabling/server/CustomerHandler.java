@@ -5,6 +5,7 @@ import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
+import java.net.URI;
 import java.sql.SQLException;
 
 import com.google.gson.Gson;
@@ -13,15 +14,17 @@ import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 
 import tabling.dao.CustomerDAO;
-import tabling.server.json.JsonCustomerInsertDTO;
-import tabling.server.json.JsonDTO;
+import tabling.dto.CustomerDTO;
+import tabling.json.JsonDTO;
 
 public class CustomerHandler implements HttpHandler {
 
 	private CustomerDAO dao;
+	private Gson gson;
 	
 	public CustomerHandler() {
 		dao = new CustomerDAO();
+		gson = new GsonBuilder().setPrettyPrinting().create();
 	}
 	
 	@Override
@@ -29,15 +32,50 @@ public class CustomerHandler implements HttpHandler {
 		String method = exchange.getRequestMethod();
 		if ("GET".equalsIgnoreCase(method)) {
 			// GET 요청시 여기서 동작
+			handleGetRequest(exchange);
 		} else if ("POST".equalsIgnoreCase(method)) {
 			// POST 요청시 여기서 동작
 			handlePostRequest(exchange);
 		}
 	}
+	
+	// GET 요청시 동작
+	private void handleGetRequest(HttpExchange exchange) {
+		URI uri = exchange.getRequestURI();
+		String path = uri.getPath();
+		String[] pathSegments = path.split("/");
+		if (pathSegments.length >= 3) {
+			String customerPhone = pathSegments[2];
+			try {
+				CustomerDTO dto = dao.getCustomerByPhone(customerPhone);
+				String response = gson.toJson(dto);
+				byte[] bytes = response.getBytes();
+				exchange.setAttribute("Content-Type", "text/plain; charset=UTF-8");
+				try {
+					exchange.sendResponseHeaders(200, bytes.length);
+					BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(exchange.getResponseBody()));
+					writer.write(response);
+					writer.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+	}
 
 	// POST 요청시 동작
 	private void handlePostRequest(HttpExchange exchange) {
+		URI uri = exchange.getRequestURI();
+		String path = uri.getPath();
+		String[] pathSegments = path.split("/");
+		String protocol = null;
+		if (pathSegments.length >= 3) {
+			protocol = pathSegments[2];
+		}
 		BufferedReader br = new BufferedReader(new InputStreamReader(exchange.getRequestBody()));
+		String response = null;
 		String inputLine;
 		StringBuffer bufferStr = new StringBuffer();
 		try {
@@ -45,27 +83,31 @@ public class CustomerHandler implements HttpHandler {
 				bufferStr.append(inputLine);
 			}
 			br.close();
-			System.out.println(bufferStr);
-			Gson gson = new GsonBuilder().setPrettyPrinting().create();
+			
 			JsonDTO dto = gson.fromJson(bufferStr.toString(), JsonDTO.class);
-			System.out.println(dto.getType());
-			if (dto.getType().equals("insert")) {
-				System.out.println("insert값 들어옴");
-				JsonCustomerInsertDTO insertDTO = gson.fromJson(bufferStr.toString(), JsonCustomerInsertDTO.class);
+			if (protocol.equalsIgnoreCase("insert")) {
+				JsonDTO insertDTO = gson.fromJson(bufferStr.toString(), JsonDTO.class);
 				try {
-					dao.addCustomer(insertDTO.getName(), insertDTO.getPhone(), insertDTO.getLocationId());
+					dao.addCustomer(insertDTO.getCustomerName(), insertDTO.getCustomerPhone(), insertDTO.getLocationId());
+					response = "회원가입 성공";
 				} catch (SQLException e) {
 					e.printStackTrace();
 				}
-				System.out.println(insertDTO);
+			} else if (protocol.equalsIgnoreCase("update")) {
+				JsonDTO updateDTO = gson.fromJson(bufferStr.toString(), JsonDTO.class);
+				try {
+					dao.updateCustomer(updateDTO.getCustomerName(), updateDTO.getCustomerPhone(), updateDTO.getLocationId());
+					response = "회원정보 수정 성공";
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
 			}
-			String response = "회원가입 성공";
 			byte[] bytes = response.getBytes();
 			exchange.setAttribute("Content-Type", "text/plain; charset=UTF-8");
 			exchange.sendResponseHeaders(200, bytes.length);
-			BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(exchange.getResponseBody()));
-			bw.write(response);
-			bw.close();
+			BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(exchange.getResponseBody()));
+			writer.write(response);
+			writer.close();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

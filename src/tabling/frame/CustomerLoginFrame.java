@@ -19,6 +19,7 @@ import javax.swing.JTextField;
 
 import tabling.dao.CustomerDAO;
 import tabling.dto.CustomerDTO;
+import tabling.request.CustomerRequest;
 
 // 고객 로그인 화면
 public class CustomerLoginFrame extends JFrame {
@@ -29,6 +30,7 @@ public class CustomerLoginFrame extends JFrame {
 	private JTextField phoneText;
 	private BackgroundPanel backgroundPanel;
 	private CustomerDAO dao;
+	private CustomerRequest request;
 	private CustomerDTO customerDTO;
 
 	public CustomerLoginFrame() {
@@ -45,6 +47,7 @@ public class CustomerLoginFrame extends JFrame {
 		phoneText = new JTextField();
 
 		dao = new CustomerDAO();
+		request = new CustomerRequest();
 	}
 
 	private void setInitLayout() {
@@ -129,7 +132,7 @@ public class CustomerLoginFrame extends JFrame {
 	private void rogin() {
 		if (!phoneText.getText().equals("")) {
 			try {
-				if ((customerDTO = dao.getCustomerByPhone(phoneText.getText())) != null) {
+				if ((customerDTO = request.select(phoneText.getText())) != null) {
 					JOptionPane.showMessageDialog(null, "로그인 되었습니다.", "성공", JOptionPane.WARNING_MESSAGE);
 					new CustomerMainMenuFrame(customerDTO);
 					setVisible(false); 
@@ -139,9 +142,7 @@ public class CustomerLoginFrame extends JFrame {
 				}
 			} catch (HeadlessException e1) {
 				e1.printStackTrace();
-			} catch (SQLException e1) {
-				e1.printStackTrace();
-			}
+			} 
 		}
 	}
 

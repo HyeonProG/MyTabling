@@ -19,12 +19,14 @@ import tabling.dao.CustomerReservationDAO;
 import tabling.dao.ReservationDAO;
 import tabling.dto.CustomerDTO;
 import tabling.dto.ReservationDTO;
+import tabling.request.CustomerRequest;
 
 public class EditCustomerInfoFrame extends JFrame {
 
 	private BackgroundPanel backgroundPanel;
 	private CustomerDTO customerDTO;
 	private CustomerDAO dao;
+	private CustomerRequest request;
 	private JTextField nameField;
 	private JTextField locationField;
 	private JTextField phoneField;
@@ -44,6 +46,7 @@ public class EditCustomerInfoFrame extends JFrame {
 
 	private void initData() {
 		dao = new CustomerDAO();
+		request = new CustomerRequest();
 		setTitle("메인 메뉴 " + customerDTO.getCustomerName() + "님"); // 제목 타이틀
 		setSize(500, 700);
 		setResizable(false);
@@ -70,19 +73,18 @@ public class EditCustomerInfoFrame extends JFrame {
 		add(backgroundPanel);
 
 		// 닉네임 필드 텍스트
-		nameField.setBounds(90, 155, 300, 30); 
+		nameField.setBounds(90, 155, 300, 30);
 		nameField.setText(customerDTO.getCustomerName());
 		backgroundPanel.add(nameField);
 
 		// 전화번호 필드 텍스트 (수정불가)
-		phoneField.setBounds(90, 260, 300, 30); 
+		phoneField.setBounds(90, 260, 300, 30);
 		phoneField.setText(customerDTO.getPhone());
 		phoneField.setEditable(false);
 		backgroundPanel.add(phoneField);
 
 		myLocation = new Choice(); // 콤보박스 생성
-		localArray = new String[] { "강서구", "사하구", "사상구", "북구", "서구", "중구", "동구", "부산진구", "영도구", "남구", "동래구", "연제구",
-				"수영구", "금정구", "해운대구", "기장군" };
+		localArray = new String[] { "강서구", "사하구", "사상구", "북구", "서구", "중구", "동구", "부산진구", "영도구", "남구", "동래구", "연제구", "수영구", "금정구", "해운대구", "기장군" };
 		for (int i = 0; i < localArray.length; i++) {
 			myLocation.add(localArray[i]); // myLocation 콤보 박스에 localArray 값을 넣는다.
 		}
@@ -96,7 +98,7 @@ public class EditCustomerInfoFrame extends JFrame {
 
 		quitBtn.setBounds(10, 30, 15, 24);
 		backgroundPanel.add(quitBtn);
-		
+
 		resignBtn.setBounds(85, 540, 314, 46);
 		backgroundPanel.add(resignBtn);
 
@@ -117,33 +119,29 @@ public class EditCustomerInfoFrame extends JFrame {
 			@Override
 			public void mousePressed(MouseEvent e) {
 
-				try {
-					if (nameField.getText().matches("^\\s.*")) {
-						JOptionPane.showMessageDialog(null, "닉네임은 공백으로 시작할 수 없습니다.", "경고", JOptionPane.WARNING_MESSAGE);
-						nameField.setText("");
-						return;
-					} else if (nameField.getText().matches("\\s*$")) {
-						JOptionPane.showMessageDialog(null, "닉네임은 공백으로 끝날 수 없습니다.", "경고", JOptionPane.WARNING_MESSAGE);
-						nameField.setText("");
-						return;
-					} else if (nameField.getText().length() > 50) {
-						JOptionPane.showMessageDialog(null, "닉네임은 50자까지만 기입 가능합니다.", "경고", JOptionPane.WARNING_MESSAGE);
-						nameField.setText("");
-					} else {
-						dao.updateCustomer(nameField.getText(), myLocation.getSelectedIndex() + 1, customerDTO.getPhone()); 
-						JOptionPane.showMessageDialog(null, "수정이 완료되었습니다.", "PLAIN_MESSAGE", JOptionPane.PLAIN_MESSAGE);
-						customerDTO = dao.getCustomerByPhone(customerDTO.getPhone());
-						new CustomerMainMenuFrame(customerDTO);
-						setVisible(false);
-						dispose();
-					}
-					
-				} catch (SQLException e1) {
-					e1.printStackTrace();
+				if (nameField.getText().matches("^\\s.*")) {
+					JOptionPane.showMessageDialog(null, "닉네임은 공백으로 시작할 수 없습니다.", "경고", JOptionPane.WARNING_MESSAGE);
+					nameField.setText("");
+					return;
+				} else if (nameField.getText().matches("\\s*$")) {
+					JOptionPane.showMessageDialog(null, "닉네임은 공백으로 끝날 수 없습니다.", "경고", JOptionPane.WARNING_MESSAGE);
+					nameField.setText("");
+					return;
+				} else if (nameField.getText().length() > 50) {
+					JOptionPane.showMessageDialog(null, "닉네임은 50자까지만 기입 가능합니다.", "경고", JOptionPane.WARNING_MESSAGE);
+					nameField.setText("");
+				} else {
+					request.update(nameField.getText(), customerDTO.getPhone(), myLocation.getSelectedIndex() + 1);
+					JOptionPane.showMessageDialog(null, "수정이 완료되었습니다.", "PLAIN_MESSAGE", JOptionPane.PLAIN_MESSAGE);
+					customerDTO = request.select(customerDTO.getPhone());
+					new CustomerMainMenuFrame(customerDTO);
+					setVisible(false);
+					dispose();
 				}
+
 			}
 		});
-		
+
 		resignBtn.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mousePressed(MouseEvent e) {
