@@ -183,21 +183,17 @@ public class CustomerReservationStatusFrame extends JFrame {
 			g.drawImage(backgroundImage, 0, 0, getWidth(), getHeight(), null);
 		}
 
-	}
-<<<<<<< HEAD
 	
 
 	
 
-	public static void main(String[] args) {
-		try {
-			new CustomerReservationStatusFrame(new CustomerDAO().authenticatePhone("01011112222"));
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
-=======
->>>>>>> 4c3687f9284e6d315661f33233c9f658a66de205
+//	public static void main(String[] args) {
+//		try {
+//			new CustomerReservationStatusFrame(new CustomerDAO().authenticatePhone("01011112222"));
+//		} catch (SQLException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+//	}
 
 }
