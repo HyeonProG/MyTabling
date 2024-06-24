@@ -57,7 +57,7 @@ public class EditCustomerInfoFrame extends JFrame {
 		locationField = new JTextField();
 		editBtn = new JLabel(new ImageIcon("img/그룹 20.png")); // 수정 버튼
 		quitBtn = new JLabel(new ImageIcon("img/quitBtn2.png")); // 뒤로가기 버튼
-		resignBtn = new JLabel(new ImageIcon("img/signinBtn.png")); // TODO 이미지 변경예정
+		resignBtn = new JLabel(new ImageIcon("img/resignBtn.png")); // TODO 이미지 변경예정
 
 		nameField = new JTextField();
 		locationField = new JTextField();
@@ -97,7 +97,7 @@ public class EditCustomerInfoFrame extends JFrame {
 		quitBtn.setBounds(10, 30, 15, 24);
 		backgroundPanel.add(quitBtn);
 		
-		resignBtn.setBounds(85, 550, 314, 46);
+		resignBtn.setBounds(85, 540, 314, 46);
 		backgroundPanel.add(resignBtn);
 
 	}
