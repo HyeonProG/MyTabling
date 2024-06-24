@@ -32,11 +32,11 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableRowSorter;
 
 import tabling.dao.CategoryDAO;
-import tabling.dao.LocationDAO;
 import tabling.dao.RestaurantDAO;
 import tabling.dto.CustomerDTO;
 import tabling.dto.RestaurantDTO;
 import tabling.request.CategoryRequest;
+import tabling.request.LocationRequest;
 import tabling.util.Time;
 
 public class RestaurantListFrame extends JFrame {
@@ -52,7 +52,7 @@ public class RestaurantListFrame extends JFrame {
 	private JLabel homeBtn;
 	private JLabel backBtn;
 	private JTextField searchField;
-	private LocationDAO locationDAO;
+	private LocationRequest locationRequest;
 	private CategoryDAO categoryDAO;
 	private CategoryRequest categoryRequest;
 	private RestaurantDAO restaurantDAO;
@@ -95,7 +95,7 @@ public class RestaurantListFrame extends JFrame {
 	private void initData() {
 		bg = new BackgroundPanel();
 		frame = this;
-		locationDAO = new LocationDAO();
+		locationRequest = new LocationRequest();
 		categoryDAO = new CategoryDAO();
 		categoryRequest = new CategoryRequest();
 		restaurantDAO = new RestaurantDAO();
@@ -322,12 +322,8 @@ public class RestaurantListFrame extends JFrame {
 			int locationId = restaurantList.get(i).getLocationId();
 			String categoryName = null;
 			String locationName = null;
-			try {
-				categoryName = categoryRequest.select(categoryId);
-				locationName = locationDAO.getLocationName(locationId);
-			} catch (SQLException e) {
-				e.printStackTrace();
-			}
+			categoryName = categoryRequest.select(categoryId);
+			locationName = locationRequest.select(locationId);
 
 			contents[i][0] = restaurantName;
 			contents[i][1] = categoryName;

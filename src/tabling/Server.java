@@ -8,6 +8,7 @@ import com.sun.net.httpserver.HttpServer;
 import tabling.server.CategoryHandler;
 import tabling.server.CustomerHandler;
 import tabling.server.LikeHandler;
+import tabling.server.LocationHandler;
 import tabling.server.ReservationHandler;
 
 
@@ -27,6 +28,7 @@ public class Server {
 	private static void setCreateContext(HttpServer httpServer) {
 		httpServer.createContext("/customer", new CustomerHandler());
 		httpServer.createContext("/category", new CategoryHandler());
+		httpServer.createContext("/location", new LocationHandler());
 		httpServer.createContext("/reservation", new ReservationHandler());
 		httpServer.createContext("/like", new LikeHandler());
 	}
