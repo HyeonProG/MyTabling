@@ -228,7 +228,6 @@ public class LocationFrame extends JFrame implements ActionListener {
 				}
 			}
 		}
-
 		
 	} // end of actionPerformed
 	

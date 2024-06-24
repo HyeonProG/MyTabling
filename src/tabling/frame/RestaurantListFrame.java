@@ -41,6 +41,8 @@ import tabling.util.Time;
 
 public class RestaurantListFrame extends JFrame {
 
+//	private BackgroundPanel bg;
+	private JLabel bg;
 	private RestaurantListFrame frame;
 	private RestaurantFrame restaurantFrame;
 
@@ -91,6 +93,8 @@ public class RestaurantListFrame extends JFrame {
 	}
 
 	private void initData() {
+		bg = new JLabel(new ImageIcon("img/retaurantListFrameBg.jpg"));
+//		bg = new BackgroundPanel();
 		frame = this;
 		locationDAO = new LocationDAO();
 		categoryDAO = new CategoryDAO();
@@ -107,6 +111,9 @@ public class RestaurantListFrame extends JFrame {
 	}
 
 	private void setInitLayout() {
+//		bg.setSize(getWidth(),getHeight());
+		add(bg);
+		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setTitle(" 리스트 화면 " + customerDTO.getCustomerName() + "님");
 		setSize(500, 700);
@@ -114,7 +121,7 @@ public class RestaurantListFrame extends JFrame {
 		setResizable(false); // 프레임 조절 불가
 		setLocationRelativeTo(null); // JFrame을 모니터 가운데 자동 배치
 
-		add(filter);
+		bg.add(filter);
 		filter.setLocation(270, 80);
 		filter.setSize(110, 30);
 		filter.setFont(new Font("Noto Sans KR", Font.BOLD, 15));
@@ -123,25 +130,26 @@ public class RestaurantListFrame extends JFrame {
 			filter.addItem(COMBOBOX[i]);
 		}
 
-		add(filterBtn);
+		bg.add(filterBtn);
 		filterBtn.setLocation(400, 80);
 		filterBtn.setSize(70, 30);
 		filterBtn.setFont(new Font("Noto Sans KR", Font.BOLD, 15));
 
-		add(homeBtn);
+		bg.add(homeBtn);
 		homeBtn.setLocation(200, 590);
 		homeBtn.setSize(70, 70);
 
-		add(backBtn);
+		bg.add(backBtn);
 		backBtn.setLocation(20, 20);
 		backBtn.setSize(15, 24);
 
-		add(searchField);
+		bg.add(searchField);
 		searchField.setLocation(20, 80);
 		searchField.setSize(202, 30);
 		searchField.setFont(new Font("Noto Sans KR", Font.BOLD, 15));
 
 		setVisible(true);
+		
 	}
 
 	private void addEventListener() {
@@ -428,22 +436,22 @@ public class RestaurantListFrame extends JFrame {
 		}
 	}
 	
-	private class BackgroundPanel extends JPanel {
-		private JPanel backgroundPanel;
-		private Image backgroundImage;
-
-		public BackgroundPanel() {
-			backgroundImage = new ImageIcon("img/retaurantListFrameBg.jpg").getImage();
-			backgroundPanel = new JPanel();
-			add(backgroundPanel);
-		}
-
-		@Override
-		protected void paintComponent(Graphics g) {
-			super.paintComponent(g);
-			g.drawImage(backgroundImage, 0, 0, getWidth(), getHeight(), null);
-		}
-
-	}
+//	private class BackgroundPanel extends JPanel {
+//		private JPanel backgroundPanel;
+//		private Image backgroundImage;
+//
+//		public BackgroundPanel() {
+//			backgroundImage = new ImageIcon("img/retaurantListFrameBg.jpg").getImage();
+//			backgroundPanel = new JPanel();
+//			add(backgroundPanel);
+//		}
+//
+//		@Override
+//		protected void paintComponent(Graphics g) {
+//			super.paintComponent(g);
+//			g.drawImage(backgroundImage, 0, 0, getWidth(), getHeight(), null);
+//		}
+//
+//	}
 	
 }
