@@ -3,6 +3,8 @@ package tabling.frame;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
+import java.awt.Graphics;
+import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
@@ -18,6 +20,7 @@ import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
@@ -423,6 +426,24 @@ public class RestaurantListFrame extends JFrame {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
+	}
+	
+	private class BackgroundPanel extends JPanel {
+		private JPanel backgroundPanel;
+		private Image backgroundImage;
+
+		public BackgroundPanel() {
+			backgroundImage = new ImageIcon("img/retaurantListFrameBg.jpg").getImage();
+			backgroundPanel = new JPanel();
+			add(backgroundPanel);
+		}
+
+		@Override
+		protected void paintComponent(Graphics g) {
+			super.paintComponent(g);
+			g.drawImage(backgroundImage, 0, 0, getWidth(), getHeight(), null);
+		}
+
 	}
 	
 }
