@@ -47,6 +47,8 @@ public class CategoryRequest {
 			str = bufferStr.toString();
 		} catch (IOException e) {
 			e.printStackTrace();
+		} finally {
+			conn.disconnect();
 		}
 		return str;
 	}
