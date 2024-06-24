@@ -44,11 +44,11 @@ public class RestaurantListFrame extends JFrame {
 	private BackgroundPanel bg;
 	private RestaurantListFrame frame;
 	private RestaurantFrame restaurantFrame;
-	
+
 	private JTable table;
 	private JScrollPane scroll;
 	private JComboBox<String> filter;
-	private JButton filterBtn;
+	private JLabel filterBtn;
 	private JLabel homeBtn;
 	private JLabel backBtn;
 	private JTextField searchField;
@@ -102,16 +102,16 @@ public class RestaurantListFrame extends JFrame {
 		// 테이블에 담는 과정
 		tableSet();
 		filter = new JComboBox<String>();
-		filterBtn = new JButton("적용");
-		homeBtn = new JLabel(new ImageIcon("img/home.png"));
+		filterBtn = new JLabel(new ImageIcon("img/적용버튼.png"));
+		homeBtn = new JLabel(new ImageIcon("img/house-solid.png"));
 		backBtn = new JLabel(new ImageIcon("img/quitBtn2.png"));
 		searchField = new JTextField();
 	}
 
 	private void setInitLayout() {
-		bg.setSize(getWidth(),getHeight());
+		bg.setSize(getWidth(), getHeight());
 		bg.setLayout(null);
-		
+
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setTitle(" 리스트 화면 " + customerDTO.getCustomerName() + "님");
 		setSize(500, 700);
@@ -120,8 +120,9 @@ public class RestaurantListFrame extends JFrame {
 		setLocationRelativeTo(null); // JFrame을 모니터 가운데 자동 배치
 
 		bg.add(filter);
-		filter.setLocation(270, 80);
-		filter.setSize(110, 30);
+		filter.setBounds(260, 80, 110, 30);
+//		filter.setLocation(270, 80);
+//		filter.setSize(110, 30);
 		filter.setFont(new Font("Noto Sans KR", Font.BOLD, 15));
 
 		for (int i = 0; i < COMBOBOX.length; i++) {
@@ -129,35 +130,36 @@ public class RestaurantListFrame extends JFrame {
 		}
 
 		bg.add(filterBtn);
-		filterBtn.setLocation(400, 80);
-		filterBtn.setSize(70, 30);
+		filterBtn.setBounds(385, 78, 86, 35);
+//		filterBtn.setLocation(400, 80);
+//		filterBtn.setSize(86, 35);
 		filterBtn.setFont(new Font("Noto Sans KR", Font.BOLD, 15));
 
 		bg.add(homeBtn);
-		homeBtn.setLocation(200, 590);
+		homeBtn.setLocation(205, 595);
 		homeBtn.setSize(70, 70);
 
 		bg.add(backBtn);
-		backBtn.setLocation(20, 20);
+		backBtn.setLocation(20, 30);
 		backBtn.setSize(15, 24);
 
 		bg.add(searchField);
 		searchField.setLocation(20, 80);
 		searchField.setSize(202, 30);
 		searchField.setFont(new Font("Noto Sans KR", Font.BOLD, 15));
-		
+
 		add(bg);
 		setVisible(true);
-		
+
 	}
 
 	private void addEventListener() {
 
 		// 적용 버튼
-		filterBtn.addActionListener(new ActionListener() {
+		filterBtn.addMouseListener(new MouseAdapter() {
 
 			@Override
-			public void actionPerformed(ActionEvent e) {
+			public void mousePressed(MouseEvent e) {
 				searchField.setText("");
 				switch (filter.getSelectedItem().toString()) {
 				case RESET:
@@ -182,7 +184,7 @@ public class RestaurantListFrame extends JFrame {
 					setRestaurantList();
 					tableSet();
 					break;
-					// 테이블의 기능을 이용하면 되긴한데 일단 구현해봄
+				// 테이블의 기능을 이용하면 되긴한데 일단 구현해봄
 				case GANADA_UP:
 					RestaurantDTO.setSortType(RestaurantDTO.GANADA);
 					Collections.sort(restaurantList, Collections.reverseOrder());
@@ -206,7 +208,7 @@ public class RestaurantListFrame extends JFrame {
 				}
 			}
 		});
-		
+
 		// 뒤로 가기 버튼 (어느 프레임으로 부터 왔는지를 기억하고 그 곳으로 돌아감)
 		backBtn.addMouseListener(new MouseAdapter() {
 			@Override
@@ -235,7 +237,7 @@ public class RestaurantListFrame extends JFrame {
 				}
 			}
 		});
-		
+
 		// 메인 메뉴로 돌아감
 		homeBtn.addMouseListener(new MouseAdapter() {
 			@Override
@@ -305,7 +307,7 @@ public class RestaurantListFrame extends JFrame {
 			bg.remove(scroll);
 		}
 		contents = new String[restaurantList.size()][head.length];
-		
+
 		// 테이블 내용 입력
 		for (int i = 0; i < restaurantList.size(); i++) {
 			String isOpen = null;
@@ -343,7 +345,7 @@ public class RestaurantListFrame extends JFrame {
 		};
 		sorter = new TableRowSorter<>(tableModel);
 		table.setRowSorter(sorter);
-		
+
 		// 테이블을 스크롤에 넣고 스크롤 설정
 		scroll = new JScrollPane(table);
 		bg.add(scroll);
@@ -374,7 +376,7 @@ public class RestaurantListFrame extends JFrame {
 				this.trackColor = Color.white;
 			}
 		});
-		
+
 		// 테이블 스타일 설정
 		DefaultTableCellRenderer centerAlign = new DefaultTableCellRenderer();
 		centerAlign.setHorizontalAlignment(JLabel.CENTER);
@@ -391,7 +393,7 @@ public class RestaurantListFrame extends JFrame {
 		table.getColumn("평점").setPreferredWidth(30);
 		table.getColumn("평점").setCellRenderer(centerAlign);
 		repaint();
-		
+
 		// 테이블 이벤트 설정
 		table.addMouseListener(new MouseAdapter() {
 			@Override
@@ -434,7 +436,7 @@ public class RestaurantListFrame extends JFrame {
 			e.printStackTrace();
 		}
 	}
-	
+
 	private class BackgroundPanel extends JPanel {
 		private JPanel backgroundPanel;
 		private Image backgroundImage;
@@ -452,5 +454,5 @@ public class RestaurantListFrame extends JFrame {
 		}
 
 	}
-	
+
 }
