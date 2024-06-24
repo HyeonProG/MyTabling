@@ -126,9 +126,9 @@ public class EditCustomerInfoFrame extends JFrame {
 					JOptionPane.showMessageDialog(null, "닉네임은 50자까지만 기입 가능합니다.", "경고", JOptionPane.WARNING_MESSAGE);
 					nameField.setText("");
 				} else {
-					request.update(nameField.getText(), customerDTO.getPhone(), myLocation.getSelectedIndex() + 1);
+					request.updateCustomer(nameField.getText(), customerDTO.getPhone(), myLocation.getSelectedIndex() + 1);
 					JOptionPane.showMessageDialog(null, "수정이 완료되었습니다.", "PLAIN_MESSAGE", JOptionPane.PLAIN_MESSAGE);
-					customerDTO = request.select(customerDTO.getPhone());
+					customerDTO = request.getCustomerByPhone(customerDTO.getPhone());
 					new CustomerMainMenuFrame(customerDTO);
 					setVisible(false);
 					dispose();
@@ -146,7 +146,7 @@ public class EditCustomerInfoFrame extends JFrame {
 					if (reservationDTO != null) {
 						new ReservationRequest().cancel(reservationDTO.getCustomerId(), reservationDTO.getRestaurantId());
 					}
-					request.delete(customerDTO.getPhone());
+					request.deleteCustomer(customerDTO.getPhone());
 					new LoginSelectFrame();
 					setVisible(false);
 					dispose();

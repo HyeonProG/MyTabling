@@ -6,7 +6,6 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.sql.SQLException;
 
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
@@ -148,7 +147,7 @@ public class SignInFrame extends JFrame {
 						JOptionPane.showMessageDialog(null, "닉네임은 50자까지만 기입 가능합니다.", "경고", JOptionPane.WARNING_MESSAGE);
 						nameField.setText("");
 					} else {
-						request.insert(nameField.getText(), localTel.getSelectedItem() + phoneField.getText(), myLocation.getSelectedIndex() + 1);
+						request.addCustomer(nameField.getText(), localTel.getSelectedItem() + phoneField.getText(), myLocation.getSelectedIndex() + 1);
 						JOptionPane.showMessageDialog(null, "회원가입 성공!", "경고", JOptionPane.WARNING_MESSAGE);
 						setVisible(false);
 						dispose();
@@ -165,7 +164,7 @@ public class SignInFrame extends JFrame {
 				if (phoneField.getText().length() == 8 && canCheck == true) {
 
 					try {
-						if (request.select(localTel.getSelectedItem() + phoneField.getText()) != null) {
+						if (request.getCustomerByPhone(localTel.getSelectedItem() + phoneField.getText()) != null) {
 							JOptionPane.showMessageDialog(null, "중복되는 번호입니다.", "경고", JOptionPane.WARNING_MESSAGE);
 						} else {
 							JOptionPane.showMessageDialog(null, "가입 가능한 전화번호입니다.", "경고", JOptionPane.WARNING_MESSAGE);

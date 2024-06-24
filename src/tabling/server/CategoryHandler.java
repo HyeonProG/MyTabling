@@ -1,31 +1,22 @@
 package tabling.server;
 
-import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.URI;
 import java.sql.SQLException;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 
 import tabling.dao.CategoryDAO;
-import tabling.dao.CustomerDAO;
-import tabling.dto.CustomerDTO;
-import tabling.dto.JsonDTO;
 
 public class CategoryHandler implements HttpHandler {
 
 	private CategoryDAO dao;
-	private Gson gson;
 	
 	public CategoryHandler() {
 		dao = new CategoryDAO();
-		gson = new GsonBuilder().setPrettyPrinting().create();
 	}
 	
 	@Override

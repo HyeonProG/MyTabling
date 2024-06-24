@@ -5,11 +5,9 @@ import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.sql.SQLException;
 import java.util.List;
 
 import javax.swing.ImageIcon;
-import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -18,7 +16,6 @@ import javax.swing.JTable;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 
-import tabling.dao.RestaurantReservationDAO;
 import tabling.dto.CustomerDTO;
 import tabling.dto.ReservationForRestaurantDTO;
 import tabling.dto.RestaurantDTO;
@@ -27,13 +24,10 @@ import tabling.request.ReservationRequest;
 
 public class RestaurantMainMenuFrame extends JFrame {
 
-	private RestaurantMainMenuFrame frame; // TODO
 	private BackgroundPanel backgroundPanel;
 	private RestaurantDTO restDTO;
-	private RestaurantReservationDAO restDAO;
 	private JTable table;
 	private JScrollPane scroll;
-	private JComboBox<String> filter;
 	// DefaultTableModel 클래스 파라미터 값 2개 - head, contents
 	DefaultTableModel tableModel;
 	private String[] head = { "고객 닉네임", "고객 전화번호", "예약시간", "예약상태" };
@@ -46,18 +40,12 @@ public class RestaurantMainMenuFrame extends JFrame {
 	private JLabel backBtn;
 	private ReservationRequest reservationRequest;
 
-	private boolean canEnd;
-	private ReservationForRestaurantDTO dto;
 	private int rowNum;
 
 	public RestaurantMainMenuFrame(RestaurantDTO restDTO) {
 		this.restDTO = restDTO;
-		restDAO = new RestaurantReservationDAO();
-		try {
-			reserList = restDAO.getCustomerInfoByReservation(restDTO.getRestaurantId());
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
+		reservationRequest = new ReservationRequest();
+		reserList = reservationRequest.getCustomerInfoByReservation(restDTO.getRestaurantId());
 		initData();
 		setInitLayout();
 		initListener();
@@ -65,17 +53,13 @@ public class RestaurantMainMenuFrame extends JFrame {
 
 	private void initData() {
 		reservationRequest = new ReservationRequest();
-		frame = this;
 		// 테이블에 담는 메소드
 		backgroundPanel = new BackgroundPanel();
 		tableSet();
-		restDAO = new RestaurantReservationDAO();
 
 		resetBtn = new JLabel(new ImageIcon("img/새로고침.png"));
 		endReserBtn = new JLabel(new ImageIcon("img/예약종료.png"));
 		backBtn = new JLabel(new ImageIcon("img/quitBtn.png"));
-
-		canEnd = false;
 
 	}
 
@@ -119,7 +103,7 @@ public class RestaurantMainMenuFrame extends JFrame {
 				rowNum = table.getSelectedRow();
 				int currentRowNum = table.convertRowIndexToModel(rowNum);
 				String phone = tableModel.getValueAt(currentRowNum, 1).toString();
-				CustomerDTO customerDTO = new CustomerRequest().select(phone);
+				CustomerDTO customerDTO = new CustomerRequest().getCustomerByPhone(phone);
 				reservationRequest.cancel(customerDTO.getCustomerId(), restDTO.getRestaurantId());
 				setList();
 				tableSet();
@@ -199,11 +183,7 @@ public class RestaurantMainMenuFrame extends JFrame {
 
 	// List<>에 값을 담는 메소드
 	private void setList() {
-		try {
-			reserList = restDAO.getCustomerInfoByReservation(restDTO.getRestaurantId());
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
+		reserList = reservationRequest.getCustomerInfoByReservation(restDTO.getRestaurantId());
 	}
 
 	private class BackgroundPanel extends JPanel {

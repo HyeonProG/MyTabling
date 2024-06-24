@@ -30,7 +30,6 @@ import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableRowSorter;
 
-import tabling.dao.CategoryDAO;
 import tabling.dto.CustomerDTO;
 import tabling.dto.RestaurantDTO;
 import tabling.request.CategoryRequest;
@@ -52,7 +51,6 @@ public class RestaurantListFrame extends JFrame {
 	private JLabel backBtn;
 	private JTextField searchField;
 	private LocationRequest locationRequest;
-	private CategoryDAO categoryDAO;
 	private CategoryRequest categoryRequest;
 	private RestaurantRequest restaurantRequest;
 	private CustomerDTO customerDTO;
@@ -95,7 +93,6 @@ public class RestaurantListFrame extends JFrame {
 		bg = new BackgroundPanel();
 		frame = this;
 		locationRequest = new LocationRequest();
-		categoryDAO = new CategoryDAO();
 		categoryRequest = new CategoryRequest();
 		restaurantRequest = new RestaurantRequest();
 		currentTime = new Time(LocalDateTime.now().getHour(), LocalDateTime.now().getMinute(),
@@ -318,8 +315,8 @@ public class RestaurantListFrame extends JFrame {
 			int locationId = restaurantList.get(i).getLocationId();
 			String categoryName = null;
 			String locationName = null;
-			categoryName = categoryRequest.select(categoryId);
-			locationName = locationRequest.select(locationId);
+			categoryName = categoryRequest.getCategoryName(categoryId);
+			locationName = locationRequest.getLocationName(locationId);
 
 			contents[i][0] = restaurantName;
 			contents[i][1] = categoryName;

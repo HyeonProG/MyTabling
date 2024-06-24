@@ -7,6 +7,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.URI;
 import java.sql.SQLException;
+import java.util.List;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -15,18 +16,22 @@ import com.sun.net.httpserver.HttpHandler;
 
 import tabling.dao.CustomerReservationDAO;
 import tabling.dao.ReservationDAO;
+import tabling.dao.RestaurantReservationDAO;
 import tabling.dto.JsonDTO;
 import tabling.dto.ReservationDTO;
+import tabling.dto.ReservationForRestaurantDTO;
 
 public class ReservationHandler implements HttpHandler {
 
 	private CustomerReservationDAO customerReservationDAO;
 	private ReservationDAO reservationDAO;
+	private RestaurantReservationDAO RestaurantReservationDAO;
 	private Gson gson;
 
 	public ReservationHandler() {
 		customerReservationDAO = new CustomerReservationDAO();
 		reservationDAO = new ReservationDAO();
+		RestaurantReservationDAO = new RestaurantReservationDAO();
 		gson = new GsonBuilder().setPrettyPrinting().create();
 	}
 
@@ -73,6 +78,12 @@ public class ReservationHandler implements HttpHandler {
 					response = String.valueOf(count);
 				} else if (type.equalsIgnoreCase("select")) {
 					response = gson.toJson(dto);
+				} else if (type.equalsIgnoreCase("restaurant")) {
+					List<ReservationDTO> list = RestaurantReservationDAO.getReservationByRestaurantId(restaurantId);
+					response = gson.toJson(list);
+				} else if (type.equalsIgnoreCase("customer")) {
+					List<ReservationForRestaurantDTO> list = RestaurantReservationDAO.getCustomerInfoByReservation(restaurantId);
+					response = gson.toJson(list);
 				}
 				try {
 					byte[] bytes = response.getBytes();

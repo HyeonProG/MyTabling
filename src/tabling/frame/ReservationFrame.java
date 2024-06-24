@@ -14,7 +14,6 @@ import javax.swing.JOptionPane;
 import javax.swing.JTextArea;
 
 import tabling.dto.CustomerDTO;
-import tabling.dto.ReservationDTO;
 import tabling.dto.RestaurantDTO;
 import tabling.request.CustomerRequest;
 import tabling.request.ReservationRequest;
@@ -25,7 +24,6 @@ public class ReservationFrame extends JFrame {
 	private RestaurantListFrame restaurantListFrame;
 
 	private RestaurantDTO restaurantDTO;
-	private ReservationDTO reservationDTO;
 	private ReservationRequest reservationRequest;
 	private CustomerDTO customerDTO;
 	private int customerId;
@@ -37,7 +35,8 @@ public class ReservationFrame extends JFrame {
 	private JTextArea reservationStatus;
 	private JLabel restaurantNameLabel;
 
-	public ReservationFrame(CustomerDTO customerDTO, RestaurantDTO restaurantDTO, RestaurantListFrame restaurantListFrame) {
+	public ReservationFrame(CustomerDTO customerDTO, RestaurantDTO restaurantDTO,
+			RestaurantListFrame restaurantListFrame) {
 		this.customerDTO = customerDTO;
 		this.restaurantDTO = restaurantDTO;
 		customerId = customerDTO.getCustomerId();
@@ -56,7 +55,6 @@ public class ReservationFrame extends JFrame {
 		setLayout(null);
 
 		reservationRequest = new ReservationRequest();
-		reservationDTO = reservationRequest.getReservationByCustomer(customerId);
 
 		restaurantNameLabel = new JLabel();
 		restaurantNameLabel.setText(restaurantDTO.getRestaurantName());
@@ -95,8 +93,8 @@ public class ReservationFrame extends JFrame {
 		reservationBtn.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mousePressed(MouseEvent e) {
-				if (new Time(LocalDateTime.now().getHour(), LocalDateTime.now().getMinute(), LocalDateTime.now().getDayOfWeek().toString())
-						.isOpen(restaurantDTO) == false) {
+				if (new Time(LocalDateTime.now().getHour(), LocalDateTime.now().getMinute(),
+						LocalDateTime.now().getDayOfWeek().toString()).isOpen(restaurantDTO) == false) {
 					JOptionPane.showMessageDialog(null, "현재 영업중이 아닙니다.");
 					return;
 				}
@@ -110,7 +108,7 @@ public class ReservationFrame extends JFrame {
 							if (restaurantListFrame != null) {
 								JOptionPane.showMessageDialog(null, "예약되었습니다.");
 								reservationRequest.reservation(customerId, restaurantId);
-								customerDTO = new CustomerRequest().select(customerDTO.getPhone());
+								customerDTO = new CustomerRequest().getCustomerByPhone(customerDTO.getPhone());
 								new CustomerMainMenuFrame(customerDTO);
 								restaurantListFrame.setVisible(false);
 								restaurantListFrame.dispose();

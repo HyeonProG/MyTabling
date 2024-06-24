@@ -125,7 +125,7 @@ public class CustomerReservationStatusFrame extends JFrame {
 					restaurantFrame.setVisible(false);
 					restaurantFrame.dispose();
 				}
-				customerDTO = new CustomerRequest().select(customerDTO.getPhone());
+				customerDTO = new CustomerRequest().getCustomerByPhone(customerDTO.getPhone());
 				new CustomerMainMenuFrame(customerDTO);
 				setVisible(false);
 				dispose();

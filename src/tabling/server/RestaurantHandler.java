@@ -1,9 +1,7 @@
 package tabling.server;
 
-import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.URI;
 import java.sql.SQLException;
@@ -15,11 +13,7 @@ import com.google.gson.GsonBuilder;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 
-import tabling.dao.CustomerReservationDAO;
-import tabling.dao.ReservationDAO;
 import tabling.dao.RestaurantDAO;
-import tabling.dto.JsonDTO;
-import tabling.dto.ReservationDTO;
 import tabling.dto.RestaurantDTO;
 import tabling.util.Time;
 
@@ -55,7 +49,6 @@ public class RestaurantHandler implements HttpHandler {
 			String query = pathSegments[3];
 			try {
 				int customerId = 0;
-				int restaurantId = 0;
 				int categoryId = 0;
 				int locationId = 0;
 				String[] pairs = query.split("&");
@@ -63,8 +56,6 @@ public class RestaurantHandler implements HttpHandler {
 					String[] keyValue = pair.split("=");
 					if (keyValue[0].equalsIgnoreCase("customerId")) {
 						customerId = Integer.parseInt(keyValue[1]);
-					} else if (keyValue[0].equalsIgnoreCase("restaurantId")) {
-						restaurantId = Integer.parseInt(keyValue[1]);
 					} else if (keyValue[0].equalsIgnoreCase("categoryId")) {
 						categoryId = Integer.parseInt(keyValue[1]);
 					} else if (keyValue[0].equalsIgnoreCase("locationId")) {

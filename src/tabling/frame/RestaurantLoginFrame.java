@@ -5,8 +5,6 @@ import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.util.ArrayList;
-import java.util.List;
 
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
@@ -15,8 +13,6 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
-import tabling.dao.RestaurantReservationDAO;
-import tabling.dto.ReservationForRestaurantDTO;
 import tabling.dto.RestaurantDTO;
 import tabling.request.RestaurantRequest;
 
@@ -27,15 +23,10 @@ public class RestaurantLoginFrame extends JFrame {
 	private JTextField resPwText;
 	private JLabel loginBtn;
 	private JLabel backBtn;
-	private boolean loginCheck;
 	private RestaurantRequest restaurantRequest;
 	private RestaurantDTO restDTO;
 	private int restaurantId;
-	
-	//
-	private List<ReservationForRestaurantDTO> reserList = new ArrayList<>();;
-	private RestaurantReservationDAO dao = new RestaurantReservationDAO();
-	
+
 	public RestaurantLoginFrame() {
 		initData();
 		setInitLayout();

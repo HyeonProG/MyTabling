@@ -128,7 +128,7 @@ public class CustomerLoginFrame extends JFrame {
 	private void rogin() {
 		if (!phoneText.getText().equals("")) {
 			try {
-				if ((customerDTO = request.select(phoneText.getText())) != null) {
+				if ((customerDTO = request.getCustomerByPhone(phoneText.getText())) != null) {
 					JOptionPane.showMessageDialog(null, "로그인 되었습니다.", "성공", JOptionPane.WARNING_MESSAGE);
 					new CustomerMainMenuFrame(customerDTO);
 					setVisible(false); 

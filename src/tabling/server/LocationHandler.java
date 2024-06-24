@@ -6,8 +6,6 @@ import java.io.OutputStreamWriter;
 import java.net.URI;
 import java.sql.SQLException;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 
@@ -16,11 +14,9 @@ import tabling.dao.LocationDAO;
 public class LocationHandler implements HttpHandler {
 
 	private LocationDAO dao;
-	private Gson gson;
 
 	public LocationHandler() {
 		dao = new LocationDAO();
-		gson = new GsonBuilder().setPrettyPrinting().create();
 	}
 
 	@Override

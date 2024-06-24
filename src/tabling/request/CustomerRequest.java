@@ -1,12 +1,6 @@
 package tabling.request;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
-import java.net.HttpURLConnection;
-import java.net.URL;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -15,9 +9,7 @@ import tabling.dto.CustomerDTO;
 import tabling.dto.JsonDTO;
 
 public class CustomerRequest {
-	private URL url;
 	private String urlStr;
-	private HttpURLConnection conn;
 	private Gson gson;
 
 	public CustomerRequest() {
@@ -25,127 +17,48 @@ public class CustomerRequest {
 		gson = new GsonBuilder().setPrettyPrinting().create();
 	}
 
-	public void insert(String customerName, String customerPhone, int locationId) {
+	public void addCustomer(String customerName, String customerPhone, int locationId) {
 		try {
-			String insertUrl = urlStr + "/" + "insert";
-			url = new URL(insertUrl);
-			conn = (HttpURLConnection) url.openConnection();
-			conn.setRequestMethod("POST");
-			conn.setDoOutput(true);
-			conn.setRequestProperty("content-type", "application/json");
+			String insertUrl = urlStr + "/insert";
 			JsonDTO dto = new JsonDTO(customerName, customerPhone, locationId);
-			String json = gson.toJson(dto);
-
-			BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(conn.getOutputStream()));
-			writer.write(json);
-			writer.flush();
-			writer.close();
-
-			int responseCode = conn.getResponseCode();
-			System.out.println("response code : " + responseCode);
-
-			BufferedReader reader = new BufferedReader(new InputStreamReader(conn.getInputStream()));
-			String inputLine;
-			StringBuffer response = new StringBuffer();
-			while ((inputLine = reader.readLine()) != null) {
-				response.append(inputLine);
-			}
-			reader.close();
-			System.out.println(response);
+			String str = Request.postRequest(insertUrl, dto);
+			System.out.println(str);
 		} catch (IOException e) {
 			e.printStackTrace();
-		} finally {
-			conn.disconnect();
 		}
 	}
 
-	public CustomerDTO select(String phone) {
+	public CustomerDTO getCustomerByPhone(String phone) {
 		CustomerDTO dto = null;
 		try {
 			String selectUrl = urlStr + "/select/" + phone;
-			url = new URL(selectUrl);
-			conn = (HttpURLConnection) url.openConnection();
-			conn.setRequestMethod("GET");
-			conn.setRequestProperty("content-type", "application/json");
-
-			int responseCode = conn.getResponseCode();
-			System.out.println("response code : " + responseCode);
-
-			BufferedReader reader = new BufferedReader(new InputStreamReader(conn.getInputStream()));
-			String inputLine;
-			StringBuffer bufferStr = new StringBuffer();
-			while ((inputLine = reader.readLine()) != null) {
-				bufferStr.append(inputLine);
-			}
-			reader.close();
-			dto = gson.fromJson(bufferStr.toString(), CustomerDTO.class);
+			String str = Request.getRequest(selectUrl);
+			dto = gson.fromJson(str, CustomerDTO.class);
 		} catch (IOException e) {
 			e.printStackTrace();
-		} finally {
-			conn.disconnect();
 		}
 		return dto;
 	}
 
-	public void update(String customerName, String customerPhone, int locationId) {
+	public void updateCustomer(String customerName, String customerPhone, int locationId) {
 		try {
-			String updateUrl = urlStr + "/" + "update";
-			url = new URL(updateUrl);
-			conn = (HttpURLConnection) url.openConnection();
-			conn.setRequestMethod("POST");
-			conn.setDoOutput(true);
-			conn.setRequestProperty("content-type", "application/json");
+			String updateUrl = urlStr + "/update";
 			JsonDTO dto = new JsonDTO(customerName, customerPhone, locationId);
-			String json = gson.toJson(dto);
-
-			BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(conn.getOutputStream()));
-			writer.write(json);
-			writer.flush();
-			writer.close();
-
-			int responseCode = conn.getResponseCode();
-			System.out.println("response code : " + responseCode);
-
-			BufferedReader reader = new BufferedReader(new InputStreamReader(conn.getInputStream()));
-			String inputLine;
-			StringBuffer response = new StringBuffer();
-			while ((inputLine = reader.readLine()) != null) {
-				response.append(inputLine);
-			}
-			reader.close();
-			System.out.println(response);
+			String str = Request.postRequest(updateUrl, dto);
+			System.out.println(str);
 		} catch (IOException e) {
 			e.printStackTrace();
-		} finally {
-			conn.disconnect();
 		}
-
 	}
 
-	public void delete(String phone) {
+	public void deleteCustomer(String phone) {
 
 		try {
 			String selectUrl = urlStr + "/delete/" + phone;
-			url = new URL(selectUrl);
-			conn = (HttpURLConnection) url.openConnection();
-			conn.setRequestMethod("GET");
-			conn.setRequestProperty("content-type", "application/json");
-
-			int responseCode = conn.getResponseCode();
-			System.out.println("response code : " + responseCode);
-
-			BufferedReader reader = new BufferedReader(new InputStreamReader(conn.getInputStream()));
-			String inputLine;
-			StringBuffer bufferStr = new StringBuffer();
-			while ((inputLine = reader.readLine()) != null) {
-				bufferStr.append(inputLine);
-			}
-			reader.close();
+			String str = Request.getRequest(selectUrl);
+			System.out.println(str);
 		} catch (IOException e) {
 			e.printStackTrace();
-		} finally {
-			conn.disconnect();
 		}
-
 	}
 }

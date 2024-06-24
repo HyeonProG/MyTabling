@@ -42,25 +42,6 @@ public class RestaurantReservationDAO {
 		return list;
 	}
 
-	// TODO 삭제 예정 중복된 역할을 하는 메서드 존재
-	public void updateReservation(int restaurantId, int customerId) throws SQLException {
-
-		String query = "UPDATE reservation SET reservation_state = 'N' WHERE restaurant_id = ? and "
-				+ " customer_id = ? ";
-
-		try (Connection conn = DBConnectionManager.getInstance().getConnection()) {
-
-			PreparedStatement pstmt = conn.prepareStatement(query);
-
-			pstmt.setInt(1, restaurantId);
-			pstmt.setInt(2, customerId);
-			pstmt.executeUpdate();
-
-		} catch (Exception e) {
-			// TODO: handle exception
-		}
-	}
-
 	// TODO - 점주측에서 예약자 명단 띄우기 위함
 	public List<ReservationForRestaurantDTO> getCustomerInfoByReservation(int restaurantId) throws SQLException {
 

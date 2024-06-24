@@ -22,7 +22,7 @@ public class LikeDAO {
 			}
 		}
 	}
-	
+
 	// 좋아요 테이블에 INSERT -> 해당 식당의 변경된 좋아요 수 받아옴
 	public int addLike(int customerId, int restaurantId) throws SQLException {
 		String query = Define.INSERT_LIKES;
@@ -36,7 +36,7 @@ public class LikeDAO {
 		}
 		return likeCount;
 	}
-	
+
 	// 좋아요 테이블에서 DELETE -> 해당 식당의 변경된 좋아요 수 받아옴
 	public int deleteLike(int customerId, int restaurantId) throws SQLException {
 		String query = Define.DELETE_LIKES;
@@ -50,15 +50,15 @@ public class LikeDAO {
 		}
 		return unlikeCount;
 	}
-	
+
 	// 좋아요 테이블에서 한 식당의 좋아요수 count
 	public int getLikeCount(int restaurantId) throws SQLException {
 		String query = Define.SELECT_LIKES_COUNT_BY_RESTAURANT;
 		int result = 0;
-		try(Connection conn = DBConnectionManager.getInstance().getConnection()) {
+		try (Connection conn = DBConnectionManager.getInstance().getConnection()) {
 			PreparedStatement pstmt = conn.prepareStatement(query);
 			pstmt.setInt(1, restaurantId);
-			try(ResultSet rs = pstmt.executeQuery()) {
+			try (ResultSet rs = pstmt.executeQuery()) {
 				if (rs.next()) {
 					result = rs.getInt(1);
 				}
@@ -66,5 +66,5 @@ public class LikeDAO {
 		}
 		return result;
 	}
-	
+
 }
