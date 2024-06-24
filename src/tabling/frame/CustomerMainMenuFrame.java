@@ -9,6 +9,7 @@ import java.sql.SQLException;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
 import tabling.dao.ReservationDAO;
@@ -81,7 +82,7 @@ public class CustomerMainMenuFrame extends JFrame {
 						setVisible(false);
 						dispose();
 					} else {
-						// TODO 현재 예약 중이 아님을 알려주는 메세지 띄워야됨
+						JOptionPane.showMessageDialog(null, "현재 예약한 곳이 없습니다.");
 					}
 				} catch (SQLException e1) {
 					e1.printStackTrace();
