@@ -13,6 +13,7 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JTextArea;
 
+import tabling.dao.CustomerDAO;
 import tabling.dao.CustomerReservationDAO;
 import tabling.dao.ReservationDAO;
 import tabling.dto.CustomerDTO;
@@ -105,10 +106,11 @@ public class ReservationFrame extends JFrame {
 								// 방어적 코드 작성
 								if (restaurantListFrame != null) {
 									JOptionPane.showMessageDialog(null, "예약되었습니다.");
+									customerReservationDAO.reservation(customerId, restaurantId);
+									customerDTO = new CustomerDAO().getCustomerByPhone(customerDTO.getPhone());
 									new CustomerMainMenuFrame(customerDTO);
 									restaurantListFrame.setVisible(false);
 									restaurantListFrame.dispose();
-									customerReservationDAO.reservation(customerId, restaurantId);
 									setVisible(false);
 									dispose();
 								}

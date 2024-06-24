@@ -11,5 +11,6 @@
 	<classpathentry kind="lib" path="lib/mysql-connector-java-8.0.21.jar"/>
 	<classpathentry kind="lib" path="lib/slf4j-api-2.0.0-alpha5.jar"/>
 	<classpathentry kind="lib" path="lib/slf4j-simple-2.0.0.jar"/>
+	<classpathentry kind="lib" path="lib/gson-2.8.6.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

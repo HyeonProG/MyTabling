@@ -13,6 +13,7 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
+import tabling.dao.CustomerDAO;
 import tabling.dao.CustomerReservationDAO;
 import tabling.dao.ReservationDAO;
 import tabling.dao.RestaurantDAO;
@@ -135,6 +136,7 @@ public class CustomerReservationStatusFrame extends JFrame {
 						restaurantFrame.setVisible(false);
 						restaurantFrame.dispose();
 					}
+					customerDTO = new CustomerDAO().getCustomerByPhone(customerDTO.getPhone());
 					new CustomerMainMenuFrame(customerDTO);
 					setVisible(false);
 					dispose();
