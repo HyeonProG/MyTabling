@@ -99,6 +99,8 @@ public class RestaurantListFrame extends JFrame {
 		categoryDAO = new CategoryDAO();
 		categoryRequest = new CategoryRequest();
 		restaurantDAO = new RestaurantDAO();
+		currentTime = new Time(LocalDateTime.now().getHour(), LocalDateTime.now().getMinute(),
+				LocalDateTime.now().getDayOfWeek().toString());
 		// 테이블에 담는 과정
 		tableSet();
 		filter = new JComboBox<String>();
