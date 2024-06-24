@@ -52,9 +52,7 @@ public class ReservationRequest {
 			System.out.println(response);
 		} catch (IOException e) {
 			e.printStackTrace();
-		} finally {
-			conn.disconnect();
-		}
+		} 
 	}
 	
 	public void cancel(int customerId, int restaurantId) {
@@ -86,9 +84,7 @@ public class ReservationRequest {
 			System.out.println(response);
 		} catch (IOException e) {
 			e.printStackTrace();
-		} finally {
-			conn.disconnect();
-		}
+		} 
 	
 	}
 }

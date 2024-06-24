@@ -54,8 +54,6 @@ public class CustomerRequest {
 			System.out.println(response);
 		} catch (IOException e) {
 			e.printStackTrace();
-		} finally {
-			conn.disconnect();
 		}
 	}
 
@@ -81,8 +79,6 @@ public class CustomerRequest {
 			dto = gson.fromJson(bufferStr.toString(), CustomerDTO.class);
 		} catch (IOException e) {
 			e.printStackTrace();
-		} finally {
-			conn.disconnect();
 		}
 		return dto;
 	}
@@ -116,12 +112,10 @@ public class CustomerRequest {
 			System.out.println(response);
 		} catch (IOException e) {
 			e.printStackTrace();
-		} finally {
-			conn.disconnect();
 		}
 
 	}
-	
+
 	public void delete(String phone) {
 
 		try {
@@ -143,9 +137,7 @@ public class CustomerRequest {
 			reader.close();
 		} catch (IOException e) {
 			e.printStackTrace();
-		} finally {
-			conn.disconnect();
 		}
-	
+
 	}
 }
