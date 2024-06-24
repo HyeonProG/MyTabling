@@ -15,6 +15,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 
 import tabling.dao.CustomerDAO;
+import tabling.request.CustomerRequest;
 
 // 회원가입 화면
 public class SignInFrame extends JFrame {
@@ -33,7 +34,8 @@ public class SignInFrame extends JFrame {
 	private boolean canCheck;
 	private boolean canLogin;
 
-	private CustomerDAO dao;
+	private CustomerDAO dao; // TODO 삭제 예정
+	private CustomerRequest request;
 
 	public SignInFrame() {
 		initData();
@@ -62,8 +64,7 @@ public class SignInFrame extends JFrame {
 		phoneField = new JTextField();
 
 		myLocation = new Choice();
-		localArray = new String[] { "강서구", "사하구", "사상구", "북구", "서구", "중구", "동구", "부산진구", "영도구", "남구", "동래구", "연제구",
-				"수영구", "금정구", "해운대구", "기장군" };
+		localArray = new String[] { "강서구", "사하구", "사상구", "북구", "서구", "중구", "동구", "부산진구", "영도구", "남구", "동래구", "연제구", "수영구", "금정구", "해운대구", "기장군" };
 		for (int i = 0; i < localArray.length; i++) {
 			myLocation.add(localArray[i]);
 		}
@@ -149,14 +150,11 @@ public class SignInFrame extends JFrame {
 						JOptionPane.showMessageDialog(null, "닉네임은 50자까지만 기입 가능합니다.", "경고", JOptionPane.WARNING_MESSAGE);
 						nameField.setText("");
 					} else {
-						try {
-							dao.addCustomer(nameField.getText(), localTel.getSelectedItem() + phoneField.getText(),
-									myLocation.getSelectedIndex() + 1);
-							JOptionPane.showMessageDialog(null, "회원가입 성공!", "경고", JOptionPane.WARNING_MESSAGE);
-							setVisible(false);
-						} catch (SQLException e1) {
-							e1.printStackTrace();
-						}
+						request = new CustomerRequest();
+						request.insert(nameField.getText(), localTel.getSelectedItem() + phoneField.getText(), myLocation.getSelectedIndex() + 1);
+						JOptionPane.showMessageDialog(null, "회원가입 성공!", "경고", JOptionPane.WARNING_MESSAGE);
+						setVisible(false);
+						dispose();
 					}
 				}
 			}
