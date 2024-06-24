@@ -76,7 +76,7 @@ public class RestaurantReservationDAO {
 				while (rs.next()) {
 					ReservationForRestaurantDTO dto2 = new ReservationForRestaurantDTO().builder().customerName(rs.getString("customer_name"))
 							.customerPhone(rs.getString("phone")).reservationTime(rs.getString("reservation_time"))
-							.state(rs.getString("state")).build();
+							.state(rs.getString("reservation_state")).build();
 					list.add(dto2);
 				}
 				
@@ -84,18 +84,6 @@ public class RestaurantReservationDAO {
 		} 
 		return list;
 
-	};
-	
-	// TODO - 식당이 고객 예약 종료로 만들기
-	public void endReservation (String phone) throws SQLException{
-		String query = " UPDATE reservation AS reser JOIN customer AS c ON reser.customer_id = c.customer_id SET  reservation_state = 'N' WHERE c.customer_id = ? ";
-		try (Connection conn = DBConnectionManager.getInstance().getConnection()){
-			PreparedStatement pstmt = conn.prepareStatement(query);
-			pstmt.setString(1, phone);
-			
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
 	};
 
 } // end of class

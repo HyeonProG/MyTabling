@@ -53,7 +53,7 @@ public class Define {
 	public static final String SELECT_RESTAURANT_BY_LOCATION = " SELECT * FROM restaurant where location_id = ? ";
 	public static final String SELECT_RESTAURANT_BY_LOCATION_FILTERED = " SELECT * FROM restaurant where location_id = ? AND restaurant_id IN (SELECT restaurant_id FROM likes WHERE customer_id = ?); ";
 	public static final String SELECT_RESERVATION_BY_RESTAURANTID = " SELECT * FROM reservation WHERE restaurant_id = ? AND reservation_state = 'Y' ";
-	public static final String SELECT_CUSTOMER_AND_RESERVATION = " SELECT customer_name, c.phone, reservation_time, state FROM restaurant as rest JOIN reservation as rev on rest.restaurant_id = rev.restaurant_id JOIN customer as c on rev.customer_id = c.customer_id WHERE rest.restaurant_id = ? ";
+	public static final String SELECT_CUSTOMER_AND_RESERVATION = " SELECT customer_name, c.phone, reservation_time, reservation_state FROM restaurant as rest JOIN reservation as rev on rest.restaurant_id = rev.restaurant_id JOIN customer as c on rev.customer_id = c.customer_id WHERE rest.restaurant_id = ? ORDER BY reservation_time asc ";
 
 	public static final String INSERT_CUSTOMER = " INSERT INTO customer(customer_name, phone, location_id) VALUES(?, ?, ?) ";
 	public static final String INSERT_RESERVATION = " INSERT INTO reservation(reservation_state, reservation_time, customer_id, restaurant_id) VALUES ('Y', current_timestamp(), ?, ?) ";

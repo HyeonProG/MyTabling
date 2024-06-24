@@ -23,9 +23,13 @@ import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
 
+import tabling.dao.CustomerDAO;
+import tabling.dao.CustomerReservationDAO;
 import tabling.dao.RestaurantReservationDAO;
+import tabling.dto.CustomerDTO;
 import tabling.dto.ReservationForRestaurantDTO;
 import tabling.dto.RestaurantDTO;
+import tabling.util.Define;
 
 public class RestaurantMainMenuFrame extends JFrame {
 
@@ -50,6 +54,8 @@ public class RestaurantMainMenuFrame extends JFrame {
 	private boolean canEnd;
 	private ReservationForRestaurantDTO dto;
 	private int rowNum;
+	
+	CustomerReservationDAO customerReservationDAO;
 
 	public RestaurantMainMenuFrame(RestaurantDTO restDTO) {
 		this.restDTO = restDTO;
@@ -67,16 +73,17 @@ public class RestaurantMainMenuFrame extends JFrame {
 	private void initData() {
 		frame = this;
 		// 테이블에 담는 메소드
-		tableSet();
-		setList();
-		restDAO = new RestaurantReservationDAO();
 		backgroundPanel = new BackgroundPanel();
+		tableSet();
+		restDAO = new RestaurantReservationDAO();
 
 		resetBtn = new JLabel(new ImageIcon("img/새로고침.png"));
 		endReserBtn = new JLabel(new ImageIcon("img/예약종료.png"));
 		backBtn = new JLabel(new ImageIcon("img/quitBtn.png"));
 
 		canEnd = false;
+		
+		customerReservationDAO = new CustomerReservationDAO();
 	}
 
 	private void setInitLayout() {
@@ -102,44 +109,30 @@ public class RestaurantMainMenuFrame extends JFrame {
 
 	private void initListener() {
 
-		// TODO - 새로고침
 		resetBtn.addMouseListener(new MouseAdapter() {
 			// 리스트 다시 담기.
 			@Override
 			public void mousePressed(MouseEvent e) {
+				System.out.println("새로고침");
 				setList();
+				tableSet();
 			}
 		});
 
-		// TODO - 예약종료
 		endReserBtn.addMouseListener(new MouseAdapter() {
-			
-		});
-
-		table.addMouseListener(new MouseAdapter() {
-
 			@Override
-			public void mouseClicked(MouseEvent e) {
-				if (e.getClickCount() == 2) {
-					rowNum = table.getSelectedRow();
-					int currentRowNum = table.convertRowIndexToModel(rowNum);
-					String phone = tableModel.getValueAt(currentRowNum, 1).toString();
-					dto = null;
-					for (ReservationForRestaurantDTO rfrdto : reserList) {
-						if (rfrdto.getCustomerPhone().equals(phone)) {
-							dto = rfrdto;
-							try {
-								restDAO.endReservation(dto.getCustomerPhone());
-							} catch (SQLException e1) {
-								e1.printStackTrace();
-							}
-						}
-					}
-
-					//
-					if (dto == null) {
-						return;
-					}
+			public void mousePressed(MouseEvent e) {
+				System.out.println("예약종료");
+				rowNum = table.getSelectedRow();
+				int currentRowNum = table.convertRowIndexToModel(rowNum);
+				String phone = tableModel.getValueAt(currentRowNum, 1).toString();
+				try {
+					CustomerDTO customerDTO = new CustomerDAO().getCustomerByPhone(phone);
+					customerReservationDAO.cancel(customerDTO.getCustomerId(), restDTO.getRestaurantId());
+					setList();
+					tableSet();
+				} catch (SQLException e1) {
+					e1.printStackTrace();
 				}
 			}
 		});
@@ -147,7 +140,10 @@ public class RestaurantMainMenuFrame extends JFrame {
 	}
 
 	public void tableSet() {
-
+		if(scroll != null) {
+			backgroundPanel.remove(scroll);
+		}
+		
 		// 리스트 값
 		contents = new String[reserList.size()][head.length];
 
@@ -181,7 +177,7 @@ public class RestaurantMainMenuFrame extends JFrame {
 
 		// 스크롤
 		scroll = new JScrollPane(table);
-		add(scroll);
+		backgroundPanel.add(scroll);
 		scroll.setSize(450, 450);
 		scroll.setLocation(20, 115);
 
