@@ -70,6 +70,7 @@ public class CategoryFrame extends JFrame implements MyMouseListener {
 	}
 
 	private void setInitLayout() {
+		setTitle("카테고리");
 		setSize(500, 700);
 		setLocationRelativeTo(null);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

@@ -44,7 +44,7 @@ public class EditCustomerInfoFrame extends JFrame {
 
 	private void initData() {
 		request = new CustomerRequest();
-		setTitle("메인 메뉴 " + customerDTO.getCustomerName() + "님"); // 제목 타이틀
+		setTitle("회원 정보 수정 " + customerDTO.getCustomerName() + "님"); // 제목 타이틀
 		setSize(500, 700);
 		setResizable(false);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

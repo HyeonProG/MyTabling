@@ -104,13 +104,13 @@ public class RestaurantLoginFrame extends JFrame {
 							setVisible(false);
 							new RestaurantMainMenuFrame(restDTO);
 						} else if ((restDTO = restaurantDao.authenticateOwnerId(restaurantId)) == null) {
-							JOptionPane.showMessageDialog(null, "아이디가 올바르지 않습니다.", "성공", JOptionPane.WARNING_MESSAGE);
+							JOptionPane.showMessageDialog(null, "아이디가 올바르지 않습니다.", "실패", JOptionPane.WARNING_MESSAGE);
 						} else {
-							JOptionPane.showMessageDialog(null, "비밀번호가 올바르지 않습니다.", "성공", JOptionPane.WARNING_MESSAGE);
+							JOptionPane.showMessageDialog(null, "비밀번호가 올바르지 않습니다.", "실패", JOptionPane.WARNING_MESSAGE);
 						}
 					}
 				} catch (NumberFormatException e1) {
-					JOptionPane.showMessageDialog(null, "존재하지 않는 ID입니다.", "성공", JOptionPane.WARNING_MESSAGE);
+					JOptionPane.showMessageDialog(null, "존재하지 않는 ID입니다.", "실패", JOptionPane.WARNING_MESSAGE);
 				}
 			}
 
