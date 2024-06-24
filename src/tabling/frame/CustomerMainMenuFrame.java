@@ -4,7 +4,6 @@ import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.sql.SQLException;
 
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
@@ -12,8 +11,8 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
-import tabling.dao.ReservationDAO;
 import tabling.dto.CustomerDTO;
+import tabling.request.ReservationRequest;
 
 public class CustomerMainMenuFrame extends JFrame {
 
@@ -24,8 +23,9 @@ public class CustomerMainMenuFrame extends JFrame {
 	private JLabel reservationBtn;
 	private JLabel userInfoBtn;
 	private JLabel homeBtn;
-	
+
 	private CustomerDTO customerDTO;
+
 	public CustomerMainMenuFrame(CustomerDTO customerDTO) {
 		this.customerDTO = customerDTO;
 		initData();
@@ -69,23 +69,19 @@ public class CustomerMainMenuFrame extends JFrame {
 
 		homeBtn.setBounds(217, 605, 50, 50);
 		backgroundPanel.add(homeBtn);
-		
+
 	}
 
 	private void addEventListener() {
 		reservationBtn.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mousePressed(MouseEvent e) {
-				try {
-					if (new ReservationDAO().getReservationByCustomer(customerDTO.getCustomerId()) != null) {
-						new CustomerReservationStatusFrame(customerDTO);
-						setVisible(false);
-						dispose();
-					} else {
-						JOptionPane.showMessageDialog(null, "현재 예약한 곳이 없습니다.");
-					}
-				} catch (SQLException e1) {
-					e1.printStackTrace();
+				if (new ReservationRequest().getReservationByCustomer(customerDTO.getCustomerId()) != null) {
+					new CustomerReservationStatusFrame(customerDTO);
+					setVisible(false);
+					dispose();
+				} else {
+					JOptionPane.showMessageDialog(null, "현재 예약한 곳이 없습니다.");
 				}
 			}
 		});
@@ -105,8 +101,7 @@ public class CustomerMainMenuFrame extends JFrame {
 				dispose();
 			}
 		});
-		
-		
+
 		userInfoBtn.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mousePressed(MouseEvent e) {

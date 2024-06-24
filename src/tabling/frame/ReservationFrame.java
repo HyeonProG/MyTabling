@@ -5,7 +5,6 @@ import java.awt.Font;
 import java.awt.HeadlessException;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.sql.SQLException;
 import java.time.LocalDateTime;
 
 import javax.swing.JButton;
@@ -14,8 +13,6 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JTextArea;
 
-import tabling.dao.ReservationDAO;
-import tabling.dao.RestaurantDAO;
 import tabling.dto.CustomerDTO;
 import tabling.dto.ReservationDTO;
 import tabling.dto.RestaurantDTO;
@@ -28,10 +25,9 @@ public class ReservationFrame extends JFrame {
 	private RestaurantListFrame restaurantListFrame;
 
 	private RestaurantDTO restaurantDTO;
-	private ReservationRequest reservationRequest;
-	private ReservationDAO reservationDAO;
-	private CustomerDTO customerDTO;
 	private ReservationDTO reservationDTO;
+	private ReservationRequest reservationRequest;
+	private CustomerDTO customerDTO;
 	private int customerId;
 	private int restaurantId;
 	private int count;
@@ -60,12 +56,7 @@ public class ReservationFrame extends JFrame {
 		setLayout(null);
 
 		reservationRequest = new ReservationRequest();
-		reservationDAO = new ReservationDAO();
-		try {
-			reservationDTO = reservationDAO.getReservationByCustomer(customerId);
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
+		reservationDTO = reservationRequest.getReservationByCustomer(customerId);
 
 		restaurantNameLabel = new JLabel();
 		restaurantNameLabel.setText(restaurantDTO.getRestaurantName());
@@ -88,16 +79,8 @@ public class ReservationFrame extends JFrame {
 		reservationStatus.setBounds(65, 100, 350, 350);
 		reservationStatus.setBackground(Color.WHITE);
 		reservationStatus.setLineWrap(true);
-		try {
-			if (reservationDTO != null) {
-				count = reservationDAO.checkReservation(restaurantId, reservationDTO.getReservationId());
-			} else {
-				count = reservationDAO.checkReservation(restaurantId, 0);
-			}
-			reservationStatus.append("현재 가게의 대기 인원은 " + count + " 명 입니다.");
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
+		count = reservationRequest.checkReservation(customerId, restaurantId);
+		reservationStatus.append("현재 가게의 대기 인원은 " + count + " 명 입니다.");
 
 		add(reservationStatus);
 
@@ -112,8 +95,8 @@ public class ReservationFrame extends JFrame {
 		reservationBtn.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mousePressed(MouseEvent e) {
-				if (new Time(LocalDateTime.now().getHour(), LocalDateTime.now().getMinute(),
-							LocalDateTime.now().getDayOfWeek().toString()).isOpen(restaurantDTO) == false) {
+				if (new Time(LocalDateTime.now().getHour(), LocalDateTime.now().getMinute(), LocalDateTime.now().getDayOfWeek().toString())
+						.isOpen(restaurantDTO) == false) {
 					JOptionPane.showMessageDialog(null, "현재 영업중이 아닙니다.");
 					return;
 				}

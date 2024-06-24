@@ -23,4 +23,5 @@ public class JsonDTO {
 		this.customerId = customerId;
 		this.restaurantId = restaurantId;
 	}
+	
 }

@@ -5,7 +5,6 @@ import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.sql.SQLException;
 
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
@@ -13,7 +12,6 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
-import tabling.dao.ReservationDAO;
 import tabling.dao.RestaurantDAO;
 import tabling.dto.CustomerDTO;
 import tabling.dto.ReservationDTO;
@@ -36,7 +34,6 @@ public class CustomerReservationStatusFrame extends JFrame {
 	private CustomerDTO customerDTO;
 	private ReservationDTO reservationDTO;
 	private RestaurantDTO restaurantDTO;
-	private ReservationDAO reservationDAO;
 	private RestaurantDAO restaurantDAO;
 	private ReservationRequest reservationRequest;
 	private int count;
@@ -50,27 +47,21 @@ public class CustomerReservationStatusFrame extends JFrame {
 
 	private void initData() {
 
-		reservationDAO = new ReservationDAO();
 		restaurantDAO = new RestaurantDAO();
 		reservationRequest = new ReservationRequest();
-		try {
-			// 고객 id를 통해서 예약 내역, 예약 순서, 식당 내역을 다 받아옴
-			reservationDTO = reservationDAO.getReservationByCustomer(customerDTO.getCustomerId());
-			count = reservationDAO.checkReservation(reservationDTO.getRestaurantId(), reservationDTO.getReservationId());
-			restaurantDTO = restaurantDAO.authenticateOwnerId(reservationDTO.getRestaurantId());
+		// 고객 id를 통해서 예약 내역, 예약 순서, 식당 내역을 다 받아옴
+		reservationDTO = reservationRequest.getReservationByCustomer(customerDTO.getCustomerId());
+		restaurantDTO = restaurantDAO.authenticateOwnerId(reservationDTO.getRestaurantId());
+		count = reservationRequest.checkReservation(customerDTO.getCustomerId(), restaurantDTO.getRestaurantId());
 
-			backgroundPanel = new BackgroundPanel();
-			backBtn = new JLabel(new ImageIcon("img/quitBtn.png"));
-			cancelBtn = new JLabel(new ImageIcon("img/그룹 25.png"));
-			detailBtn = new JLabel(new ImageIcon("img/그룹 24.png"));
-			// TODO 라벨 수정 필요
-			refreshBtn = new JLabel(new ImageIcon("img/새로고침.png"));
-			customerQueue = new JLabel(String.valueOf(count));
-			restaurantName = new JLabel(restaurantDTO.getRestaurantName());
-			customerName = new JLabel(customerDTO.getCustomerName());
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
+		backgroundPanel = new BackgroundPanel();
+		backBtn = new JLabel(new ImageIcon("img/quitBtn.png"));
+		cancelBtn = new JLabel(new ImageIcon("img/그룹 25.png"));
+		detailBtn = new JLabel(new ImageIcon("img/그룹 24.png"));
+		refreshBtn = new JLabel(new ImageIcon("img/새로고침.png"));
+		customerQueue = new JLabel(String.valueOf(count));
+		restaurantName = new JLabel(restaurantDTO.getRestaurantName());
+		customerName = new JLabel(customerDTO.getCustomerName());
 	}
 
 	private void setInitLayout() {
@@ -108,7 +99,6 @@ public class CustomerReservationStatusFrame extends JFrame {
 		detailBtn.setFont(new Font("Noto Sans KR", Font.BOLD, 15));
 		backgroundPanel.add(detailBtn);
 
-		// TODO 위치 수정 필요
 		refreshBtn.setBounds(150, 550, 184, 44);
 		backgroundPanel.add(refreshBtn);
 
@@ -152,13 +142,9 @@ public class CustomerReservationStatusFrame extends JFrame {
 		refreshBtn.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mousePressed(MouseEvent e) {
-				try {
-					count = reservationDAO.checkReservation(reservationDTO.getRestaurantId(), reservationDTO.getReservationId());
-					customerQueue.setText(String.valueOf(count));
-					repaint();
-				} catch (SQLException e1) {
-					e1.printStackTrace();
-				}
+				count = reservationRequest.checkReservation(reservationDTO.getRestaurantId(), reservationDTO.getReservationId());
+				customerQueue.setText(String.valueOf(count));
+				repaint();
 			}
 		});
 
@@ -180,13 +166,5 @@ public class CustomerReservationStatusFrame extends JFrame {
 			g.drawImage(backgroundImage, 0, 0, getWidth(), getHeight(), null);
 		}
 
-//	public static void main(String[] args) {
-//		try {
-//			new CustomerReservationStatusFrame(new CustomerDAO().authenticatePhone("01011112222"));
-//		} catch (SQLException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
-//	}
 	}
 }

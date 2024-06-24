@@ -5,7 +5,6 @@ import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.sql.SQLException;
 
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
@@ -14,7 +13,6 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
-import tabling.dao.ReservationDAO;
 import tabling.dto.CustomerDTO;
 import tabling.dto.ReservationDTO;
 import tabling.request.CustomerRequest;
@@ -144,18 +142,14 @@ public class EditCustomerInfoFrame extends JFrame {
 			public void mousePressed(MouseEvent e) {
 				int result = JOptionPane.showConfirmDialog(null, "탈퇴하시겠습니까", "탈퇴", 2, 1);
 				if (result == JOptionPane.YES_OPTION) {
-					try {
-						ReservationDTO reservationDTO = new ReservationDAO().getReservationByCustomer(customerDTO.getCustomerId());
-						if (reservationDTO != null) {
-							new ReservationRequest().cancel(reservationDTO.getCustomerId(), reservationDTO.getRestaurantId());
-						}
-						request.delete(customerDTO.getPhone());
-						new LoginSelectFrame();
-						setVisible(false);
-						dispose();
-					} catch (SQLException e1) {
-						e1.printStackTrace();
+					ReservationDTO reservationDTO = new ReservationRequest().getReservationByCustomer(customerDTO.getCustomerId());
+					if (reservationDTO != null) {
+						new ReservationRequest().cancel(reservationDTO.getCustomerId(), reservationDTO.getRestaurantId());
 					}
+					request.delete(customerDTO.getPhone());
+					new LoginSelectFrame();
+					setVisible(false);
+					dispose();
 				}
 			}
 		});

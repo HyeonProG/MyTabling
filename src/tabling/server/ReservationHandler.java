@@ -14,15 +14,19 @@ import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 
 import tabling.dao.CustomerReservationDAO;
+import tabling.dao.ReservationDAO;
+import tabling.dto.ReservationDTO;
 import tabling.json.JsonDTO;
 
 public class ReservationHandler implements HttpHandler {
 
-	private CustomerReservationDAO dao;
+	private CustomerReservationDAO customerReservationDAO;
+	private ReservationDAO reservationDAO;
 	private Gson gson;
 	
 	public ReservationHandler() {
-		dao = new CustomerReservationDAO();
+		customerReservationDAO = new CustomerReservationDAO();
+		reservationDAO = new ReservationDAO();
 		gson = new GsonBuilder().setPrettyPrinting().create();
 	}
 	
@@ -31,45 +35,57 @@ public class ReservationHandler implements HttpHandler {
 		String method = exchange.getRequestMethod();
 		if ("GET".equalsIgnoreCase(method)) {
 			// GET 요청시 여기서 동작
-			// handleGetRequest(exchange);
+			handleGetRequest(exchange);
 		} else if ("POST".equalsIgnoreCase(method)) {
 			// POST 요청시 여기서 동작
 			handlePostRequest(exchange);
 		}
 	}
 	
-//	// GET 요청시 동작
-//	private void handleGetRequest(HttpExchange exchange) {
-//		URI uri = exchange.getRequestURI();
-//		String path = uri.getPath();
-//		String response = null;
-//		String[] pathSegments = path.split("/");
-//		if (pathSegments.length >= 4) {
-//			String type = pathSegments[2];
-//			String customerPhone = pathSegments[3];
-//			try {
-//				if (type.equalsIgnoreCase("select")) {
-//					CustomerDTO dto = dao.getCustomerByPhone(customerPhone);
-//					response = gson.toJson(dto);
-//				} else if (type.equalsIgnoreCase("delete")) {
-//					dao.deleteCustomer(customerPhone);
-//					response = "회원 삭제 성공";
-//				}
-//				try {
-//					byte[] bytes = response.getBytes();
-//					exchange.setAttribute("Content-Type", "text/plain; charset=UTF-8");
-//					exchange.sendResponseHeaders(200, bytes.length);
-//					BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(exchange.getResponseBody()));
-//					writer.write(response);
-//					writer.close();
-//				} catch (IOException e) {
-//					e.printStackTrace();
-//				}
-//			} catch (SQLException e) {
-//				e.printStackTrace();
-//			}
-//		}
-//	}
+	// GET 요청시 동작
+	private void handleGetRequest(HttpExchange exchange) {
+		URI uri = exchange.getRequestURI();
+		String path = uri.getPath();
+		String response = null;
+		String[] pathSegments = path.split("/");
+		if (pathSegments.length >= 4) {
+			String type = pathSegments[2];
+			String query = pathSegments[3];
+			try {
+				int customerId = 0;
+				int restaurantId = 0;
+				String[] pairs = query.split("&");
+				for (String pair : pairs) {
+					String[] keyValue = pair.split("=");
+					if (keyValue[0].equalsIgnoreCase("customerId")) {
+						customerId = Integer.parseInt(keyValue[1]);
+					} else if (keyValue[0].equalsIgnoreCase("restaurantId")) {
+						restaurantId = Integer.parseInt(keyValue[1]);
+					}
+				}
+				// TODO dto null 일때 처리 해야됨
+				ReservationDTO dto = reservationDAO.getReservationByCustomer(customerId);
+				if (type.equalsIgnoreCase("check")) {
+					int count = reservationDAO.checkReservation(restaurantId, dto.getReservationId());
+					response = String.valueOf(count);
+				} else if (type.equalsIgnoreCase("select")) {
+					response = gson.toJson(dto);
+				}
+				try {
+					byte[] bytes = response.getBytes();
+					exchange.setAttribute("Content-Type", "text/plain; charset=UTF-8");
+					exchange.sendResponseHeaders(200, bytes.length);
+					BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(exchange.getResponseBody()));
+					writer.write(response);
+					writer.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+	}
 
 	// POST 요청시 동작
 	private void handlePostRequest(HttpExchange exchange) {
@@ -93,7 +109,7 @@ public class ReservationHandler implements HttpHandler {
 			if (protocol.equalsIgnoreCase("reservation")) {
 				JsonDTO reservationDTO = gson.fromJson(bufferStr.toString(), JsonDTO.class);
 				try {
-					dao.reservation(reservationDTO.getCustomerId(), reservationDTO.getRestaurantId());
+					customerReservationDAO.reservation(reservationDTO.getCustomerId(), reservationDTO.getRestaurantId());
 					response = "예약 성공";
 				} catch (SQLException e) {
 					e.printStackTrace();
@@ -101,7 +117,7 @@ public class ReservationHandler implements HttpHandler {
 			} else if (protocol.equalsIgnoreCase("cancel")) {
 				JsonDTO cancelDTO = gson.fromJson(bufferStr.toString(), JsonDTO.class);
 				try {
-					dao.cancel(cancelDTO.getCustomerId(), cancelDTO.getRestaurantId());
+					customerReservationDAO.cancel(cancelDTO.getCustomerId(), cancelDTO.getRestaurantId());
 					response = "예약 취소 성공";
 				} catch (SQLException e) {
 					e.printStackTrace();
