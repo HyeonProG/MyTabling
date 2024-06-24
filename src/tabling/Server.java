@@ -10,6 +10,7 @@ import tabling.server.CustomerHandler;
 import tabling.server.LikeHandler;
 import tabling.server.LocationHandler;
 import tabling.server.ReservationHandler;
+import tabling.server.RestaurantHandler;
 
 
 public class Server {
@@ -31,6 +32,7 @@ public class Server {
 		httpServer.createContext("/location", new LocationHandler());
 		httpServer.createContext("/reservation", new ReservationHandler());
 		httpServer.createContext("/like", new LikeHandler());
+		httpServer.createContext("/restaurant", new RestaurantHandler());
 	}
 
 }

@@ -1,46 +1,45 @@
 package tabling.request;
 
 import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
+import java.lang.reflect.Type;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
 
-import tabling.dto.CustomerDTO;
-import tabling.dto.JsonDTO;
+import lombok.Setter;
+import tabling.dto.RestaurantDTO;
 
-public class LikeRequest {
+@Setter
+public class RestaurantRequest {
 	private URL url;
 	private String urlStr;
 	private HttpURLConnection conn;
 	private Gson gson;
 
-	public LikeRequest() {
-		urlStr = "http://localhost:8080/like";
+	private boolean openFilter; // 식당 리스트 프레임에서 영업중 필터가 걸리면 true
+	private boolean likeFilter; // 식당 리스트 프레임에서 좋아요 필터가 걸리면 true
+
+	public RestaurantRequest() {
+		urlStr = "http://localhost:8080/restaurant";
 		gson = new GsonBuilder().setPrettyPrinting().create();
 	}
 
-	public int insert(int customerId, int restaurantId) {
-		int likeCount = 0;
+	public List<RestaurantDTO> getAllRestaurants(int customerId) {
+		List<RestaurantDTO> list = new ArrayList<>();
 		try {
-			String insertUrl = urlStr + "/" + "insert";
-			url = new URL(insertUrl);
+			String strUrl = urlStr + "/all/" + "customerId=" + String.valueOf(customerId) + "&" + "open="
+					+ String.valueOf(openFilter) + "&" + "like=" + String.valueOf(likeFilter);
+			url = new URL(strUrl);
 			conn = (HttpURLConnection) url.openConnection();
-			conn.setRequestMethod("POST");
-			conn.setDoOutput(true);
+			conn.setRequestMethod("GET");
 			conn.setRequestProperty("content-type", "application/json");
-			JsonDTO dto = new JsonDTO(customerId, restaurantId);
-			String json = gson.toJson(dto);
-
-			BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(conn.getOutputStream()));
-			writer.write(json);
-			writer.flush();
-			writer.close();
 
 			int responseCode = conn.getResponseCode();
 			System.out.println("response code : " + responseCode);
@@ -48,26 +47,29 @@ public class LikeRequest {
 			BufferedReader reader = new BufferedReader(new InputStreamReader(conn.getInputStream()));
 			String inputLine;
 			StringBuffer response = new StringBuffer();
+
 			while ((inputLine = reader.readLine()) != null) {
 				response.append(inputLine);
 			}
 			reader.close();
-			System.out.println(response);
-			likeCount = Integer.parseInt(response.toString());
+			Type dtoType = new TypeToken<List<RestaurantDTO>>() {
+			}.getType();
+			list = gson.fromJson(response.toString(), dtoType);
 		} catch (IOException e) {
 			e.printStackTrace();
 		} finally {
 			conn.disconnect();
 		}
-		return likeCount;
+		return list;
 	}
 
-	public boolean getLike(int customerId, int restaurantId) {
-		boolean like = false;
+	public List<RestaurantDTO> getRestaurantsByCategory(int categoryId, int customerId) {
+		List<RestaurantDTO> list = new ArrayList<>();
 		try {
-			String selectUrl = urlStr + "/getLike/" + "customerId=" + String.valueOf(customerId) + "&" + "restaurantId="
-					+ String.valueOf(restaurantId);
-			url = new URL(selectUrl);
+			String strUrl = urlStr + "/category/" + "customerId=" + String.valueOf(customerId) + "&" + "categoryId="
+					+ String.valueOf(categoryId) + "&" + "open=" + String.valueOf(openFilter) + "&" + "like="
+					+ String.valueOf(likeFilter);
+			url = new URL(strUrl);
 			conn = (HttpURLConnection) url.openConnection();
 			conn.setRequestMethod("GET");
 			conn.setRequestProperty("content-type", "application/json");
@@ -77,26 +79,30 @@ public class LikeRequest {
 
 			BufferedReader reader = new BufferedReader(new InputStreamReader(conn.getInputStream()));
 			String inputLine;
-			StringBuffer bufferStr = new StringBuffer();
+			StringBuffer response = new StringBuffer();
+
 			while ((inputLine = reader.readLine()) != null) {
-				bufferStr.append(inputLine);
+				response.append(inputLine);
 			}
 			reader.close();
-			like = Boolean.parseBoolean(bufferStr.toString());
+			Type dtoType = new TypeToken<List<RestaurantDTO>>() {
+			}.getType();
+			list = gson.fromJson(response.toString(), dtoType);
 		} catch (IOException e) {
 			e.printStackTrace();
 		} finally {
 			conn.disconnect();
 		}
-		return like;
+		return list;
 	}
 
-	public int delete(int customerId, int restaurantId) {
-		int likeCount = 0;
+	public List<RestaurantDTO> getRestaurantsByLocation(int locationId, int customerId) {
+		List<RestaurantDTO> list = new ArrayList<>();
 		try {
-			String deleteUrl = urlStr + "/delete/" + "customerId=" + String.valueOf(customerId) + "&" + "restaurantId="
-					+ String.valueOf(restaurantId);
-			url = new URL(deleteUrl);
+			String strUrl = urlStr + "/location/" + "customerId=" + String.valueOf(customerId) + "&" + "locationId="
+					+ String.valueOf(locationId) + "&" + "open=" + String.valueOf(openFilter) + "&" + "like="
+					+ String.valueOf(likeFilter);
+			url = new URL(strUrl);
 			conn = (HttpURLConnection) url.openConnection();
 			conn.setRequestMethod("GET");
 			conn.setRequestProperty("content-type", "application/json");
@@ -106,26 +112,28 @@ public class LikeRequest {
 
 			BufferedReader reader = new BufferedReader(new InputStreamReader(conn.getInputStream()));
 			String inputLine;
-			StringBuffer bufferStr = new StringBuffer();
+			StringBuffer response = new StringBuffer();
+
 			while ((inputLine = reader.readLine()) != null) {
-				bufferStr.append(inputLine);
+				response.append(inputLine);
 			}
 			reader.close();
-			likeCount = Integer.parseInt(bufferStr.toString());
+			Type dtoType = new TypeToken<List<RestaurantDTO>>() {
+			}.getType();
+			list = gson.fromJson(response.toString(), dtoType);
 		} catch (IOException e) {
 			e.printStackTrace();
 		} finally {
 			conn.disconnect();
 		}
-		return likeCount;
+		return list;
 	}
 
-	public int getLikeCount(int restaurantId) {
-		int likeCount = 0;
+	public RestaurantDTO getRestaurantByRestaurantId(int restaurantId) {
+		RestaurantDTO dto = null;
 		try {
-			String selectUrl = urlStr + "/getLikeCount/" + "customerId=" + String.valueOf(0) + "&" + "restaurantId="
-					+ String.valueOf(restaurantId);
-			url = new URL(selectUrl);
+			String strUrl = urlStr + "/restaurant/" + "restaurantId=" + String.valueOf(restaurantId) + "&";
+			url = new URL(strUrl);
 			conn = (HttpURLConnection) url.openConnection();
 			conn.setRequestMethod("GET");
 			conn.setRequestProperty("content-type", "application/json");
@@ -135,17 +143,19 @@ public class LikeRequest {
 
 			BufferedReader reader = new BufferedReader(new InputStreamReader(conn.getInputStream()));
 			String inputLine;
-			StringBuffer bufferStr = new StringBuffer();
+			StringBuffer response = new StringBuffer();
+
 			while ((inputLine = reader.readLine()) != null) {
-				bufferStr.append(inputLine);
+				response.append(inputLine);
 			}
 			reader.close();
-			likeCount = Integer.parseInt(bufferStr.toString());
+			dto = gson.fromJson(response.toString(), RestaurantDTO.class);
 		} catch (IOException e) {
 			e.printStackTrace();
 		} finally {
 			conn.disconnect();
 		}
-		return likeCount;
+		return dto;
 	}
+
 }

@@ -6,8 +6,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import java.sql.SQLException;
 import java.util.List;
 
 import javax.swing.Icon;
@@ -17,21 +15,20 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
-import tabling.dao.RestaurantDAO;
 import tabling.dto.CustomerDTO;
 import tabling.dto.RestaurantDTO;
+import tabling.request.RestaurantRequest;
 import tabling.util.Define;
 
 public class LocationFrame extends JFrame implements ActionListener {
 
-	
 	private BackgroundPanel frame;
 	private JLabel background;
 	private JLabel home;
 
 	private JButton[] locationbutton;
 	private CustomerDTO customerDTO;
-	private RestaurantDAO dao;
+	private RestaurantRequest restaurantRequest;
 
 //	private JLabel backBtn;
 
@@ -45,8 +42,8 @@ public class LocationFrame extends JFrame implements ActionListener {
 
 	private void initData() {
 		frame = new BackgroundPanel();
-		
-		dao = new RestaurantDAO();
+
+		restaurantRequest = new RestaurantRequest();
 		locationbutton = new JButton[17]; // 0 ~ 17 배열
 		setTitle("지역 찾기");
 		setSize(500, 700);
@@ -64,12 +61,12 @@ public class LocationFrame extends JFrame implements ActionListener {
 
 //		backBtn.setSize(40, 40);
 //		backBtn.setLocation(34, 40);
-		
+
 		Icon icon4 = new ImageIcon("img/house-solid.png");
 		home = new JLabel(icon4);
-		home.setSize(50,50);
+		home.setSize(50, 50);
 		home.setLocation(217, 580);
-		
+
 		// 버튼 이미지 크기 조절 -- 사용안함
 //		ImageIcon icon3 = new ImageIcon("img/지역별전체보기버튼.png");
 //		Image image = icon3.getImage();
@@ -77,8 +74,8 @@ public class LocationFrame extends JFrame implements ActionListener {
 //		ImageIcon scaledIcon = new ImageIcon(scaledImage);
 //		locationbutton[Define.LOCATION_ALL] = new JButton(scaledIcon); // 지역구 모두 검색 (전체 검색)
 //		locationbutton[Define.LOCATION_ALL].setBounds(37, 495, 410, 60); // 190, 460, 120, 40 // 37, 495, 410, 60
-		
-		 Icon icon3 = new ImageIcon("img/지역별전체보기버튼.png");
+
+		Icon icon3 = new ImageIcon("img/지역별전체보기버튼.png");
 		locationbutton[Define.LOCATION_ALL] = new JButton(icon3);
 		locationbutton[Define.LOCATION_ALL].setBounds(37, 495, 410, 60); // 190, 460, 120, 40 // 37, 495, 410, 60
 		locationbutton[Define.LOCATION_ALL].setBorderPainted(false);
@@ -189,7 +186,7 @@ public class LocationFrame extends JFrame implements ActionListener {
 		frame.setLayout(null);
 //		setLayout(null);
 		setResizable(false);
- 
+
 		for (int i = 1; i < 17; i++) {
 			background.add(locationbutton[i]);
 		}
@@ -216,7 +213,7 @@ public class LocationFrame extends JFrame implements ActionListener {
 //				dispose();
 //			}
 //		});
-		
+
 		home.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mousePressed(MouseEvent e) {
@@ -234,48 +231,40 @@ public class LocationFrame extends JFrame implements ActionListener {
 		for (int i = Define.CATEGORY_ALL; i <= Define.LOCATION_GIJANGGUN; i++) {
 
 			if (e.getSource() == locationbutton[Define.LOCATION_ALL]) {
-				try {
-					List<RestaurantDTO> list = dao.getAllRestaurants(customerDTO.getCustomerId());
-					new RestaurantListFrame(list, customerDTO, RestaurantListFrame.LOCATION_ALL);
-					setVisible(false);
-					dispose();
-					break;
-				} catch (SQLException e1) {
-					e1.printStackTrace();
-				}
+				List<RestaurantDTO> list = restaurantRequest.getAllRestaurants(customerDTO.getCustomerId());
+				new RestaurantListFrame(list, customerDTO, RestaurantListFrame.LOCATION_ALL);
+				setVisible(false);
+				dispose();
+				break;
 			}
 			if (e.getSource() == locationbutton[i]) {
 
-				try {
-					List<RestaurantDTO> list = dao.getRestaurantsByLocation(i, customerDTO.getCustomerId());
-					new RestaurantListFrame(list, customerDTO, RestaurantListFrame.LOCATION);
-					setVisible(false);
-					dispose();
-					break;
-				} catch (SQLException e1) {
-					e1.printStackTrace();
-				}
+				List<RestaurantDTO> list = restaurantRequest.getRestaurantsByLocation(i, customerDTO.getCustomerId());
+				new RestaurantListFrame(list, customerDTO, RestaurantListFrame.LOCATION);
+				setVisible(false);
+				dispose();
+				break;
 			}
 		}
-		
+
 	} // end of actionPerformed
-	
+
 	private class BackgroundPanel extends JPanel {
 		private JPanel backgroundPanel;
 		private Image backgroundImage;
-		
+
 		public BackgroundPanel() {
 			backgroundImage = new ImageIcon("img/locationFrameBg.jpg").getImage();
 			backgroundPanel = new JPanel();
 			add(backgroundPanel);
 		}
-		
+
 		@Override
 		protected void paintComponent(Graphics g) {
 			super.paintComponent(g);
 			g.drawImage(backgroundImage, 0, 0, getWidth(), getHeight(), null);
 		}
-		
+
 	}
 
 } // end of class

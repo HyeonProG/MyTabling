@@ -4,19 +4,16 @@ import java.awt.Graphics;
 import java.awt.GridLayout;
 import java.awt.Image;
 import java.awt.event.MouseEvent;
-import java.sql.SQLException;
 import java.util.List;
 
 import javax.swing.ImageIcon;
-import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JScrollPane;
 
-import tabling.dao.RestaurantDAO;
 import tabling.dto.CustomerDTO;
 import tabling.dto.RestaurantDTO;
+import tabling.request.RestaurantRequest;
 import tabling.util.Define;
 import tabling.util.MyMouseListener;
 
@@ -30,7 +27,7 @@ public class CategoryFrame extends JFrame implements MyMouseListener {
 	private BackgroundPanel backgroundPanel;
 	private JLabel mainLabel;
 	private CustomerDTO customerDTO;
-	private RestaurantDAO dao;
+	private RestaurantRequest restaurantRequest;
 
 	public CategoryFrame(CustomerDTO customerDTO) {
 		this.customerDTO = customerDTO;
@@ -40,8 +37,8 @@ public class CategoryFrame extends JFrame implements MyMouseListener {
 	}
 
 	private void initData() {
-		dao = new RestaurantDAO();
 		backgroundPanel = new BackgroundPanel();
+		restaurantRequest = new RestaurantRequest();
 		// 그림라벨
 		categoryImgs = new JLabel[14];
 		categoryImgs[Define.CATEGORY_ALL] = new JLabel(new ImageIcon("img/전체보기버튼.png"));
@@ -101,33 +98,28 @@ public class CategoryFrame extends JFrame implements MyMouseListener {
 
 	@Override
 	public void mousePressed(MouseEvent e) {
-		try {
-			for (int i = Define.CATEGORY_ALL; i <= Define.CATEGORY_HOF; i++) {
-				if (e.getSource() == categoryImgs[Define.CATEGORY_ALL]) {
-					List<RestaurantDTO> list = dao.getAllRestaurants(customerDTO.getCustomerId());
-					new RestaurantListFrame(list, customerDTO, RestaurantListFrame.CATEGORY_ALL);
-					setVisible(false);
-					dispose();
-					break;
-
-				}
-				if (e.getSource() == categoryImgs[i]) {
-					List<RestaurantDTO> list = dao.getRestaurantsByCategory(i, customerDTO.getCustomerId());
-					new RestaurantListFrame(list, customerDTO, RestaurantListFrame.CATEGORY);
-					setVisible(false);
-					dispose();
-					break;
-				}
-			}
-
-			if (e.getSource() == homeLabel) {
-				new CustomerMainMenuFrame(customerDTO);
+		for (int i = Define.CATEGORY_ALL; i <= Define.CATEGORY_HOF; i++) {
+			if (e.getSource() == categoryImgs[Define.CATEGORY_ALL]) {
+				List<RestaurantDTO> list = restaurantRequest.getAllRestaurants(customerDTO.getCustomerId());
+				new RestaurantListFrame(list, customerDTO, RestaurantListFrame.CATEGORY_ALL);
 				setVisible(false);
 				dispose();
-			}
+				break;
 
-		} catch (SQLException e1) {
-			e1.printStackTrace();
+			}
+			if (e.getSource() == categoryImgs[i]) {
+				List<RestaurantDTO> list = restaurantRequest.getRestaurantsByCategory(i, customerDTO.getCustomerId());
+				new RestaurantListFrame(list, customerDTO, RestaurantListFrame.CATEGORY);
+				setVisible(false);
+				dispose();
+				break;
+			}
+		}
+
+		if (e.getSource() == homeLabel) {
+			new CustomerMainMenuFrame(customerDTO);
+			setVisible(false);
+			dispose();
 		}
 
 	}

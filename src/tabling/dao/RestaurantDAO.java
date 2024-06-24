@@ -160,10 +160,9 @@ public class RestaurantDAO {
 
 	}
 
-	// TODO 비밀번호도 확인 하게 변경
-	public RestaurantDTO authenticateOwnerId(int restaurantId) {
-		RestaurantDTO dto;
-		String query = "  SELECT * FROM restaurant WHERE restaurant_id = ?  ";
+	public RestaurantDTO getRestaurantByRestaurantId(int restaurantId) {
+		RestaurantDTO dto = null;
+		String query = Define.SELECT_RESTAURANT_BY_RESTAURANTID;
 
 		try (Connection conn = DBConnectionManager.getInstance().getConnection()) {
 			PreparedStatement pstmt = conn.prepareStatement(query);
@@ -191,7 +190,7 @@ public class RestaurantDAO {
 			e.printStackTrace();
 		}
 
-		return null;
+		return dto;
 	}
 
 }

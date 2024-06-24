@@ -15,7 +15,7 @@ import com.sun.net.httpserver.HttpHandler;
 
 import tabling.dao.LikeDAO;
 import tabling.dto.CustomerDTO;
-import tabling.json.JsonDTO;
+import tabling.dto.JsonDTO;
 
 public class LikeHandler implements HttpHandler {
 

@@ -11,8 +11,8 @@ import java.net.URL;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
+import tabling.dto.JsonDTO;
 import tabling.dto.ReservationDTO;
-import tabling.json.JsonDTO;
 
 public class ReservationRequest {
 	private URL url;

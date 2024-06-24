@@ -12,12 +12,12 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
-import tabling.dao.RestaurantDAO;
 import tabling.dto.CustomerDTO;
 import tabling.dto.ReservationDTO;
 import tabling.dto.RestaurantDTO;
 import tabling.request.CustomerRequest;
 import tabling.request.ReservationRequest;
+import tabling.request.RestaurantRequest;
 
 public class CustomerReservationStatusFrame extends JFrame {
 
@@ -34,7 +34,7 @@ public class CustomerReservationStatusFrame extends JFrame {
 	private CustomerDTO customerDTO;
 	private ReservationDTO reservationDTO;
 	private RestaurantDTO restaurantDTO;
-	private RestaurantDAO restaurantDAO;
+	private RestaurantRequest restaurantRequest;
 	private ReservationRequest reservationRequest;
 	private int count;
 
@@ -47,11 +47,11 @@ public class CustomerReservationStatusFrame extends JFrame {
 
 	private void initData() {
 
-		restaurantDAO = new RestaurantDAO();
+		restaurantRequest = new RestaurantRequest();
 		reservationRequest = new ReservationRequest();
 		// 고객 id를 통해서 예약 내역, 예약 순서, 식당 내역을 다 받아옴
 		reservationDTO = reservationRequest.getReservationByCustomer(customerDTO.getCustomerId());
-		restaurantDTO = restaurantDAO.authenticateOwnerId(reservationDTO.getRestaurantId());
+		restaurantDTO = restaurantRequest.getRestaurantByRestaurantId(reservationDTO.getRestaurantId());
 		count = reservationRequest.checkReservation(customerDTO.getCustomerId(), restaurantDTO.getRestaurantId());
 
 		backgroundPanel = new BackgroundPanel();

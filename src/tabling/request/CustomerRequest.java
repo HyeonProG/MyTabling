@@ -12,7 +12,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import tabling.dto.CustomerDTO;
-import tabling.json.JsonDTO;
+import tabling.dto.JsonDTO;
 
 public class CustomerRequest {
 	private URL url;

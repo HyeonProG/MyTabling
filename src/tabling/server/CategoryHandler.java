@@ -16,7 +16,7 @@ import com.sun.net.httpserver.HttpHandler;
 import tabling.dao.CategoryDAO;
 import tabling.dao.CustomerDAO;
 import tabling.dto.CustomerDTO;
-import tabling.json.JsonDTO;
+import tabling.dto.JsonDTO;
 
 public class CategoryHandler implements HttpHandler {
 

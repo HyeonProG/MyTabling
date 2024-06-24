@@ -15,21 +15,21 @@ import com.sun.net.httpserver.HttpHandler;
 
 import tabling.dao.CustomerReservationDAO;
 import tabling.dao.ReservationDAO;
+import tabling.dto.JsonDTO;
 import tabling.dto.ReservationDTO;
-import tabling.json.JsonDTO;
 
 public class ReservationHandler implements HttpHandler {
 
 	private CustomerReservationDAO customerReservationDAO;
 	private ReservationDAO reservationDAO;
 	private Gson gson;
-	
+
 	public ReservationHandler() {
 		customerReservationDAO = new CustomerReservationDAO();
 		reservationDAO = new ReservationDAO();
 		gson = new GsonBuilder().setPrettyPrinting().create();
 	}
-	
+
 	@Override
 	public void handle(HttpExchange exchange) throws IOException {
 		String method = exchange.getRequestMethod();
@@ -41,7 +41,7 @@ public class ReservationHandler implements HttpHandler {
 			handlePostRequest(exchange);
 		}
 	}
-	
+
 	// GET 요청시 동작
 	private void handleGetRequest(HttpExchange exchange) {
 		URI uri = exchange.getRequestURI();
@@ -63,10 +63,13 @@ public class ReservationHandler implements HttpHandler {
 						restaurantId = Integer.parseInt(keyValue[1]);
 					}
 				}
-				// TODO dto null 일때 처리 해야됨
 				ReservationDTO dto = reservationDAO.getReservationByCustomer(customerId);
+				int reservationId = 0;
+				if (dto != null) {
+					reservationId = dto.getReservationId();
+				}
 				if (type.equalsIgnoreCase("check")) {
-					int count = reservationDAO.checkReservation(restaurantId, dto.getReservationId());
+					int count = reservationDAO.checkReservation(restaurantId, reservationId);
 					response = String.valueOf(count);
 				} else if (type.equalsIgnoreCase("select")) {
 					response = gson.toJson(dto);
@@ -105,11 +108,12 @@ public class ReservationHandler implements HttpHandler {
 				bufferStr.append(inputLine);
 			}
 			br.close();
-			
+
 			if (protocol.equalsIgnoreCase("reservation")) {
 				JsonDTO reservationDTO = gson.fromJson(bufferStr.toString(), JsonDTO.class);
 				try {
-					customerReservationDAO.reservation(reservationDTO.getCustomerId(), reservationDTO.getRestaurantId());
+					customerReservationDAO.reservation(reservationDTO.getCustomerId(),
+							reservationDTO.getRestaurantId());
 					response = "예약 성공";
 				} catch (SQLException e) {
 					e.printStackTrace();
@@ -133,5 +137,5 @@ public class ReservationHandler implements HttpHandler {
 			e.printStackTrace();
 		}
 	}
-	
+
 }

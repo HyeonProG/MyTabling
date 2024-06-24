@@ -1,4 +1,4 @@
-package tabling.json;
+package tabling.dto;
 
 import lombok.Data;
 

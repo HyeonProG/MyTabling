@@ -7,7 +7,6 @@ import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -32,11 +31,11 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableRowSorter;
 
 import tabling.dao.CategoryDAO;
-import tabling.dao.RestaurantDAO;
 import tabling.dto.CustomerDTO;
 import tabling.dto.RestaurantDTO;
 import tabling.request.CategoryRequest;
 import tabling.request.LocationRequest;
+import tabling.request.RestaurantRequest;
 import tabling.util.Time;
 
 public class RestaurantListFrame extends JFrame {
@@ -55,7 +54,7 @@ public class RestaurantListFrame extends JFrame {
 	private LocationRequest locationRequest;
 	private CategoryDAO categoryDAO;
 	private CategoryRequest categoryRequest;
-	private RestaurantDAO restaurantDAO;
+	private RestaurantRequest restaurantRequest;
 	private CustomerDTO customerDTO;
 	private int categoryId;
 	private int locationId;
@@ -98,7 +97,7 @@ public class RestaurantListFrame extends JFrame {
 		locationRequest = new LocationRequest();
 		categoryDAO = new CategoryDAO();
 		categoryRequest = new CategoryRequest();
-		restaurantDAO = new RestaurantDAO();
+		restaurantRequest = new RestaurantRequest();
 		currentTime = new Time(LocalDateTime.now().getHour(), LocalDateTime.now().getMinute(),
 				LocalDateTime.now().getDayOfWeek().toString());
 		// 테이블에 담는 과정
@@ -166,21 +165,18 @@ public class RestaurantListFrame extends JFrame {
 				switch (filter.getSelectedItem().toString()) {
 				case RESET:
 					// 걸려 있는 필터를 모두 초기화
-					restaurantDAO.setOpenFilter(false);
-					restaurantDAO.setLikeFilter(false);
+					restaurantRequest.setOpenFilter(false);
+					restaurantRequest.setLikeFilter(false);
 					setRestaurantList();
 					tableSet();
 					break;
 				case OPEN:
-					restaurantDAO.setOpenFilter(true);
-					currentTime = new Time(LocalDateTime.now().getHour(), LocalDateTime.now().getMinute(),
-							LocalDateTime.now().getDayOfWeek().toString());
-					restaurantDAO.setCurrentTime(currentTime);
+					restaurantRequest.setOpenFilter(true);
 					setRestaurantList();
 					tableSet();
 					break;
 				case LIKE:
-					restaurantDAO.setLikeFilter(true);
+					restaurantRequest.setLikeFilter(true);
 					setRestaurantList();
 					tableSet();
 					break;
@@ -420,16 +416,12 @@ public class RestaurantListFrame extends JFrame {
 
 	// 특정 필터가 결렸을때 다시 식당 리스트를 불러 오기 위한 메서드
 	private void setRestaurantList() {
-		try {
-			if (type == LOCATION) {
-				restaurantList = restaurantDAO.getRestaurantsByLocation(locationId, customerDTO.getCustomerId());
-			} else if (type == CATEGORY) {
-				restaurantList = restaurantDAO.getRestaurantsByCategory(categoryId, customerDTO.getCustomerId());
-			} else {
-				restaurantList = restaurantDAO.getAllRestaurants(customerDTO.getCustomerId());
-			}
-		} catch (SQLException e) {
-			e.printStackTrace();
+		if (type == LOCATION) {
+			restaurantList = restaurantRequest.getRestaurantsByLocation(locationId, customerDTO.getCustomerId());
+		} else if (type == CATEGORY) {
+			restaurantList = restaurantRequest.getRestaurantsByCategory(categoryId, customerDTO.getCustomerId());
+		} else {
+			restaurantList = restaurantRequest.getAllRestaurants(customerDTO.getCustomerId());
 		}
 	}
 
