@@ -13,13 +13,13 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
-import tabling.dao.CustomerDAO;
-import tabling.dao.CustomerReservationDAO;
 import tabling.dao.ReservationDAO;
 import tabling.dao.RestaurantDAO;
 import tabling.dto.CustomerDTO;
 import tabling.dto.ReservationDTO;
 import tabling.dto.RestaurantDTO;
+import tabling.request.CustomerRequest;
+import tabling.request.ReservationRequest;
 
 public class CustomerReservationStatusFrame extends JFrame {
 
@@ -38,6 +38,7 @@ public class CustomerReservationStatusFrame extends JFrame {
 	private RestaurantDTO restaurantDTO;
 	private ReservationDAO reservationDAO;
 	private RestaurantDAO restaurantDAO;
+	private ReservationRequest reservationRequest;
 	private int count;
 
 	public CustomerReservationStatusFrame(CustomerDTO customerDTO) {
@@ -51,11 +52,11 @@ public class CustomerReservationStatusFrame extends JFrame {
 
 		reservationDAO = new ReservationDAO();
 		restaurantDAO = new RestaurantDAO();
+		reservationRequest = new ReservationRequest();
 		try {
 			// 고객 id를 통해서 예약 내역, 예약 순서, 식당 내역을 다 받아옴
 			reservationDTO = reservationDAO.getReservationByCustomer(customerDTO.getCustomerId());
-			count = reservationDAO.checkReservation(reservationDTO.getRestaurantId(),
-					reservationDTO.getReservationId());
+			count = reservationDAO.checkReservation(reservationDTO.getRestaurantId(), reservationDTO.getReservationId());
 			restaurantDTO = restaurantDAO.authenticateOwnerId(reservationDTO.getRestaurantId());
 
 			backgroundPanel = new BackgroundPanel();
@@ -128,21 +129,16 @@ public class CustomerReservationStatusFrame extends JFrame {
 		cancelBtn.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mousePressed(MouseEvent e) {
-				CustomerReservationDAO customerReservationDAO = new CustomerReservationDAO();
-				try {
-					customerReservationDAO.cancel(reservationDTO.getCustomerId(), reservationDTO.getRestaurantId());
-					JOptionPane.showMessageDialog(null, "예약 취소 되었습니다.", "성공", JOptionPane.WARNING_MESSAGE);
-					if (restaurantFrame != null) {
-						restaurantFrame.setVisible(false);
-						restaurantFrame.dispose();
-					}
-					customerDTO = new CustomerDAO().getCustomerByPhone(customerDTO.getPhone());
-					new CustomerMainMenuFrame(customerDTO);
-					setVisible(false);
-					dispose();
-				} catch (SQLException e1) {
-					e1.printStackTrace();
+				reservationRequest.cancel(reservationDTO.getCustomerId(), reservationDTO.getRestaurantId());
+				JOptionPane.showMessageDialog(null, "예약 취소 되었습니다.", "성공", JOptionPane.WARNING_MESSAGE);
+				if (restaurantFrame != null) {
+					restaurantFrame.setVisible(false);
+					restaurantFrame.dispose();
 				}
+				customerDTO = new CustomerRequest().select(customerDTO.getPhone());
+				new CustomerMainMenuFrame(customerDTO);
+				setVisible(false);
+				dispose();
 
 			}
 		});
@@ -157,8 +153,7 @@ public class CustomerReservationStatusFrame extends JFrame {
 			@Override
 			public void mousePressed(MouseEvent e) {
 				try {
-					count = reservationDAO.checkReservation(reservationDTO.getRestaurantId(),
-							reservationDTO.getReservationId());
+					count = reservationDAO.checkReservation(reservationDTO.getRestaurantId(), reservationDTO.getReservationId());
 					customerQueue.setText(String.valueOf(count));
 					repaint();
 				} catch (SQLException e1) {
@@ -184,10 +179,6 @@ public class CustomerReservationStatusFrame extends JFrame {
 			super.paintComponent(g);
 			g.drawImage(backgroundImage, 0, 0, getWidth(), getHeight(), null);
 		}
-
-	
-
-	
 
 //	public static void main(String[] args) {
 //		try {

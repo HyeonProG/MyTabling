@@ -14,18 +14,16 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
-import tabling.dao.CustomerDAO;
-import tabling.dao.CustomerReservationDAO;
 import tabling.dao.ReservationDAO;
 import tabling.dto.CustomerDTO;
 import tabling.dto.ReservationDTO;
 import tabling.request.CustomerRequest;
+import tabling.request.ReservationRequest;
 
 public class EditCustomerInfoFrame extends JFrame {
 
 	private BackgroundPanel backgroundPanel;
 	private CustomerDTO customerDTO;
-	private CustomerDAO dao;
 	private CustomerRequest request;
 	private JTextField nameField;
 	private JTextField locationField;
@@ -45,7 +43,6 @@ public class EditCustomerInfoFrame extends JFrame {
 	}
 
 	private void initData() {
-		dao = new CustomerDAO();
 		request = new CustomerRequest();
 		setTitle("메인 메뉴 " + customerDTO.getCustomerName() + "님"); // 제목 타이틀
 		setSize(500, 700);
@@ -150,7 +147,7 @@ public class EditCustomerInfoFrame extends JFrame {
 					try {
 						ReservationDTO reservationDTO = new ReservationDAO().getReservationByCustomer(customerDTO.getCustomerId());
 						if (reservationDTO != null) {
-							new CustomerReservationDAO().cancel(reservationDTO.getCustomerId(), reservationDTO.getRestaurantId());
+							new ReservationRequest().cancel(reservationDTO.getCustomerId(), reservationDTO.getRestaurantId());
 						}
 						request.delete(customerDTO.getPhone());
 						new LoginSelectFrame();
