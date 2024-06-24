@@ -27,6 +27,7 @@ public class ReservationRequest {
 	public void reservation(int customerId, int restaurantId) {
 		try {
 			String reservationUrl = urlStr + "/" + "reservation";
+			url = new URL(reservationUrl);
 			conn = (HttpURLConnection) url.openConnection();
 			conn.setRequestMethod("POST");
 			conn.setDoOutput(true);
@@ -52,13 +53,16 @@ public class ReservationRequest {
 			System.out.println(response);
 		} catch (IOException e) {
 			e.printStackTrace();
-		} 
+		} finally {
+			conn.disconnect();
+		}
 	}
 	
 	public void cancel(int customerId, int restaurantId) {
 
 		try {
 			String cancelUrl = urlStr + "/" + "cancel";
+			url = new URL(cancelUrl);
 			conn = (HttpURLConnection) url.openConnection();
 			conn.setRequestMethod("POST");
 			conn.setDoOutput(true);
@@ -84,7 +88,9 @@ public class ReservationRequest {
 			System.out.println(response);
 		} catch (IOException e) {
 			e.printStackTrace();
-		} 
+		} finally {
+			conn.disconnect();
+		}
 	
 	}
 }
