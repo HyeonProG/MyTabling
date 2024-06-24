@@ -15,12 +15,17 @@ public class ReservationDAO {
 	public int checkReservation(int restaurantId, int reservationId) throws SQLException {
 		int count = 0;
 		String query = Define.SELECT_RESERVATION_COUNT_BY_RESTID_AND_RESERID;
-
+		if (reservationId == 0) {
+			query = Define.SELECT_RESERVATION_COUNT_BY_RESTID;
+		}
+		
 		try (Connection conn = DBConnectionManager.getInstance().getConnection()) {
 
 			PreparedStatement pstmt = conn.prepareStatement(query);
 			pstmt.setInt(1, restaurantId);
-			pstmt.setInt(2, reservationId);
+			if (reservationId != 0) {
+				pstmt.setInt(2, reservationId);
+			}
 			ResultSet rs = pstmt.executeQuery();
 
 			while (rs.next()) {
@@ -54,5 +59,5 @@ public class ReservationDAO {
 		}
 		return dto;
 	}
-
+	
 }

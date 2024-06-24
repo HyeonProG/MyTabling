@@ -31,6 +31,7 @@ public class ReservationFrame extends JFrame {
 	private ReservationDTO reservationDTO;
 	private int customerId;
 	private int restaurantId;
+	private int count;
 
 	private JButton reservationBtn;
 	private JButton backBtn;
@@ -85,7 +86,12 @@ public class ReservationFrame extends JFrame {
 		reservationStatus.setBackground(Color.WHITE);
 		reservationStatus.setLineWrap(true);
 		try {
-			reservationStatus.append("현재 가게의 대기 인원은 " + reservationDAO.checkReservation(restaurantId, reservationDTO.getReservationId()) + " 명 입니다.");
+			if (reservationDTO != null) {
+				count = reservationDAO.checkReservation(restaurantId, reservationDTO.getReservationId());
+			} else {
+				count = reservationDAO.checkReservation(restaurantId, 0);
+			}
+			reservationStatus.append("현재 가게의 대기 인원은 " + count + " 명 입니다.");
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}

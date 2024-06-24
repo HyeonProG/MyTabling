@@ -45,6 +45,7 @@ public class Define {
 	public static final String SELECT_FOOD_BY_FOODID = " SELECT * FROM food WHERE food_id = ? ";
 	public static final String SELECT_MENU_BY_RESTAURANTID = " SELECT * FROM menu WHERE restaurant_id = ? ";
 	public static final String SELECT_RESERVATION_COUNT_BY_RESTID_AND_RESERID = " SELECT count(*) from reservation WHERE reservation_state = 'Y' AND restaurant_id = ? AND reservation_id <= ? ";
+	public static final String SELECT_RESERVATION_COUNT_BY_RESTID = " SELECT count(*) from reservation WHERE reservation_state = 'Y' AND restaurant_id = ? ";
 	public static final String SELECT_RESTAURANT_ALL = " SELECT * FROM restaurant ORDER BY CASE WHEN location_id = (SELECT location_id FROM customer WHERE customer_id = ? ) THEN 0 ELSE 1 END ";
 	public static final String SELECT_RESTAURANT_ALL_FILTERED = " SELECT * FROM restaurant WHERE restaurant_id IN (SELECT restaurant_id FROM likes WHERE customer_id = ?) ORDER BY CASE WHEN location_id = (SELECT location_id FROM customer WHERE customer_id = ? ) THEN 0 ELSE 1 END ";
 	public static final String SELECT_RESTAURANT_BY_CATEGROY = " SELECT * FROM restaurant where category_id = ? ";
