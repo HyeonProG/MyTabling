@@ -41,11 +41,10 @@ import tabling.util.Time;
 
 public class RestaurantListFrame extends JFrame {
 
-//	private BackgroundPanel bg;
-	private JLabel bg;
+	private BackgroundPanel bg;
 	private RestaurantListFrame frame;
 	private RestaurantFrame restaurantFrame;
-
+	
 	private JTable table;
 	private JScrollPane scroll;
 	private JComboBox<String> filter;
@@ -93,8 +92,7 @@ public class RestaurantListFrame extends JFrame {
 	}
 
 	private void initData() {
-		bg = new JLabel(new ImageIcon("img/retaurantListFrameBg.jpg"));
-//		bg = new BackgroundPanel();
+		bg = new BackgroundPanel();
 		frame = this;
 		locationDAO = new LocationDAO();
 		categoryDAO = new CategoryDAO();
@@ -111,13 +109,13 @@ public class RestaurantListFrame extends JFrame {
 	}
 
 	private void setInitLayout() {
-//		bg.setSize(getWidth(),getHeight());
-		add(bg);
+		bg.setSize(getWidth(),getHeight());
+		bg.setLayout(null);
 		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setTitle(" 리스트 화면 " + customerDTO.getCustomerName() + "님");
 		setSize(500, 700);
-		setLayout(null); // 좌표값으로 배치
+		// setLayout(null); // 좌표값으로 배치
 		setResizable(false); // 프레임 조절 불가
 		setLocationRelativeTo(null); // JFrame을 모니터 가운데 자동 배치
 
@@ -147,7 +145,8 @@ public class RestaurantListFrame extends JFrame {
 		searchField.setLocation(20, 80);
 		searchField.setSize(202, 30);
 		searchField.setFont(new Font("Noto Sans KR", Font.BOLD, 15));
-
+		
+		add(bg);
 		setVisible(true);
 		
 	}
@@ -303,7 +302,7 @@ public class RestaurantListFrame extends JFrame {
 	// 테이블을 세팅하고, 이벤트도 등록하는 메서드
 	private void tableSet() {
 		if (scroll != null) {
-			remove(scroll);
+			bg.remove(scroll);
 		}
 		contents = new String[restaurantList.size()][head.length];
 		
@@ -347,7 +346,7 @@ public class RestaurantListFrame extends JFrame {
 		
 		// 테이블을 스크롤에 넣고 스크롤 설정
 		scroll = new JScrollPane(table);
-		add(scroll);
+		bg.add(scroll);
 		scroll.setSize(450, 450);
 		scroll.setLocation(20, 130);
 		scroll.getVerticalScrollBar().setUI(new BasicScrollBarUI() {
@@ -436,22 +435,22 @@ public class RestaurantListFrame extends JFrame {
 		}
 	}
 	
-//	private class BackgroundPanel extends JPanel {
-//		private JPanel backgroundPanel;
-//		private Image backgroundImage;
-//
-//		public BackgroundPanel() {
-//			backgroundImage = new ImageIcon("img/retaurantListFrameBg.jpg").getImage();
-//			backgroundPanel = new JPanel();
-//			add(backgroundPanel);
-//		}
-//
-//		@Override
-//		protected void paintComponent(Graphics g) {
-//			super.paintComponent(g);
-//			g.drawImage(backgroundImage, 0, 0, getWidth(), getHeight(), null);
-//		}
-//
-//	}
+	private class BackgroundPanel extends JPanel {
+		private JPanel backgroundPanel;
+		private Image backgroundImage;
+
+		public BackgroundPanel() {
+			backgroundImage = new ImageIcon("img/retaurantListFrameBg.jpg").getImage();
+			backgroundPanel = new JPanel();
+			add(backgroundPanel);
+		}
+
+		@Override
+		protected void paintComponent(Graphics g) {
+			super.paintComponent(g);
+			g.drawImage(backgroundImage, 0, 0, getWidth(), getHeight(), null);
+		}
+
+	}
 	
 }
