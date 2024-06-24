@@ -190,7 +190,12 @@ public class CustomerReservationStatusFrame extends JFrame {
 	
 
 	public static void main(String[] args) {
-		new CustomerReservationStatusFrame(new CustomerDAO().authenticatePhone("01011112222"));
+		try {
+			new CustomerReservationStatusFrame(new CustomerDAO().authenticatePhone("01011112222"));
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 }
