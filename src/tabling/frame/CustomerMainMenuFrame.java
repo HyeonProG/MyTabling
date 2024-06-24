@@ -4,16 +4,15 @@ import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.sql.SQLException;
 
 import javax.swing.ImageIcon;
-import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
+import tabling.dao.ReservationDAO;
 import tabling.dto.CustomerDTO;
-import tabling.dto.ReservationDTO;
-import tabling.dto.RestaurantDTO;
 
 public class CustomerMainMenuFrame extends JFrame {
 
@@ -24,17 +23,13 @@ public class CustomerMainMenuFrame extends JFrame {
 	private JLabel reservationBtn;
 	private JLabel userInfoBtn;
 	private JLabel homeBtn;
-	private JLabel underReservationBtn;
-	private JLabel underCategoryBtn;
-	private JLabel underLocationBtn;
-	private JLabel userInfoBtn2;
 	
 	private CustomerDTO customerDTO;
 	public CustomerMainMenuFrame(CustomerDTO customerDTO) {
 		this.customerDTO = customerDTO;
 		initData();
 		setInitLayout();
-		initListener();
+		addEventListener();
 	}
 
 	private void initData() {
@@ -49,13 +44,8 @@ public class CustomerMainMenuFrame extends JFrame {
 		reservationBtn = new JLabel(new ImageIcon("img/reservationStateBtn.png"));
 		categoryBtn = new JLabel(new ImageIcon("img/categoryBtn.png"));
 		locationBtn = new JLabel(new ImageIcon("img/locationBtn.png"));
-		userInfoBtn = new JLabel(new ImageIcon("img/gearSolid.png"));
-		
+		userInfoBtn = new JLabel(new ImageIcon("img/user-solid.png"));
 		homeBtn = new JLabel(new ImageIcon("img/house-solid.png"));
-		underReservationBtn = new JLabel(new ImageIcon("img/utensils-solid.png"));
-		underCategoryBtn = new JLabel(new ImageIcon("img/list-solid.png"));
-		underLocationBtn = new JLabel(new ImageIcon("img/location-dot-solid.png"));
-		userInfoBtn2 = new JLabel(new ImageIcon("img/user-solid.png"));
 	}
 
 	private void setInitLayout() {
@@ -64,41 +54,38 @@ public class CustomerMainMenuFrame extends JFrame {
 		backgroundPanel.setLayout(null);
 		add(backgroundPanel);
 
-		reservationBtn.setBounds(50, 330, 80, 120);
-//		reservationBtn.setSize(70, 100);
+		reservationBtn.setBounds(50, 280, 80, 120);
 		backgroundPanel.add(reservationBtn);
 
-		categoryBtn.setBounds(210, 335, 70, 120);
-//		categoryBtn.setSize(330, 130);
+		categoryBtn.setBounds(210, 280, 70, 120);
 		backgroundPanel.add(categoryBtn);
 
-		locationBtn.setBounds(360, 335, 70, 120);
-//		locationBtn.setSize(330, 130);
+		locationBtn.setBounds(360, 280, 70, 120);
 		backgroundPanel.add(locationBtn);
 
-		userInfoBtn.setBounds(430, 20, 30, 30);
+		userInfoBtn.setBounds(430, 15, 30, 30);
 		backgroundPanel.add(userInfoBtn);
 
-		homeBtn.setBounds(50, 600, 50, 50);
+		homeBtn.setBounds(217, 605, 50, 50);
 		backgroundPanel.add(homeBtn);
-		underReservationBtn.setBounds(130, 600, 50, 50);
-		backgroundPanel.add(underReservationBtn);
-		underCategoryBtn.setBounds(220, 600, 50, 50);
-		backgroundPanel.add(underCategoryBtn);
-		underLocationBtn.setBounds(300, 600, 50, 50);
-		backgroundPanel.add(underLocationBtn);
-		userInfoBtn2.setBounds(390, 600, 50, 50);
-		backgroundPanel.add(userInfoBtn2);
 		
 	}
 
-	private void initListener() {
+	private void addEventListener() {
 		reservationBtn.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mousePressed(MouseEvent e) {
-				new CustomerReservationStatusFrame(customerDTO);
-				setVisible(false);
-
+				try {
+					if (new ReservationDAO().getReservationByCustomer(customerDTO.getCustomerId()) != null) {
+						new CustomerReservationStatusFrame(customerDTO);
+						setVisible(false);
+						dispose();
+					} else {
+						// TODO 현재 예약 중이 아님을 알려주는 메세지 띄워야됨
+					}
+				} catch (SQLException e1) {
+					e1.printStackTrace();
+				}
 			}
 		});
 		categoryBtn.addMouseListener(new MouseAdapter() {
@@ -106,6 +93,7 @@ public class CustomerMainMenuFrame extends JFrame {
 			public void mousePressed(MouseEvent e) {
 				new CategoryFrame(customerDTO);
 				setVisible(false);
+				dispose();
 			}
 		});
 		locationBtn.addMouseListener(new MouseAdapter() {
@@ -113,15 +101,17 @@ public class CustomerMainMenuFrame extends JFrame {
 			public void mousePressed(MouseEvent e) {
 				new LocationFrame(customerDTO);
 				setVisible(false);
+				dispose();
 			}
 		});
+		
 		
 		userInfoBtn.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mousePressed(MouseEvent e) {
-				
-				new EditCustomerInfoFrame1(customerDTO);
+				new EditCustomerInfoFrame(customerDTO);
 				setVisible(false);
+				dispose();
 			}
 		});
 	}
@@ -142,10 +132,6 @@ public class CustomerMainMenuFrame extends JFrame {
 			g.drawImage(backgroundImage, 0, 0, getWidth(), getHeight(), null);
 		}
 
-	}
-
-	public static void main(String[] args) {
-		// new MainMenuFrame();
 	}
 
 }

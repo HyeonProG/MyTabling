@@ -1,6 +1,5 @@
 package tabling.util;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import tabling.dto.RestaurantDTO;
 
@@ -18,6 +17,29 @@ public class Time {
 		}
 		this.currentHour = currentHour;
 		this.currentMinute = currentMinute;
+		switch(currentDay) {
+		case "MONDAY":
+			currentDay = "월요일";
+			break;
+		case "TUESDAY":
+			currentDay = "화요일";
+			break;
+		case "WEDNESDAY":
+			currentDay = "수요일";
+			break;
+		case "THURSDAY":
+			currentDay = "목요일";
+			break;
+		case "FRIDAY":
+			currentDay = "금요일";
+			break;
+		case "SATURDAY":
+			currentDay = "토요일";
+			break;
+		case "SUNDAY":
+			currentDay = "일요일";
+			break;
+		}
 		this.currentDay = currentDay;
 	}
 

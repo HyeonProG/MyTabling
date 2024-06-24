@@ -20,14 +20,13 @@ import javax.swing.table.DefaultTableCellRenderer;
 
 import tabling.dao.LikeDAO;
 import tabling.dao.MenuDAO;
-import tabling.dao.RestaurantDAO;
 import tabling.dto.CustomerDTO;
-import tabling.dto.LikeDTO;
 import tabling.dto.MenuDTO;
 import tabling.dto.RestaurantDTO;
 
 public class RestaurantFrame extends JFrame {
 	private RestaurantFrame frame;
+	private RestaurantListFrame restaurantListFrame;
 	
 	private RestaurantDTO restaurantDTO;
 	private List<MenuDTO> menuList = new ArrayList<>();
@@ -43,8 +42,8 @@ public class RestaurantFrame extends JFrame {
 	
 	private JTable table;
 	private JScrollPane tableScroll;
-	Vector<String> head = new Vector<>();
-	Vector<Vector<String>> contents = new Vector<>();
+	private Vector<String> head = new Vector<>();
+	private Vector<Vector<String>> contents = new Vector<>();
 
 	private JButton reservationBtn;
 
@@ -55,9 +54,10 @@ public class RestaurantFrame extends JFrame {
 	private LikeDAO likeDAO;
 	private JLabel likeCountLabel;
 
-	public RestaurantFrame(CustomerDTO customerDTO, RestaurantDTO restaurantDTO) {
+	public RestaurantFrame(CustomerDTO customerDTO, RestaurantDTO restaurantDTO, RestaurantListFrame restaurantListFrame) {
 		this.customerDTO = customerDTO;
 		this.restaurantDTO = restaurantDTO;
+		this.restaurantListFrame = restaurantListFrame;
 		menuDAO = new MenuDAO();
 		try {
 			this.menuList = menuDAO.getMenuByRestaurantId(restaurantDTO.getRestaurantId());
@@ -79,6 +79,7 @@ public class RestaurantFrame extends JFrame {
 		setLayout(null);
 		
 		likeDAO = new LikeDAO();
+		// 현재 고객이 좋아요를 누른 식당인지 판별 -> 프레임에 띄우기 위함
 		try {
 			checkLike = likeDAO.getLike(customerDTO.getCustomerId(), restaurantDTO.getRestaurantId());
 		} catch (SQLException e) {
@@ -108,7 +109,7 @@ public class RestaurantFrame extends JFrame {
 			int foodId = menuList.get(i).getFoodId();
 			String menuName = null;
 			try {
-				menuName = menuDAO.getMenuName(foodId);
+				menuName = menuDAO.getFoodName(foodId);
 			} catch (SQLException e) {
 				e.printStackTrace();
 			}
@@ -126,7 +127,6 @@ public class RestaurantFrame extends JFrame {
 		reservationBtn = new JButton("예약하기");
 
 		tableScroll = new JScrollPane(table);
-		setVisible(true);
 
 		detailScroll = new JScrollPane(restaurantDetail);
 		
@@ -136,6 +136,8 @@ public class RestaurantFrame extends JFrame {
 		
 		likeImg = new ImageIcon("img/like.png");
 		unlikeImg = new ImageIcon("img/unlike.png");
+		
+		// 좋아요를 누른 식당이라면 꽉찬 하트 적용
 		if (checkLike == false) {
 			likeLabel = new JLabel(unlikeImg);			
 		} else {
@@ -143,11 +145,13 @@ public class RestaurantFrame extends JFrame {
 		}
 		
 		likeCountLabel = new JLabel();
+		// 좋아요 수 카운트
 		try {
 			likeCountLabel.setText(String.valueOf(likeDAO.getLikeCount(restaurantDTO.getRestaurantId())));
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
+		setVisible(true);
 
 	}
 
@@ -205,20 +209,25 @@ public class RestaurantFrame extends JFrame {
 	}
 
 	private void addEventListener() {
+		
+		// 예약하기 버튼 이벤트
 		reservationBtn.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mousePressed(MouseEvent e) {
-				new ReservationFrame(customerDTO, restaurantDTO);
+				new ReservationFrame(customerDTO, restaurantDTO, restaurantListFrame);
 				frame.setVisible(false);
 				frame.dispose();
 			}
 		});
 		
+		// 좋아요 버튼 이벤트
+		// 이미 좋아요 누른 상태면 해제, 반대면 적용
 		likeLabel.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mousePressed(MouseEvent e) {
 				if (checkLike == false) {
 					try {
+						// 좋아요 테이블에 추가하고, 해당 식당의 변경된 좋아요 수를 받아옴
 						int likeCount = likeDAO.addLike(customerDTO.getCustomerId(), restaurantDTO.getRestaurantId());
 						likeCountLabel.setText(String.valueOf(likeCount));
 					} catch (SQLException e1) {
@@ -228,6 +237,7 @@ public class RestaurantFrame extends JFrame {
 					checkLike = true;
 				} else {
 					try {
+						// 좋아요 테이블에서 삭제하고, 해당 식당의 변경된 좋아요 수를 받아옴
 						int likeCount = likeDAO.deleteLike(customerDTO.getCustomerId(), restaurantDTO.getRestaurantId());
 						likeCountLabel.setText(String.valueOf(likeCount));
 					} catch (SQLException e1) {

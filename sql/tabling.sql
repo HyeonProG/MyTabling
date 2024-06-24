@@ -50,8 +50,8 @@ create table reservation(
     reservation_time timestamp default current_timestamp,
     customer_id int,
     restaurant_id int,
-    foreign key(customer_id) references customer(customer_id),
-    foreign key(restaurant_id) references restaurant(restaurant_id)
+    foreign key(customer_id) references customer(customer_id) on delete set null,
+    foreign key(restaurant_id) references restaurant(restaurant_id) on delete set null
 );
 
 create table menu (
@@ -67,6 +67,6 @@ create table likes(
 	customer_id int,
     restaurant_id int,
     primary key(customer_id, restaurant_id),
-    foreign key(customer_id) references customer(customer_id),
-    foreign key(restaurant_id) references restaurant(restaurant_id)
+    foreign key(customer_id) references customer(customer_id) on delete cascade,
+    foreign key(restaurant_id) references restaurant(restaurant_id) on delete cascade
 );

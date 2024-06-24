@@ -5,20 +5,21 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 import tabling.dto.ReservationDTO;
+import tabling.dto.ReservationForRestaurantDTO;
 import tabling.util.DBConnectionManager;
+import tabling.util.Define;
 
 public class RestaurantReservationDAO {
 
-	// 식당에서 Table select * where 식당
-	public List<ReservationDTO> selectReservation(int restaurantId) throws SQLException {
-		
+	// 해당 식당의 예약 리스트를 반환하는 메서드
+	public List<ReservationDTO> getReservationByRestaurantId(int restaurantId) throws SQLException {
+
 		List<ReservationDTO> list = new ArrayList<>();
 
-		String query = " select * from reservation where restaurant_id = ? and reservation_state = 'Y' ";
+		String query = Define.SELECT_RESERVATION_BY_RESTAURANTID;
 
 		try (Connection conn = DBConnectionManager.getInstance().getConnection()) {
 
@@ -27,14 +28,10 @@ public class RestaurantReservationDAO {
 
 			try (ResultSet rs = pstmt.executeQuery()) {
 				while (rs.next()) {
-					ReservationDTO dto = new ReservationDTO()
-							.builder()
-							.reservationId(rs.getInt("reservation_id"))
+					ReservationDTO dto = new ReservationDTO().builder().reservationId(rs.getInt("reservation_id"))
 							.reservationState(rs.getString("reservation_state"))
-							.reservationTime(rs.getString("reservation_time"))
-							.customerId(rs.getInt("customer_id"))
-							.restaurantId(rs.getInt("restaurant_id"))
-							.build();
+							.reservationTime(rs.getString("reservation_time")).customerId(rs.getInt("customer_id"))
+							.restaurantId(rs.getInt("restaurant_id")).build();
 					list.add(dto);
 				}
 				for (ReservationDTO reservationDTO : list) {
@@ -43,44 +40,50 @@ public class RestaurantReservationDAO {
 			}
 		}
 		return list;
-	} // end of selectReservation
-	
-	// 식당에서 예약 이행 
+	}
+
+	// TODO 삭제 예정 중복된 역할을 하는 메서드 존재
 	public void updateReservation(int restaurantId, int customerId) throws SQLException {
-		
+
 		String query = "UPDATE reservation SET reservation_state = 'N' WHERE restaurant_id = ? and "
 				+ " customer_id = ? ";
-		
-		try(
-				Connection conn = DBConnectionManager.getInstance().getConnection()) {
-			
+
+		try (Connection conn = DBConnectionManager.getInstance().getConnection()) {
+
 			PreparedStatement pstmt = conn.prepareStatement(query);
-			
+
 			pstmt.setInt(1, restaurantId);
 			pstmt.setInt(2, customerId);
 			pstmt.executeUpdate();
-			
-			
+
 		} catch (Exception e) {
 			// TODO: handle exception
 		}
 	}
-	// TODO : TEST CODE
-	public static void main(String[] args) {
-		RestaurantReservationDAO dao = new RestaurantReservationDAO();
+
+	// TODO - 점주측에서 예약자 명단 띄우기 위함
+	public List<ReservationForRestaurantDTO> getCustomerInfoByReservation(int restaurantId) throws SQLException {
+
+		List<ReservationForRestaurantDTO> list = new ArrayList<>();
+
+		// JOIN으로 필요한 것만 띄우기 - 고객이름, 전화번호, 예약시간, 예약상태
+		String query = Define.SELECT_CUSTOMER_AND_RESERVATION;
 		
-		try {
-			dao.updateReservation(3,3);
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-		
-		RestaurantReservationDAO dao1 = new RestaurantReservationDAO();
-		try {
-			dao1.selectReservation(1);
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-	}
-	
+		try (Connection conn = DBConnectionManager.getInstance().getConnection()) {
+			PreparedStatement pstmt = conn.prepareStatement(query);
+			pstmt.setInt(1, restaurantId);
+			try (ResultSet rs = pstmt.executeQuery()){
+				while (rs.next()) {
+					ReservationForRestaurantDTO dto2 = new ReservationForRestaurantDTO().builder().customerName(rs.getString("customer_name"))
+							.customerPhone(rs.getString("phone")).reservationTime(rs.getString("reservation_time"))
+							.state(rs.getString("state")).build();
+					list.add(dto2);
+				}
+				
+			}
+		} 
+		return list;
+
+	};
+
 } // end of class
