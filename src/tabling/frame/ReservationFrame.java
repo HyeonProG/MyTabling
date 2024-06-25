@@ -7,6 +7,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.time.LocalDateTime;
 
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -21,6 +22,7 @@ import tabling.util.Time;
 
 public class ReservationFrame extends JFrame {
 
+	private JLabel background;
 	private RestaurantListFrame restaurantListFrame;
 
 	private RestaurantDTO restaurantDTO;
@@ -53,6 +55,8 @@ public class ReservationFrame extends JFrame {
 		setResizable(false);
 		setLocationRelativeTo(null);
 		setLayout(null);
+		
+		background = new JLabel(new ImageIcon("img/reservationFrame.jpg"));
 
 		reservationRequest = new ReservationRequest();
 
@@ -68,25 +72,28 @@ public class ReservationFrame extends JFrame {
 	}
 
 	private void setInitLayout() {
-		restaurantNameLabel.setBounds(65, 45, 150, 50);
-		restaurantNameLabel.setFont(new Font("Noto Sans KR", Font.BOLD, 15));
+		background.setSize(getWidth(), getHeight());
+		add(background);
+		
+		restaurantNameLabel.setBounds(65, 85, 150, 50);
+		restaurantNameLabel.setFont(new Font("Noto Sans KR", Font.BOLD, 30));
 		restaurantNameLabel.setOpaque(true);
 		restaurantNameLabel.setBackground(Color.WHITE);
-		add(restaurantNameLabel);
+		background.add(restaurantNameLabel);
 
-		reservationStatus.setBounds(65, 100, 350, 350);
+		reservationStatus.setBounds(65, 140, 350, 350);
 		reservationStatus.setBackground(Color.WHITE);
 		reservationStatus.setLineWrap(true);
 		count = reservationRequest.checkReservation(customerId, restaurantId);
 		reservationStatus.append("현재 가게의 대기 인원은 " + count + " 명 입니다.");
 
-		add(reservationStatus);
+		background.add(reservationStatus);
 
 		backBtn.setBounds(320, 50, 90, 30);
-		add(backBtn);
+		background.add(backBtn);
 
-		reservationBtn.setBounds(65, 460, 350, 40);
-		add(reservationBtn);
+		reservationBtn.setBounds(65, 500, 350, 40);
+		background.add(reservationBtn);
 	}
 
 	private void initListener() {

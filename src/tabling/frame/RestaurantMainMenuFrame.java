@@ -6,6 +6,7 @@ import java.awt.Image;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.List;
+import java.util.regex.PatternSyntaxException;
 
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
@@ -13,8 +14,10 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.RowFilter;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableRowSorter;
 
 import tabling.dto.CustomerDTO;
 import tabling.dto.ReservationForRestaurantDTO;
@@ -32,12 +35,14 @@ public class RestaurantMainMenuFrame extends JFrame {
 	DefaultTableModel tableModel;
 	private String[] head = { "고객 닉네임", "고객 전화번호", "예약시간", "예약상태" };
 	private String[][] contents;
+	private TableRowSorter<DefaultTableModel> sorter;
 	// 리스트
 	private List<ReservationForRestaurantDTO> reserList;
 	//
 	private JLabel resetBtn;
 	private JLabel endReserBtn;
 	private JLabel backBtn;
+	private JLabel filterBtn;
 	private ReservationRequest reservationRequest;
 
 	private int rowNum;
@@ -48,7 +53,7 @@ public class RestaurantMainMenuFrame extends JFrame {
 		reserList = reservationRequest.getCustomerInfoByReservation(restDTO.getRestaurantId());
 		initData();
 		setInitLayout();
-		initListener();
+		addEventListener();
 	}
 
 	private void initData() {
@@ -60,6 +65,7 @@ public class RestaurantMainMenuFrame extends JFrame {
 		resetBtn = new JLabel(new ImageIcon("img/새로고침.png"));
 		endReserBtn = new JLabel(new ImageIcon("img/예약종료.png"));
 		backBtn = new JLabel(new ImageIcon("img/quitBtn.png"));
+		filterBtn = new JLabel(new ImageIcon("img/대기중인고객버튼.png"));
 
 	}
 
@@ -82,9 +88,11 @@ public class RestaurantMainMenuFrame extends JFrame {
 		backgroundPanel.add(endReserBtn);
 		backBtn.setBounds(10, 15, 30, 30);
 		backgroundPanel.add(backBtn);
+		filterBtn.setBounds(330, 60, 130, 44);
+		backgroundPanel.add(filterBtn);
 	}
 
-	private void initListener() {
+	private void addEventListener() {
 
 		resetBtn.addMouseListener(new MouseAdapter() {
 			// 리스트 다시 담기.
@@ -108,6 +116,19 @@ public class RestaurantMainMenuFrame extends JFrame {
 				setList();
 				tableSet();
 			}
+		});
+
+		filterBtn.addMouseListener(new MouseAdapter() {
+
+			@Override
+			public void mousePressed(MouseEvent e) {
+				try {
+					sorter.setRowFilter(RowFilter.regexFilter("대기중"));
+				} catch (PatternSyntaxException ex) {
+					sorter.setRowFilter(null);
+				}
+			}
+
 		});
 
 	}
@@ -147,6 +168,8 @@ public class RestaurantMainMenuFrame extends JFrame {
 				return false;
 			}
 		};
+		sorter = new TableRowSorter<>(tableModel);
+		table.setRowSorter(sorter);
 
 		// 스크롤
 		scroll = new JScrollPane(table);

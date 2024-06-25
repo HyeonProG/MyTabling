@@ -6,7 +6,7 @@ public class CategoryRequest {
 	private String urlStr;
 
 	public CategoryRequest() {
-		urlStr = "http://localhost:8080/category";
+		urlStr = "http://" + Request.getIp() + ":8080/category";
 	}
 
 	public String getCategoryName(int categoryId) {

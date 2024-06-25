@@ -14,6 +14,8 @@ import com.google.gson.GsonBuilder;
 import tabling.dto.JsonDTO;
 
 public class Request {
+	
+	private static String ip = "localhost";
 
 	public static String getRequest(String urlStr) throws IOException {
 		String str = null;
@@ -65,5 +67,12 @@ public class Request {
 		reader.close();
 		str = response.toString();
 		return str;
+	}
+	
+	public static void setIp(String ip) {
+		Request.ip = ip;
+	}
+	public static String getIp() {
+		return ip;
 	}
 }
