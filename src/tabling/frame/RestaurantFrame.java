@@ -24,7 +24,7 @@ import tabling.request.LikeRequest;
 import tabling.request.MenuRequest;
 
 public class RestaurantFrame extends JFrame {
-	
+
 	private JLabel background;
 	private RestaurantFrame frame;
 	private RestaurantListFrame restaurantListFrame;
@@ -46,8 +46,7 @@ public class RestaurantFrame extends JFrame {
 	private Vector<String> head = new Vector<>();
 	private Vector<Vector<String>> contents = new Vector<>();
 
-	private JLabel reservationLabel;
-	private JButton reservationBtn;
+	private JLabel reservationBtn;
 
 	private JLabel restaurantNameLabel;
 	private JTextArea restaurantDetail;
@@ -76,7 +75,7 @@ public class RestaurantFrame extends JFrame {
 		setResizable(false);
 		setLocationRelativeTo(null);
 		setLayout(null);
-		
+
 		background = new JLabel(new ImageIcon("img/retaurantFrameBg.jpg"));
 
 		likeRequest = new LikeRequest();
@@ -118,8 +117,7 @@ public class RestaurantFrame extends JFrame {
 			}
 		};
 
-		reservationLabel = new JLabel(new ImageIcon("img/예약하기버튼1.png"));
-		reservationBtn = new JButton();
+		reservationBtn = new JLabel(new ImageIcon("img/예약하기버튼1.png"));
 
 		tableScroll = new JScrollPane(table);
 
@@ -149,17 +147,12 @@ public class RestaurantFrame extends JFrame {
 	private void setInitLayout() {
 		background.setSize(getWidth(), getHeight());
 		add(background);
-		
+
 		likeLabel.setBounds(60, 95, 50, 50);
 		background.add(likeLabel);
 		likeLabel.setVisible(true);
 
-		reservationLabel.setBounds(340, 27, 90, 40);
-		background.add(reservationLabel);
 		reservationBtn.setBounds(340, 27, 90, 40);
-		reservationBtn.setBorderPainted(false);
-		reservationBtn.setContentAreaFilled(false);
-		reservationBtn.setFocusPainted(false);
 		background.add(reservationBtn);
 
 		background.add(tableScroll);
@@ -177,7 +170,7 @@ public class RestaurantFrame extends JFrame {
 		table.getColumn("메뉴 이름").setPreferredWidth(70);
 		table.getColumn("메뉴 이름").setCellRenderer(centerAlign);
 
-		restaurantNameLabel.setBounds(65, 160, 150, 50);
+		restaurantNameLabel.setBounds(65, 150, 150, 50);
 		restaurantNameLabel.setFont(new Font("Noto Sans KR", Font.BOLD, 30));
 		restaurantNameLabel.setOpaque(true);
 		restaurantNameLabel.setBackground(Color.WHITE);
@@ -187,15 +180,15 @@ public class RestaurantFrame extends JFrame {
 		detailScroll.setSize(350, 150);
 		detailScroll.setLocation(65, 280);
 
-		restaurantDetail.setBounds(65, 280, 350, 150);
+		restaurantDetail.setBounds(65, 20, 350, 150);
 		restaurantDetail.setFont(new Font("Noto Sans KR", Font.BOLD, 15));
 		restaurantDetail.setOpaque(true);
 		restaurantDetail.setBackground(Color.WHITE);
 
-		imageLabel.setBounds(250, 110, 170, 150);
+		imageLabel.setBounds(250, 100, 170, 150);
 		background.add(imageLabel);
 
-		ratingLabel.setBounds(65, 220, 150, 50);
+		ratingLabel.setBounds(65, 210, 150, 50);
 		ratingLabel.setFont(new Font("Noto Sans KR", Font.BOLD, 20));
 		ratingLabel.setBackground(Color.WHITE);
 		ratingLabel.setOpaque(true);

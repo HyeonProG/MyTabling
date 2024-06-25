@@ -32,9 +32,9 @@ public class ReservationFrame extends JFrame {
 	private int restaurantId;
 	private int count;
 
-	private JButton reservationBtn;
-	private JButton backBtn;
-	private JTextArea reservationStatus;
+	private JLabel reservationBtn;
+	private JLabel backBtn;
+	private JTextArea reservationCount;
 	private JLabel restaurantNameLabel;
 
 	public ReservationFrame(CustomerDTO customerDTO, RestaurantDTO restaurantDTO,
@@ -54,7 +54,6 @@ public class ReservationFrame extends JFrame {
 		setSize(500, 700);
 		setResizable(false);
 		setLocationRelativeTo(null);
-		setLayout(null);
 		
 		background = new JLabel(new ImageIcon("img/reservationFrame.jpg"));
 
@@ -63,11 +62,12 @@ public class ReservationFrame extends JFrame {
 		restaurantNameLabel = new JLabel();
 		restaurantNameLabel.setText(restaurantDTO.getRestaurantName());
 
-		reservationStatus = new JTextArea();
+		reservationCount = new JTextArea();
 
-		backBtn = new JButton("뒤로가기");
+		
+		backBtn = new JLabel(new ImageIcon("img/quitBtn2.png"));
 
-		reservationBtn = new JButton("예약하기");
+		reservationBtn = new JLabel(new ImageIcon("img/예약하기버튼2.png"));
 		setVisible(true);
 	}
 
@@ -75,21 +75,23 @@ public class ReservationFrame extends JFrame {
 		background.setSize(getWidth(), getHeight());
 		add(background);
 		
-		restaurantNameLabel.setBounds(65, 85, 150, 50);
+		restaurantNameLabel.setBounds(0, 105, 500, 50);
 		restaurantNameLabel.setFont(new Font("Noto Sans KR", Font.BOLD, 30));
-		restaurantNameLabel.setOpaque(true);
-		restaurantNameLabel.setBackground(Color.WHITE);
+		restaurantNameLabel.setHorizontalAlignment(JLabel.CENTER);
+		restaurantNameLabel.setOpaque(false);
 		background.add(restaurantNameLabel);
 
-		reservationStatus.setBounds(65, 140, 350, 350);
-		reservationStatus.setBackground(Color.WHITE);
-		reservationStatus.setLineWrap(true);
+		reservationCount.setBounds(250, 320, 100, 100);
+		reservationCount.setFont(new Font("Noto Sans KR", Font.BOLD, 50));
+		reservationCount.setOpaque(false);
+		reservationCount.setLineWrap(true);
+		reservationCount.setEditable(false);
 		count = reservationRequest.checkReservation(customerId, restaurantId);
-		reservationStatus.append("현재 가게의 대기 인원은 " + count + " 명 입니다.");
+		reservationCount.append("" + count);
 
-		background.add(reservationStatus);
+		background.add(reservationCount);
 
-		backBtn.setBounds(320, 50, 90, 30);
+		backBtn.setBounds(20, 2, 50, 50);
 		background.add(backBtn);
 
 		reservationBtn.setBounds(65, 500, 350, 40);
