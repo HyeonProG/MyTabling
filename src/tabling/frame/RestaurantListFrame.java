@@ -381,7 +381,6 @@ public class RestaurantListFrame extends JFrame {
 		table.getColumn("영업중").setCellRenderer(centerAlign);
 		table.getColumn("평점").setPreferredWidth(30);
 		table.getColumn("평점").setCellRenderer(centerAlign);
-		table.setOpaque(false);
 		repaint();
 
 		// 테이블 이벤트 설정
