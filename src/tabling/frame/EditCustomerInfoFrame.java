@@ -1,12 +1,14 @@
 package tabling.frame;
 
 import java.awt.Choice;
+import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
 import javax.swing.ImageIcon;
+import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -30,7 +32,7 @@ public class EditCustomerInfoFrame extends JFrame {
 	private JLabel quitBtn;
 	private JLabel resignBtn;
 
-	private Choice myLocation;
+	private JComboBox<String> myLocation;
 	private String[] localArray;
 
 	public EditCustomerInfoFrame(CustomerDTO customerDTO) {
@@ -78,12 +80,13 @@ public class EditCustomerInfoFrame extends JFrame {
 		phoneField.setEditable(false);
 		backgroundPanel.add(phoneField);
 
-		myLocation = new Choice(); // 콤보박스 생성
+		myLocation = new JComboBox<String>(); // 콤보박스 생성
 		localArray = new String[] { "강서구", "사하구", "사상구", "북구", "서구", "중구", "동구", "부산진구", "영도구", "남구", "동래구", "연제구", "수영구", "금정구", "해운대구", "기장군" };
 		for (int i = 0; i < localArray.length; i++) {
-			myLocation.add(localArray[i]); // myLocation 콤보 박스에 localArray 값을 넣는다.
+			myLocation.addItem(localArray[i]); // myLocation 콤보 박스에 localArray 값을 넣는다.
 		}
 		myLocation.setBounds(90, 380, 300, 30);
+		myLocation.setFont(new Font("Noto Sans KR", Font.BOLD, 13));
 		backgroundPanel.add(myLocation);
 
 		backgroundPanel.add(locationField);
