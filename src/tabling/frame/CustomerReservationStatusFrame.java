@@ -1,16 +1,12 @@
 package tabling.frame;
 
 import java.awt.Font;
-import java.awt.Graphics;
-import java.awt.Image;
-import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
-import javax.swing.JPanel;
 
 import tabling.dto.CustomerDTO;
 import tabling.dto.ReservationDTO;
@@ -67,7 +63,7 @@ public class CustomerReservationStatusFrame extends JFrame implements MyMouseLis
 		restaurantDTO = restaurantRequest.getRestaurantByRestaurantId(reservationDTO.getRestaurantId());
 		count = reservationRequest.checkReservation(customerDTO.getCustomerId(), restaurantDTO.getRestaurantId());
 
-		backgroundPanel = new BackgroundPanel();
+		backgroundPanel = new BackgroundPanel("img/예약현황.jpg");
 
 		// 컴포넌트 초기화
 		backBtn = new JLabel(new ImageIcon("img/quitBtn.png"));
@@ -154,27 +150,10 @@ public class CustomerReservationStatusFrame extends JFrame implements MyMouseLis
 				setVisible(false);
 				dispose();
 			}
-			count = reservationRequest.checkReservation(reservationDTO.getCustomerId(), reservationDTO.getRestaurantId());
+			count = reservationRequest.checkReservation(reservationDTO.getCustomerId(),
+					reservationDTO.getRestaurantId());
 			customerQueue.setText(String.valueOf(count));
 			repaint();
 		}
-	}
-
-	private class BackgroundPanel extends JPanel {
-		private JPanel backgroundPanel;
-		private Image backgroundImage;
-
-		public BackgroundPanel() {
-			backgroundImage = new ImageIcon("img/예약현황.jpg").getImage();
-			backgroundPanel = new JPanel();
-			add(backgroundPanel);
-		}
-
-		@Override
-		protected void paintComponent(Graphics g) {
-			super.paintComponent(g);
-			g.drawImage(backgroundImage, 0, 0, getWidth(), getHeight(), null);
-		}
-
 	}
 }

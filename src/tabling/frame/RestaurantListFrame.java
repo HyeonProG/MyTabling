@@ -3,8 +3,6 @@ package tabling.frame;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
-import java.awt.Graphics;
-import java.awt.Image;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.time.LocalDateTime;
@@ -18,7 +16,6 @@ import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
@@ -32,31 +29,45 @@ import javax.swing.table.TableRowSorter;
 
 import tabling.dto.CustomerDTO;
 import tabling.dto.RestaurantDTO;
-import tabling.request.CategoryRequest;
-import tabling.request.LocationRequest;
 import tabling.request.RestaurantRequest;
 import tabling.util.Define;
 import tabling.util.Time;
 
 public class RestaurantListFrame extends JFrame {
 
-	private BackgroundPanel bg;
+	// 패널
+	private BackgroundPanel backgroundPanel;
+
+	// 추후 다른 프레임에서 이 프레임을 끄기 위해 주소값 저장
 	private RestaurantListFrame frame;
+	// 한번에 식당 프레임은 하나만 띄워놓기 위해 변수 선언
 	private RestaurantFrame restaurantFrame;
 
-	private JTable table;
-	private JScrollPane scroll;
+	// 컴포넌트
 	private JComboBox<String> filter;
 	private JLabel filterBtn;
 	private JLabel homeBtn;
 	private JLabel backBtn;
 	private JTextField searchField;
-	private LocationRequest locationRequest;
-	private CategoryRequest categoryRequest;
-	private RestaurantRequest restaurantRequest;
+
+	// 테이블 관련
+	private JTable table;
+	private JScrollPane scroll;
+	private String[] head = { "식당명", "카테고리", "지역", "영업중", "평점" };
+	private String[][] contents;
+	private TableRowSorter<DefaultTableModel> sorter;
+
+	// DTO
 	private CustomerDTO customerDTO;
+
+	// request
+	private RestaurantRequest restaurantRequest;
+
+	// 자주 사용하는 변수
 	private int categoryId;
 	private int locationId;
+
+	// 뒤로가기 버튼 입력시 돌아가기 위해 어디로 부터 왔는지를 저장하는 변수
 	private int type;
 	public static final int CATEGORY = 0;
 	public static final int LOCATION = 1;
@@ -73,12 +84,11 @@ public class RestaurantListFrame extends JFrame {
 	private final String RATING_DOWN = "평점순";
 	private final String[] COMBOBOX = { RESET, OPEN, LIKE, GANADA_UP, GANADA_DOWN, RATING_UP, RATING_DOWN };
 
+	// 영업중 필터 적용을 위해 시간을 다루는 클래스 선언
 	private Time currentTime;
-	private List<RestaurantDTO> restaurantList = new ArrayList<>();
 
-	private String[] head = { "식당명", "카테고리", "지역", "영업중", "평점" };
-	private String[][] contents;
-	private TableRowSorter<DefaultTableModel> sorter;
+	// DTO
+	private List<RestaurantDTO> restaurantList = new ArrayList<>();
 
 	public RestaurantListFrame(List<RestaurantDTO> restaurantList, CustomerDTO customerDTO, int type) {
 		this.customerDTO = customerDTO;
@@ -90,13 +100,29 @@ public class RestaurantListFrame extends JFrame {
 		addEventListener();
 	}
 
+	/**
+	 * 카테고리를 눌러서 들어왔을 경우 해당 카테고리를 저장 로케이션을 눌러서 들어왔을 경우 해당 로케이션을 저장
+	 */
+	private void typeSet() {
+		if (!restaurantList.isEmpty()) {
+			switch (type) {
+			case CATEGORY:
+				categoryId = restaurantList.get(0).getCategoryId();
+				break;
+			case LOCATION:
+				locationId = restaurantList.get(0).getLocationId();
+				break;
+			}
+		}
+	}
+
 	private void initData() {
-		bg = new BackgroundPanel();
+		backgroundPanel = new BackgroundPanel("img/retaurantListFrameBg.jpg");
 		frame = this;
-		locationRequest = new LocationRequest();
-		categoryRequest = new CategoryRequest();
 		restaurantRequest = new RestaurantRequest();
-		currentTime = new Time(LocalDateTime.now().getHour(), LocalDateTime.now().getMinute(), LocalDateTime.now().getDayOfWeek().toString());
+		// 현재 시간 설정
+		currentTime = new Time(LocalDateTime.now().getHour(), LocalDateTime.now().getMinute(),
+				LocalDateTime.now().getDayOfWeek().toString());
 		// 테이블에 담는 과정
 		tableSet();
 		filter = new JComboBox<String>();
@@ -107,46 +133,41 @@ public class RestaurantListFrame extends JFrame {
 	}
 
 	private void setInitLayout() {
-		bg.setSize(getWidth(), getHeight());
-		bg.setLayout(null);
+		backgroundPanel.setSize(getWidth(), getHeight());
+		backgroundPanel.setLayout(null);
 
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setTitle(" 리스트 화면 " + customerDTO.getCustomerName() + "님");
 		setSize(500, 700);
-		// setLayout(null); // 좌표값으로 배치
-		setResizable(false); // 프레임 조절 불가
-		setLocationRelativeTo(null); // JFrame을 모니터 가운데 자동 배치
+		setResizable(false);
+		setLocationRelativeTo(null);
 
-		bg.add(filter);
+		backgroundPanel.add(filter);
 		filter.setBounds(260, 80, 110, 30);
-//		filter.setLocation(270, 80);
-//		filter.setSize(110, 30);
 		filter.setFont(new Font("Noto Sans KR", Font.BOLD, 15));
 
 		for (int i = 0; i < COMBOBOX.length; i++) {
 			filter.addItem(COMBOBOX[i]);
 		}
 
-		bg.add(filterBtn);
+		backgroundPanel.add(filterBtn);
 		filterBtn.setBounds(385, 78, 86, 35);
-//		filterBtn.setLocation(400, 80);
-//		filterBtn.setSize(86, 35);
 		filterBtn.setFont(new Font("Noto Sans KR", Font.BOLD, 15));
 
-		bg.add(homeBtn);
+		backgroundPanel.add(homeBtn);
 		homeBtn.setLocation(205, 595);
 		homeBtn.setSize(70, 70);
 
-		bg.add(backBtn);
+		backgroundPanel.add(backBtn);
 		backBtn.setLocation(20, 30);
 		backBtn.setSize(15, 24);
 
-		bg.add(searchField);
+		backgroundPanel.add(searchField);
 		searchField.setLocation(20, 80);
 		searchField.setSize(202, 30);
 		searchField.setFont(new Font("Noto Sans KR", Font.BOLD, 15));
 
-		add(bg);
+		add(backgroundPanel);
 		setVisible(true);
 
 	}
@@ -278,26 +299,10 @@ public class RestaurantListFrame extends JFrame {
 		});
 	}
 
-	/**
-	 * 카테고리를 눌러서 들어왔을 경우 해당 카테고리를 저장 로케이션을 눌러서 들어왔을 경우 해당 로케이션을 저장
-	 */
-	private void typeSet() {
-		if (!restaurantList.isEmpty()) {
-			switch (type) {
-			case CATEGORY:
-				categoryId = restaurantList.get(0).getCategoryId();
-				break;
-			case LOCATION:
-				locationId = restaurantList.get(0).getLocationId();
-				break;
-			}
-		}
-	}
-
 	// 테이블을 세팅하고, 이벤트도 등록하는 메서드
 	private void tableSet() {
 		if (scroll != null) {
-			bg.remove(scroll);
+			backgroundPanel.remove(scroll);
 		}
 		contents = new String[restaurantList.size()][head.length];
 
@@ -316,10 +321,10 @@ public class RestaurantListFrame extends JFrame {
 			String categoryName = null;
 			String locationName = null;
 			/**
-			 *  원래는 db에 접근해서 id에 해당하는 이름을 받아 왔으나 <BR>
-			 *  1회 반복마다 서버에 요청을하니 너무 오래걸려서 자체적으로 처리함
+			 * 원래는 db에 접근해서 id에 해당하는 이름을 받아 왔으나 <BR>
+			 * 1회 반복마다 서버에 요청을하니 너무 오래걸려서 자체적으로 처리함
 			 */
-			// categoryName = categoryRequest.getCategoryName(categoryId); 
+			// categoryName = categoryRequest.getCategoryName(categoryId);
 			// locationName = locationRequest.getLocationName(locationId);
 			categoryName = getCategoryName(categoryId);
 			locationName = getLocationName(locationId);
@@ -343,7 +348,7 @@ public class RestaurantListFrame extends JFrame {
 
 		// 테이블을 스크롤에 넣고 스크롤 설정
 		scroll = new JScrollPane(table);
-		bg.add(scroll);
+		backgroundPanel.add(scroll);
 		scroll.setSize(450, 450);
 		scroll.setLocation(20, 130);
 		scroll.getVerticalScrollBar().setUI(new BasicScrollBarUI() {
@@ -428,100 +433,28 @@ public class RestaurantListFrame extends JFrame {
 		}
 	}
 
-	private class BackgroundPanel extends JPanel {
-		private JPanel backgroundPanel;
-		private Image backgroundImage;
-
-		public BackgroundPanel() {
-			backgroundImage = new ImageIcon("img/retaurantListFrameBg.jpg").getImage();
-			backgroundPanel = new JPanel();
-			add(backgroundPanel);
-		}
-
-		@Override
-		protected void paintComponent(Graphics g) {
-			super.paintComponent(g);
-			g.drawImage(backgroundImage, 0, 0, getWidth(), getHeight(), null);
-		}
-
-	}
-
 	/**
 	 * id를 이름으로 바꾸는 메서드 <BR>
 	 * 원래는 db에서 받아왔으나 서버에 요청을 하는 방식으로는 너무 오래걸려 바꿈
+	 * 
 	 * @param id
 	 * @return
 	 */
 	private String getCategoryName(int id) {
-		switch (id) {
-		case Define.CATEGORY_BOONSIK:
-			return "분식";
-		case Define.CATEGORY_CAFE:
-			return "카페";
-		case Define.CATEGORY_CHICKEN:
-			return "치킨";
-		case Define.CATEGORY_FAMILY:
-			return "패밀리레스토랑";
-		case Define.CATEGORY_FASTFOOD:
-			return "패스트푸드";
-		case Define.CATEGORY_GUI:
-			return "숯불구이";
-		case Define.CATEGORY_GYOUNGYANG:
-			return "경양식";
-		case Define.CATEGORY_HANSIK:
-			return "한식";
-		case Define.CATEGORY_HOE:
-			return "횟집";
-		case Define.CATEGORY_HOF:
-			return "호프";
-		case Define.CATEGORY_ILSIK:
-			return "일식";
-		case Define.CATEGORY_JOONGSIK:
-			return "중식";
-		case Define.CATEGORY_NAENGMYUN:
-			return "냉면";
-		default:
-			return null;
+		for (int i = Define.CATEGORY_GYOUNGYANG; i <= Define.CATEGORY_HOF; i++) {
+			if (i == id) {
+				return Define.CATEGOIES[i];
+			}
 		}
+		return null;
 	}
 
 	private String getLocationName(int id) {
-		switch (id) {
-		case Define.LOCATION_BUKGU:
-			return "북구";
-		case Define.LOCATION_BUSANSGINGU:
-			return "부산진구";
-		case Define.LOCATION_DONGGU:
-			return "동구";
-		case Define.LOCATION_DONGNAEGU:
-			return "동래구";
-		case Define.LOCATION_GANGSEOGU:
-			return "강서구";
-		case Define.LOCATION_GEUMJEONGGU:
-			return "금정구";
-		case Define.LOCATION_GIJANGGUN:
-			return "기장군";
-		case Define.LOCATION_HAEUNDAEGU:
-			return "해운대구";
-		case Define.LOCATION_JUNGGU:
-			return "중구";
-		case Define.LOCATION_NAMGU:
-			return "남구";
-		case Define.LOCATION_SAHAGU:
-			return "사하구";
-		case Define.LOCATION_SASANGGU:
-			return "사상구";
-		case Define.LOCATION_SEOGU:
-			return "서구";
-		case Define.LOCATION_SUYEONGGU:
-			return "수영구";
-		case Define.LOCATION_YEONGDOGU:
-			return "영도구";
-		case Define.LOCATION_YEONJEGU:
-			return "연제구";
-			default :
-				return null;
+		for (int i = Define.LOCATION_GANGSEOGU; i <= Define.LOCATION_GIJANGGUN; i++) {
+			if (i == id) {
+				return Define.LOCATIONS[i];
+			}
 		}
+		return null;
 	}
-
 }

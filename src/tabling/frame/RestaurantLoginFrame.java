@@ -1,8 +1,6 @@
 package tabling.frame;
 
 import java.awt.Font;
-import java.awt.Graphics;
-import java.awt.Image;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
@@ -12,7 +10,6 @@ import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
-import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 
@@ -21,13 +18,22 @@ import tabling.request.RestaurantRequest;
 
 public class RestaurantLoginFrame extends JFrame {
 
+	// 패널
 	private BackgroundPanel backgroundPanel;
+
+	// 컴포넌트
 	private JTextField resIdText;
 	private JPasswordField resPwText;
 	private JLabel loginBtn;
 	private JLabel backBtn;
+
+	// DTO
+	private RestaurantDTO restaurantDTO;
+
+	// request
 	private RestaurantRequest restaurantRequest;
-	private RestaurantDTO restDTO;
+
+	// 변수
 	private int restaurantId;
 
 	public RestaurantLoginFrame() {
@@ -37,14 +43,14 @@ public class RestaurantLoginFrame extends JFrame {
 	}
 
 	private void initData() {
-		backgroundPanel = new BackgroundPanel();
+		backgroundPanel = new BackgroundPanel("img/restaurantLoginBg.jpg");
 		loginBtn = new JLabel(new ImageIcon("img/loginBtn.png"));
 		resIdText = new JTextField();
 		resPwText = new JPasswordField();
 		backBtn = new JLabel(new ImageIcon("img/quitBtn.png"));
 
 		restaurantRequest = new RestaurantRequest();
-		restDTO = new RestaurantDTO();
+		restaurantDTO = new RestaurantDTO();
 	}
 
 	private void setInitLayout() {
@@ -82,84 +88,60 @@ public class RestaurantLoginFrame extends JFrame {
 	}
 
 	private void addEventListener() {
+
+		// 로그인 버튼 입력시
 		loginBtn.addMouseListener(new MouseAdapter() {
 
 			@Override
 			public void mousePressed(MouseEvent e) {
-				char[] pwChars = resPwText.getPassword();
-				String pw = new String(pwChars);
-				try {
-					if (!resIdText.getText().equals("") || !pw.equals("")) {
-						restaurantId = Integer.parseInt(resIdText.getText());
-						if ((restDTO = restaurantRequest.getRestaurantByRestaurantId(restaurantId)) != null && pw.equals("1111")) {
-							JOptionPane.showMessageDialog(null, "로그인 되었습니다.", "성공", JOptionPane.INFORMATION_MESSAGE);
-							setVisible(false);
-							dispose();
-							new RestaurantMainMenuFrame(restDTO);
-						} else if ((restDTO = restaurantRequest.getRestaurantByRestaurantId(restaurantId)) == null) {
-							JOptionPane.showMessageDialog(null, "아이디가 올바르지 않습니다.", "실패", JOptionPane.WARNING_MESSAGE);
-						} else {
-							JOptionPane.showMessageDialog(null, "비밀번호가 올바르지 않습니다.", "실패", JOptionPane.WARNING_MESSAGE);
-						}
-					}
-				} catch (NumberFormatException e1) {
-					JOptionPane.showMessageDialog(null, "존재하지 않는 ID입니다.", "실패", JOptionPane.WARNING_MESSAGE);
-				}
+				login();
 			}
 
 		});
 
+		// 뒤로가기 입력시
 		backBtn.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mousePressed(MouseEvent e) {
 				new LoginSelectFrame();
 				setVisible(false);
+				dispose();
 			}
 		});
 
+		// 엔터키 입력시
 		addKeyListener(new KeyAdapter() {
 			@Override
 			public void keyPressed(KeyEvent e) {
-				char[] pwChars = resPwText.getPassword();
-				String pw = new String(pwChars);
-				try {
-					if (!resIdText.getText().equals("") || !pw.equals("")) {
-						restaurantId = Integer.parseInt(resIdText.getText());
-						if ((restDTO = restaurantRequest.getRestaurantByRestaurantId(restaurantId)) != null && pw.equals("1111")) {
-							JOptionPane.showMessageDialog(null, "로그인 되었습니다.", "성공", JOptionPane.INFORMATION_MESSAGE);
-							setVisible(false);
-							dispose();
-							new RestaurantMainMenuFrame(restDTO);
-						} else if ((restDTO = restaurantRequest.getRestaurantByRestaurantId(restaurantId)) == null) {
-							JOptionPane.showMessageDialog(null, "아이디가 올바르지 않습니다.", "경고", JOptionPane.WARNING_MESSAGE);
-						} else {
-							JOptionPane.showMessageDialog(null, "비밀번호가 올바르지 않습니다.", "경고", JOptionPane.WARNING_MESSAGE);
-						}
-					}
-				} catch (NumberFormatException e1) {
-					JOptionPane.showMessageDialog(null, "존재하지 않는 ID입니다.", "경고", JOptionPane.WARNING_MESSAGE);
+				if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+					login();
 				}
 			}
 		});
 
 	}
 
-	private class BackgroundPanel extends JPanel {
-		private JPanel backgroundPanel;
-		private Image backgroundImage;
-
-		public BackgroundPanel() {
-			backgroundImage = new ImageIcon("img/restaurantLoginBg.jpg").getImage();
-			backgroundPanel = new JPanel();
-			add(backgroundPanel);
+	// 로그인 버튼 & 엔터 키 입력시 호출
+	private void login() {
+		char[] pwChars = resPwText.getPassword();
+		String pw = new String(pwChars);
+		try {
+			if (!resIdText.getText().equals("") || !pw.equals("")) {
+				restaurantId = Integer.parseInt(resIdText.getText());
+				if ((restaurantDTO = restaurantRequest.getRestaurantByRestaurantId(restaurantId)) != null
+						&& pw.equals("1111")) {
+					JOptionPane.showMessageDialog(null, "로그인 되었습니다.", "성공", JOptionPane.INFORMATION_MESSAGE);
+					setVisible(false);
+					dispose();
+					new RestaurantMainMenuFrame(restaurantDTO);
+				} else if ((restaurantDTO = restaurantRequest.getRestaurantByRestaurantId(restaurantId)) == null) {
+					JOptionPane.showMessageDialog(null, "아이디가 올바르지 않습니다.", "경고", JOptionPane.WARNING_MESSAGE);
+				} else {
+					JOptionPane.showMessageDialog(null, "비밀번호가 올바르지 않습니다.", "경고", JOptionPane.WARNING_MESSAGE);
+				}
+			}
+		} catch (NumberFormatException e1) {
+			JOptionPane.showMessageDialog(null, "존재하지 않는 ID입니다.", "경고", JOptionPane.WARNING_MESSAGE);
 		}
-
-		@Override
-		protected void paintComponent(Graphics g) {
-			super.paintComponent(g);
-			g.drawImage(backgroundImage, 0, 0, getWidth(), getHeight(), null);
-		}
-
 	}
-
 }

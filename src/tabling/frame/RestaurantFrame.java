@@ -9,7 +9,6 @@ import java.util.List;
 import java.util.Vector;
 
 import javax.swing.ImageIcon;
-import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JScrollPane;
@@ -25,50 +24,51 @@ import tabling.request.MenuRequest;
 
 public class RestaurantFrame extends JFrame {
 
-	private JLabel background;
-	private RestaurantFrame frame;
+	// 예약 프레임에 넘겨주기 위해 참조함
 	private RestaurantListFrame restaurantListFrame;
 
-	private RestaurantDTO restaurantDTO;
-	private List<MenuDTO> menuList = new ArrayList<>();
-	private MenuRequest menuRequest;
-	private CustomerDTO customerDTO;
-
+	// 컴포넌트
+	private JLabel background;
 	private JLabel imageLabel;
 	private JLabel ratingLabel;
+	private JLabel restaurantNameLabel;
+	private JTextArea restaurantDetail;
+	private JScrollPane detailScroll;
 	private JLabel likeLabel;
 	private ImageIcon likeImg;
 	private ImageIcon unlikeImg;
-	private boolean checkLike;
+	private JLabel likeCountLabel;
+	private JLabel reservationBtn;
 
+	// 테이블 관련 변수
 	private JTable table;
 	private JScrollPane tableScroll;
 	private Vector<String> head = new Vector<>();
 	private Vector<Vector<String>> contents = new Vector<>();
 
-	private JLabel reservationBtn;
+	// DTO
+	private RestaurantDTO restaurantDTO;
+	private CustomerDTO customerDTO;
+	private List<MenuDTO> menuList = new ArrayList<>();
 
-	private JLabel restaurantNameLabel;
-	private JTextArea restaurantDetail;
-	private JScrollPane detailScroll;
-
+	// request
+	private MenuRequest menuRequest;
 	private LikeRequest likeRequest;
-	private JLabel likeCountLabel;
+
+	// 좋아요 버튼이 눌러졌는지 체크하는 변수
+	private boolean checkLike;
 
 	public RestaurantFrame(CustomerDTO customerDTO, RestaurantDTO restaurantDTO,
 			RestaurantListFrame restaurantListFrame) {
 		this.customerDTO = customerDTO;
 		this.restaurantDTO = restaurantDTO;
 		this.restaurantListFrame = restaurantListFrame;
-		menuRequest = new MenuRequest();
-		this.menuList = menuRequest.getMenuByRestaurantId(restaurantDTO.getRestaurantId());
 		initData();
 		setInitLayout();
 		addEventListener();
 	}
 
 	private void initData() {
-		frame = this;
 
 		setTitle("음식점 상세페이지");
 		setSize(500, 700);
@@ -79,6 +79,9 @@ public class RestaurantFrame extends JFrame {
 		background = new JLabel(new ImageIcon("img/retaurantFrameBg.jpg"));
 
 		likeRequest = new LikeRequest();
+		menuRequest = new MenuRequest();
+		menuList = menuRequest.getMenuByRestaurantId(restaurantDTO.getRestaurantId());
+
 		// 현재 고객이 좋아요를 누른 식당인지 판별 -> 프레임에 띄우기 위함
 		checkLike = likeRequest.getLike(customerDTO.getCustomerId(), restaurantDTO.getRestaurantId());
 
@@ -86,8 +89,10 @@ public class RestaurantFrame extends JFrame {
 
 		restaurantNameLabel = new JLabel();
 		restaurantNameLabel.setText(restaurantDTO.getRestaurantName());
+
 		restaurantDetail = new JTextArea();
 		restaurantDetail.setLineWrap(true);
+		// 식당의 상세 정보를 작성
 		restaurantDetail.append("주소 : " + restaurantDTO.getAddress() + "\n");
 		restaurantDetail.append("가게 번호 : " + restaurantDTO.getPhone() + "\n");
 		restaurantDetail
@@ -98,8 +103,11 @@ public class RestaurantFrame extends JFrame {
 		restaurantDetail.append(restaurantDTO.getContent() + "\n");
 		restaurantDetail.setEditable(false);
 
+		// 테이블 컬럼 명 초기화
 		head.add("메뉴 이름");
 		head.add("가격");
+
+		// 테이블 내용 초기화
 		for (int i = 0; i < menuList.size(); i++) {
 			contents.add(new Vector<>());
 			int price = menuList.get(i).getPrice();
@@ -110,6 +118,7 @@ public class RestaurantFrame extends JFrame {
 			contents.get(i).add(String.valueOf(price));
 		}
 
+		// 테이블 초기화와 동시에 수정 불가 적용
 		table = new JTable(contents, head) {
 			@Override
 			public boolean isCellEditable(int row, int column) {
@@ -138,6 +147,7 @@ public class RestaurantFrame extends JFrame {
 		}
 
 		likeCountLabel = new JLabel();
+
 		// 좋아요 수 카운트
 		likeCountLabel.setText(String.valueOf(likeRequest.getLikeCount(restaurantDTO.getRestaurantId())));
 		setVisible(true);
@@ -159,6 +169,7 @@ public class RestaurantFrame extends JFrame {
 		tableScroll.setSize(350, 148);
 		tableScroll.setLocation(65, 430);
 
+		// 테이블 설정
 		table.setFont(new Font("Noto Sans KR", Font.BOLD, 15));
 		table.setRowHeight(25);
 		table.getTableHeader().setReorderingAllowed(false); // 컬럼 이동 불가
@@ -207,8 +218,8 @@ public class RestaurantFrame extends JFrame {
 			@Override
 			public void mousePressed(MouseEvent e) {
 				new ReservationFrame(customerDTO, restaurantDTO, restaurantListFrame);
-				frame.setVisible(false);
-				frame.dispose();
+				setVisible(false);
+				dispose();
 			}
 		});
 

@@ -1,9 +1,7 @@
 package tabling.frame;
 
 import java.awt.Font;
-import java.awt.Graphics;
 import java.awt.HeadlessException;
-import java.awt.Image;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
@@ -12,7 +10,6 @@ import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
-import javax.swing.JPanel;
 import javax.swing.JTextField;
 
 import tabling.dto.CustomerDTO;
@@ -24,16 +21,16 @@ public class CustomerLoginFrame extends JFrame implements MyMouseListener {
 
 	// 패널
 	private BackgroundPanel backgroundPanel;
-	
+
 	// 컴포넌트
 	private JLabel loginBtn;
 	private JLabel registerBtn;
 	private JLabel backBtn;
 	private JTextField phoneText;
-	
+
 	// DTO
 	private CustomerDTO customerDTO;
-	
+
 	// request
 	private CustomerRequest request;
 
@@ -44,14 +41,14 @@ public class CustomerLoginFrame extends JFrame implements MyMouseListener {
 	}
 
 	private void initData() {
-		backgroundPanel = new BackgroundPanel();
-		
+		backgroundPanel = new BackgroundPanel("img/loginBg.jpg");
+
 		// 컴포넌트 초기화
 		loginBtn = new JLabel(new ImageIcon("img/loginBtn.png"));
 		registerBtn = new JLabel(new ImageIcon("img/signInBtn.png"));
 		backBtn = new JLabel(new ImageIcon("img/quitBtn.png"));
 		phoneText = new JTextField();
-		
+
 		// request 초기화
 		request = new CustomerRequest();
 	}
@@ -63,7 +60,7 @@ public class CustomerLoginFrame extends JFrame implements MyMouseListener {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setLayout(null);
 		setResizable(false);
-		
+
 		backgroundPanel.setSize(getWidth(), getHeight());
 		backgroundPanel.setLayout(null);
 		add(backgroundPanel);
@@ -113,18 +110,18 @@ public class CustomerLoginFrame extends JFrame implements MyMouseListener {
 			}
 		});
 	}
-	
+
 	// 마우스 입력 이벤트 처리
 	@Override
 	public void mousePressed(MouseEvent e) {
-		
+
 		// 회원가입 버튼
 		if (e.getSource() == registerBtn) {
 			new SignInFrame();
-		// 로그인 버튼
+			// 로그인 버튼
 		} else if (e.getSource() == loginBtn) {
 			login();
-		// 뒤로가기 버튼
+			// 뒤로가기 버튼
 		} else if (e.getSource() == backBtn) {
 			new LoginSelectFrame();
 			setVisible(false);
@@ -156,24 +153,4 @@ public class CustomerLoginFrame extends JFrame implements MyMouseListener {
 			}
 		}
 	}
-
-	// 패널 내부 클래스
-	private class BackgroundPanel extends JPanel {
-		private JPanel backgroundPanel;
-		private Image backgroundImage;
-
-		public BackgroundPanel() {
-			backgroundImage = new ImageIcon("img/loginBg.jpg").getImage();
-			backgroundPanel = new JPanel();
-			add(backgroundPanel);
-		}
-
-		@Override
-		protected void paintComponent(Graphics g) {
-			super.paintComponent(g);
-			g.drawImage(backgroundImage, 0, 0, getWidth(), getHeight(), null);
-		}
-
-	}
-
 }

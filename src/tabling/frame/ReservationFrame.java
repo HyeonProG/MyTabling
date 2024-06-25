@@ -1,6 +1,5 @@
 package tabling.frame;
 
-import java.awt.Color;
 import java.awt.Font;
 import java.awt.HeadlessException;
 import java.awt.event.MouseAdapter;
@@ -8,7 +7,6 @@ import java.awt.event.MouseEvent;
 import java.time.LocalDateTime;
 
 import javax.swing.ImageIcon;
-import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -22,20 +20,29 @@ import tabling.util.Time;
 
 public class ReservationFrame extends JFrame {
 
-	private JLabel background;
+	// 예약 완료시 식당 리스트 프레임을 종료 시키기 위해 참조함
 	private RestaurantListFrame restaurantListFrame;
 
-	private RestaurantDTO restaurantDTO;
-	private ReservationRequest reservationRequest;
-	private CustomerDTO customerDTO;
-	private int customerId;
-	private int restaurantId;
-	private int count;
-
+	// 컴포넌트
+	private JLabel background;
 	private JLabel reservationBtn;
 	private JLabel backBtn;
 	private JTextArea reservationCount;
 	private JLabel restaurantNameLabel;
+
+	// DTO
+	private RestaurantDTO restaurantDTO;
+	private CustomerDTO customerDTO;
+
+	// request
+	private ReservationRequest reservationRequest;
+
+	// 자주 사용하는 변수
+	private int customerId;
+	private int restaurantId;
+
+	// 대기열 수
+	private int count;
 
 	public ReservationFrame(CustomerDTO customerDTO, RestaurantDTO restaurantDTO,
 			RestaurantListFrame restaurantListFrame) {
@@ -46,7 +53,7 @@ public class ReservationFrame extends JFrame {
 		this.restaurantListFrame = restaurantListFrame;
 		initData();
 		setInitLayout();
-		initListener();
+		addEventListener();
 	}
 
 	private void initData() {
@@ -54,7 +61,7 @@ public class ReservationFrame extends JFrame {
 		setSize(500, 700);
 		setResizable(false);
 		setLocationRelativeTo(null);
-		
+
 		background = new JLabel(new ImageIcon("img/reservationFrame.jpg"));
 
 		reservationRequest = new ReservationRequest();
@@ -64,7 +71,6 @@ public class ReservationFrame extends JFrame {
 
 		reservationCount = new JTextArea();
 
-		
 		backBtn = new JLabel(new ImageIcon("img/quitBtn2.png"));
 
 		reservationBtn = new JLabel(new ImageIcon("img/예약하기버튼2.png"));
@@ -74,7 +80,7 @@ public class ReservationFrame extends JFrame {
 	private void setInitLayout() {
 		background.setSize(getWidth(), getHeight());
 		add(background);
-		
+
 		restaurantNameLabel.setBounds(0, 105, 500, 50);
 		restaurantNameLabel.setFont(new Font("Noto Sans KR", Font.BOLD, 30));
 		restaurantNameLabel.setHorizontalAlignment(JLabel.CENTER);
@@ -98,15 +104,19 @@ public class ReservationFrame extends JFrame {
 		background.add(reservationBtn);
 	}
 
-	private void initListener() {
+	private void addEventListener() {
 		reservationBtn.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mousePressed(MouseEvent e) {
+
+				// 현재 영업중인지 확인하는 코드
 				if (new Time(LocalDateTime.now().getHour(), LocalDateTime.now().getMinute(),
 						LocalDateTime.now().getDayOfWeek().toString()).isOpen(restaurantDTO) == false) {
 					JOptionPane.showMessageDialog(null, "현재 영업중이 아닙니다.");
 					return;
 				}
+
+				// 예약 버튼 입력시
 				int result = JOptionPane.showConfirmDialog(null, "예약하시겠습니까?", "예약", 2, 1);
 				if (result == JOptionPane.YES_OPTION) {
 					try {
@@ -118,6 +128,7 @@ public class ReservationFrame extends JFrame {
 								JOptionPane.showMessageDialog(null, "예약되었습니다.");
 								reservationRequest.reservation(customerId, restaurantId);
 								customerDTO = new CustomerRequest().getCustomerByPhone(customerDTO.getPhone());
+								// 예약이 완료되면 메인 화면으로 돌아가면서 식당 리스트 프레임을 꺼버림
 								new CustomerMainMenuFrame(customerDTO);
 								restaurantListFrame.setVisible(false);
 								restaurantListFrame.dispose();

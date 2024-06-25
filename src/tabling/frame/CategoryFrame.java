@@ -1,15 +1,12 @@
 package tabling.frame;
 
-import java.awt.Graphics;
 import java.awt.GridLayout;
-import java.awt.Image;
 import java.awt.event.MouseEvent;
 import java.util.List;
 
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JPanel;
 
 import tabling.dto.CustomerDTO;
 import tabling.dto.RestaurantDTO;
@@ -27,10 +24,10 @@ public class CategoryFrame extends JFrame implements MyMouseListener {
 	private JLabel[] categoryImgs;
 	private JLabel homeLabel;
 	private JLabel mainLabel;
-	
+
 	// DTO
 	private CustomerDTO customerDTO;
-	
+
 	// request
 	private RestaurantRequest restaurantRequest;
 
@@ -42,7 +39,7 @@ public class CategoryFrame extends JFrame implements MyMouseListener {
 	}
 
 	private void initData() {
-		backgroundPanel = new BackgroundPanel();
+		backgroundPanel = new BackgroundPanel("img/categoryFrameBg.jpg");
 		restaurantRequest = new RestaurantRequest();
 		mainLabel = new JLabel();
 
@@ -97,7 +94,7 @@ public class CategoryFrame extends JFrame implements MyMouseListener {
 			setVisible(false);
 			dispose();
 		}
-		
+
 		// 어떤 카테고리를 선택했는지 확인
 		for (int i = Define.CATEGORY_GYOUNGYANG; i <= Define.CATEGORY_HOF; i++) {
 			if (e.getSource() == categoryImgs[i]) {
@@ -115,24 +112,6 @@ public class CategoryFrame extends JFrame implements MyMouseListener {
 			dispose();
 		}
 
-	}
-
-	// 패널 내부 클래스
-	private class BackgroundPanel extends JPanel {
-		private JPanel backgroundPanel;
-		private Image backgroundImage;
-
-		public BackgroundPanel() {
-			backgroundImage = new ImageIcon("img/categoryFrameBg.jpg").getImage();
-			backgroundPanel = new JPanel();
-			add(backgroundPanel);
-		}
-
-		@Override
-		protected void paintComponent(Graphics g) {
-			super.paintComponent(g);
-			g.drawImage(backgroundImage, 0, 0, getWidth(), getHeight(), null);
-		}
 	}
 
 }

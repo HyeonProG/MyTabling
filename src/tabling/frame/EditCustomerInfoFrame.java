@@ -1,10 +1,6 @@
 package tabling.frame;
 
-import java.awt.Choice;
 import java.awt.Font;
-import java.awt.Graphics;
-import java.awt.Image;
-import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
 import javax.swing.ImageIcon;
@@ -12,28 +8,34 @@ import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
-import javax.swing.JPanel;
 import javax.swing.JTextField;
 
 import tabling.dto.CustomerDTO;
 import tabling.dto.ReservationDTO;
 import tabling.request.CustomerRequest;
 import tabling.request.ReservationRequest;
+import tabling.util.Define;
+import tabling.util.MyMouseListener;
 
-public class EditCustomerInfoFrame extends JFrame {
+public class EditCustomerInfoFrame extends JFrame implements MyMouseListener {
 
+	// 패널
 	private BackgroundPanel backgroundPanel;
-	private CustomerDTO customerDTO;
-	private CustomerRequest request;
+
+	// 컴포넌트
 	private JTextField nameField;
 	private JTextField locationField;
 	private JTextField phoneField;
 	private JLabel editBtn;
 	private JLabel quitBtn;
 	private JLabel resignBtn;
-
 	private JComboBox<String> myLocation;
-	private String[] localArray;
+
+	// DTO
+	private CustomerDTO customerDTO;
+
+	// request
+	private CustomerRequest request;
 
 	public EditCustomerInfoFrame(CustomerDTO customerDTO) {
 		this.customerDTO = customerDTO;
@@ -51,7 +53,9 @@ public class EditCustomerInfoFrame extends JFrame {
 		setLocationRelativeTo(null);
 		setVisible(true);
 
-		backgroundPanel = new BackgroundPanel();
+		backgroundPanel = new BackgroundPanel("img/인트로화면 – 4.jpg");
+
+		// 컴포넌트 초기화
 		nameField = new JTextField();
 		phoneField = new JTextField();
 		locationField = new JTextField();
@@ -80,10 +84,10 @@ public class EditCustomerInfoFrame extends JFrame {
 		phoneField.setEditable(false);
 		backgroundPanel.add(phoneField);
 
-		myLocation = new JComboBox<String>(); // 콤보박스 생성
-		localArray = new String[] { "강서구", "사하구", "사상구", "북구", "서구", "중구", "동구", "부산진구", "영도구", "남구", "동래구", "연제구", "수영구", "금정구", "해운대구", "기장군" };
-		for (int i = 0; i < localArray.length; i++) {
-			myLocation.addItem(localArray[i]); // myLocation 콤보 박스에 localArray 값을 넣는다.
+		// 콤보 박스에 로케이션 값 초기화
+		myLocation = new JComboBox<String>();
+		for (int i = Define.LOCATION_GANGSEOGU; i <= Define.LOCATION_GIJANGGUN; i++) {
+			myLocation.addItem(Define.LOCATIONS[i]);
 		}
 		myLocation.setBounds(90, 380, 300, 30);
 		myLocation.setFont(new Font("Noto Sans KR", Font.BOLD, 13));
@@ -91,7 +95,7 @@ public class EditCustomerInfoFrame extends JFrame {
 
 		backgroundPanel.add(locationField);
 
-		editBtn.setBounds(85, 480, 314, 46); // 수정하기
+		editBtn.setBounds(85, 480, 314, 46);
 		backgroundPanel.add(editBtn);
 
 		quitBtn.setBounds(10, 30, 15, 24);
@@ -103,78 +107,53 @@ public class EditCustomerInfoFrame extends JFrame {
 	}
 
 	private void addEventListener() {
+		quitBtn.addMouseListener(this);
+		editBtn.addMouseListener(this);
+		resignBtn.addMouseListener(this);
+	}
 
-		quitBtn.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mousePressed(MouseEvent e) {
+	@Override
+	public void mousePressed(MouseEvent e) {
+		// 나가기 버튼 입력시 메인 메뉴로 돌아감
+		if (e.getSource() == quitBtn) {
+			new CustomerMainMenuFrame(customerDTO);
+			setVisible(false);
+			dispose();
+			// 수정하기 버튼
+		} else if (e.getSource() == editBtn) {
+			if (nameField.getText().matches("^\\s.*")) {
+				JOptionPane.showMessageDialog(null, "닉네임은 공백으로 시작할 수 없습니다.", "경고", JOptionPane.WARNING_MESSAGE);
+				nameField.setText("");
+				return;
+			} else if (nameField.getText().matches(".*\\s$")) {
+				JOptionPane.showMessageDialog(null, "닉네임은 공백으로 끝날 수 없습니다.", "경고", JOptionPane.WARNING_MESSAGE);
+				nameField.setText("");
+				return;
+			} else if (nameField.getText().length() > 50) {
+				JOptionPane.showMessageDialog(null, "닉네임은 50자까지만 기입 가능합니다.", "경고", JOptionPane.WARNING_MESSAGE);
+				nameField.setText("");
+			} else {
+				request.updateCustomer(nameField.getText(), customerDTO.getPhone(), myLocation.getSelectedIndex() + 1);
+				JOptionPane.showMessageDialog(null, "수정이 완료되었습니다.", "PLAIN_MESSAGE", JOptionPane.PLAIN_MESSAGE);
+				customerDTO = request.getCustomerByPhone(customerDTO.getPhone());
 				new CustomerMainMenuFrame(customerDTO);
 				setVisible(false);
 				dispose();
 			}
-		});
-
-		editBtn.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mousePressed(MouseEvent e) {
-
-				if (nameField.getText().matches("^\\s.*")) {
-					JOptionPane.showMessageDialog(null, "닉네임은 공백으로 시작할 수 없습니다.", "경고", JOptionPane.WARNING_MESSAGE);
-					nameField.setText("");
-					return;
-				} else if (nameField.getText().matches(".*\\s$")) {
-					JOptionPane.showMessageDialog(null, "닉네임은 공백으로 끝날 수 없습니다.", "경고", JOptionPane.WARNING_MESSAGE);
-					nameField.setText("");
-					return;
-				} else if (nameField.getText().length() > 50) {
-					JOptionPane.showMessageDialog(null, "닉네임은 50자까지만 기입 가능합니다.", "경고", JOptionPane.WARNING_MESSAGE);
-					nameField.setText("");
-				} else {
-					request.updateCustomer(nameField.getText(), customerDTO.getPhone(), myLocation.getSelectedIndex() + 1);
-					JOptionPane.showMessageDialog(null, "수정이 완료되었습니다.", "PLAIN_MESSAGE", JOptionPane.PLAIN_MESSAGE);
-					customerDTO = request.getCustomerByPhone(customerDTO.getPhone());
-					new CustomerMainMenuFrame(customerDTO);
-					setVisible(false);
-					dispose();
+			// 탈퇴 버튼
+		} else if (e.getSource() == resignBtn) {
+			int result = JOptionPane.showConfirmDialog(null, "탈퇴하시겠습니까", "탈퇴", 2, 1);
+			if (result == JOptionPane.YES_OPTION) {
+				ReservationDTO reservationDTO = new ReservationRequest()
+						.getReservationByCustomer(customerDTO.getCustomerId());
+				if (reservationDTO != null) {
+					new ReservationRequest().cancel(reservationDTO.getCustomerId(), reservationDTO.getRestaurantId());
 				}
-
+				request.deleteCustomer(customerDTO.getPhone());
+				new LoginSelectFrame();
+				setVisible(false);
+				dispose();
 			}
-		});
-
-		resignBtn.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mousePressed(MouseEvent e) {
-				int result = JOptionPane.showConfirmDialog(null, "탈퇴하시겠습니까", "탈퇴", 2, 1);
-				if (result == JOptionPane.YES_OPTION) {
-					ReservationDTO reservationDTO = new ReservationRequest().getReservationByCustomer(customerDTO.getCustomerId());
-					if (reservationDTO != null) {
-						new ReservationRequest().cancel(reservationDTO.getCustomerId(), reservationDTO.getRestaurantId());
-					}
-					request.deleteCustomer(customerDTO.getPhone());
-					new LoginSelectFrame();
-					setVisible(false);
-					dispose();
-				}
-			}
-		});
-
+		}
 	}
-
-	private class BackgroundPanel extends JPanel { // 배경화면 패널
-		private JPanel backgroundPanel;
-		private Image backgroundImage;
-
-		public BackgroundPanel() {
-			backgroundImage = new ImageIcon("img/인트로화면 – 4.jpg").getImage();
-			backgroundPanel = new JPanel();
-			add(backgroundPanel);
-		}
-
-		@Override
-		protected void paintComponent(Graphics g) {
-			super.paintComponent(g);
-			g.drawImage(backgroundImage, 0, 0, getWidth(), getHeight(), null);
-		}
-
-	} // end of BackgroundPanel
-
 }

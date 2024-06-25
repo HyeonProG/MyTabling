@@ -1,9 +1,6 @@
 package tabling.frame;
 
 import java.awt.Desktop;
-import java.awt.Graphics;
-import java.awt.Image;
-import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.IOException;
 import java.net.URI;
@@ -13,7 +10,6 @@ import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
-import javax.swing.JPanel;
 
 import tabling.dto.CustomerDTO;
 import tabling.request.CustomerRequest;
@@ -67,7 +63,7 @@ public class CustomerMainMenuFrame extends JFrame implements MyMouseListener {
 		setLocationRelativeTo(null);
 		setVisible(true);
 
-		backgroundPanel = new BackgroundPanel();
+		backgroundPanel = new BackgroundPanel("img/customerMainMenuBg.jpg");
 
 		// 컴포넌트 초기화
 		reservationBtn = new JLabel(new ImageIcon("img/reservationStateBtn.png"));
@@ -123,7 +119,7 @@ public class CustomerMainMenuFrame extends JFrame implements MyMouseListener {
 		linkLabel.addMouseListener(this);
 		adLabelLeft.addMouseListener(this);
 	}
-	
+
 	@Override
 	public void mousePressed(MouseEvent e) {
 		if (e.getSource() == reservationBtn) {
@@ -206,23 +202,4 @@ public class CustomerMainMenuFrame extends JFrame implements MyMouseListener {
 			}
 		}).start();
 	}
-
-	private class BackgroundPanel extends JPanel {
-		private JPanel backgroundPanel;
-		private Image backgroundImage;
-
-		public BackgroundPanel() {
-			backgroundImage = new ImageIcon("img/customerMainMenuBg.jpg").getImage();
-			backgroundPanel = new JPanel();
-			add(backgroundPanel);
-		}
-
-		@Override
-		protected void paintComponent(Graphics g) {
-			super.paintComponent(g);
-			g.drawImage(backgroundImage, 0, 0, getWidth(), getHeight(), null);
-		}
-
-	}
-
 }

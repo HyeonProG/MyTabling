@@ -16,6 +16,8 @@ public class Define {
 	public static final int CATEGORY_ILSIK = 11;
 	public static final int CATEGORY_NAENGMYUN = 12;
 	public static final int CATEGORY_HOF = 13;
+	public static final String[] CATEGOIES = { "전체", "경양식", "카페", "분식", "숯불구이", "중식", "패스트푸드", "한식", "치킨", "횟집",
+			"패밀리레스토랑", "일식", "냉면", "호프" };
 
 	// 로케이션 인덱스
 	public static final int LOCATION_ALL = 0;
@@ -35,6 +37,8 @@ public class Define {
 	public static final int LOCATION_GEUMJEONGGU = 14;
 	public static final int LOCATION_HAEUNDAEGU = 15;
 	public static final int LOCATION_GIJANGGUN = 16;
+	public static final String[] LOCATIONS = { "전체", "강서구", "사하구", "사상구", "북구", "서구", "중구", "동구", "부산진구", "영도구", "남구",
+			"동래구", "연제구", "수영구", "금정구", "해운대구", "기장군" };
 
 	// 쿼리문
 	public static final String SELECT_CATEGORY_BY_CATEGORYID = " SELECT * FROM category WHERE category_id = ? ";

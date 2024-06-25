@@ -1,9 +1,6 @@
 package tabling.frame;
 
 import java.awt.Font;
-import java.awt.Graphics;
-import java.awt.Image;
-import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.List;
 import java.util.regex.PatternSyntaxException;
@@ -11,7 +8,6 @@ import java.util.regex.PatternSyntaxException;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.RowFilter;
@@ -24,33 +20,36 @@ import tabling.dto.ReservationForRestaurantDTO;
 import tabling.dto.RestaurantDTO;
 import tabling.request.CustomerRequest;
 import tabling.request.ReservationRequest;
+import tabling.util.MyMouseListener;
 
-public class RestaurantMainMenuFrame extends JFrame {
+public class RestaurantMainMenuFrame extends JFrame implements MyMouseListener {
 
+	// 패널
 	private BackgroundPanel backgroundPanel;
-	private RestaurantDTO restDTO;
-	private JTable table;
-	private JScrollPane scroll;
-	// DefaultTableModel 클래스 파라미터 값 2개 - head, contents
-	DefaultTableModel tableModel;
-	private String[] head = { "고객 닉네임", "고객 전화번호", "예약시간", "예약상태" };
-	private String[][] contents;
-	private TableRowSorter<DefaultTableModel> sorter;
-	// 리스트
-	private List<ReservationForRestaurantDTO> reserList;
-	//
-	private JLabel resetBtn;
+
+	// 컴포넌트
+	private JLabel refreshBtn;
 	private JLabel endReserBtn;
 	private JLabel backBtn;
 	private JLabel filterBtn;
-	private ReservationRequest reservationRequest;
 
-	private int rowNum;
+	// 테이블 관련
+	private JTable table;
+	private JScrollPane scroll;
+	private DefaultTableModel tableModel;
+	private TableRowSorter<DefaultTableModel> sorter;
+	private String[] head = { "고객 닉네임", "고객 전화번호", "예약시간", "예약상태" };
+	private String[][] contents;
+
+	// DTO
+	private RestaurantDTO restDTO;
+	private List<ReservationForRestaurantDTO> reserList;
+
+	// request
+	private ReservationRequest reservationRequest;
 
 	public RestaurantMainMenuFrame(RestaurantDTO restDTO) {
 		this.restDTO = restDTO;
-		reservationRequest = new ReservationRequest();
-		reserList = reservationRequest.getCustomerInfoByReservation(restDTO.getRestaurantId());
 		initData();
 		setInitLayout();
 		addEventListener();
@@ -58,11 +57,12 @@ public class RestaurantMainMenuFrame extends JFrame {
 
 	private void initData() {
 		reservationRequest = new ReservationRequest();
+		reserList = reservationRequest.getCustomerInfoByReservation(restDTO.getRestaurantId());
+		backgroundPanel = new BackgroundPanel("img/점주측 고객예약리스트.jpg");
 		// 테이블에 담는 메소드
-		backgroundPanel = new BackgroundPanel();
 		tableSet();
 
-		resetBtn = new JLabel(new ImageIcon("img/새로고침.png"));
+		refreshBtn = new JLabel(new ImageIcon("img/새로고침.png"));
 		endReserBtn = new JLabel(new ImageIcon("img/예약종료.png"));
 		backBtn = new JLabel(new ImageIcon("img/quitBtn.png"));
 		filterBtn = new JLabel(new ImageIcon("img/대기중인고객버튼.png"));
@@ -82,8 +82,8 @@ public class RestaurantMainMenuFrame extends JFrame {
 		backgroundPanel.setLayout(null);
 		add(backgroundPanel);
 
-		resetBtn.setBounds(20, 590, 184, 44);
-		backgroundPanel.add(resetBtn);
+		refreshBtn.setBounds(20, 590, 184, 44);
+		backgroundPanel.add(refreshBtn);
 		endReserBtn.setBounds(280, 590, 184, 44);
 		backgroundPanel.add(endReserBtn);
 		backBtn.setBounds(10, 15, 30, 30);
@@ -93,44 +93,35 @@ public class RestaurantMainMenuFrame extends JFrame {
 	}
 
 	private void addEventListener() {
+		refreshBtn.addMouseListener(this);
+		endReserBtn.addMouseListener(this);
+		filterBtn.addMouseListener(this);
+	}
 
-		resetBtn.addMouseListener(new MouseAdapter() {
-			// 리스트 다시 담기.
-			@Override
-			public void mousePressed(MouseEvent e) {
-				System.out.println("새로고침");
-				setList();
-				tableSet();
+	@Override
+	public void mousePressed(MouseEvent e) {
+
+		// 새로고침 버튼
+		if (e.getSource() == refreshBtn) {
+			setList();
+			tableSet();
+			// 예약 종료 버튼
+		} else if (e.getSource() == endReserBtn) {
+			int rowNum = table.getSelectedRow();
+			int currentRowNum = table.convertRowIndexToModel(rowNum);
+			String phone = tableModel.getValueAt(currentRowNum, 1).toString();
+			CustomerDTO customerDTO = new CustomerRequest().getCustomerByPhone(phone);
+			reservationRequest.cancel(customerDTO.getCustomerId(), restDTO.getRestaurantId());
+			setList();
+			tableSet();
+			// 대기중인 손님만 보기 필터 적용시
+		} else if (e.getSource() == filterBtn) {
+			try {
+				sorter.setRowFilter(RowFilter.regexFilter("대기중"));
+			} catch (PatternSyntaxException ex) {
+				sorter.setRowFilter(null);
 			}
-		});
-
-		endReserBtn.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mousePressed(MouseEvent e) {
-				System.out.println("예약종료");
-				rowNum = table.getSelectedRow();
-				int currentRowNum = table.convertRowIndexToModel(rowNum);
-				String phone = tableModel.getValueAt(currentRowNum, 1).toString();
-				CustomerDTO customerDTO = new CustomerRequest().getCustomerByPhone(phone);
-				reservationRequest.cancel(customerDTO.getCustomerId(), restDTO.getRestaurantId());
-				setList();
-				tableSet();
-			}
-		});
-
-		filterBtn.addMouseListener(new MouseAdapter() {
-
-			@Override
-			public void mousePressed(MouseEvent e) {
-				try {
-					sorter.setRowFilter(RowFilter.regexFilter("대기중"));
-				} catch (PatternSyntaxException ex) {
-					sorter.setRowFilter(null);
-				}
-			}
-
-		});
-
+		}
 	}
 
 	public void tableSet() {
@@ -160,8 +151,8 @@ public class RestaurantMainMenuFrame extends JFrame {
 
 		}
 
-		// 테이블
 		tableModel = new DefaultTableModel(contents, head); // 모델과 데이터 연결
+		// 초기화와 동시에 수정 불가 설정
 		table = new JTable(tableModel) {
 			@Override
 			public boolean isCellEditable(int row, int column) {
@@ -208,23 +199,4 @@ public class RestaurantMainMenuFrame extends JFrame {
 	private void setList() {
 		reserList = reservationRequest.getCustomerInfoByReservation(restDTO.getRestaurantId());
 	}
-
-	private class BackgroundPanel extends JPanel {
-		private JPanel backgroundPanel;
-		private Image backgroundImage;
-
-		public BackgroundPanel() {
-			backgroundImage = new ImageIcon("img/점주측 고객예약리스트.jpg").getImage();
-			backgroundPanel = new JPanel();
-			add(backgroundPanel);
-		}
-
-		@Override
-		protected void paintComponent(Graphics g) {
-			super.paintComponent(g);
-			g.drawImage(backgroundImage, 0, 0, getWidth(), getHeight(), null);
-		}
-
-	}
-
 }

@@ -1,19 +1,15 @@
 package tabling.frame;
 
-import java.awt.Graphics;
-import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.List;
 
-import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JPanel;
 
 import tabling.dto.CustomerDTO;
 import tabling.dto.RestaurantDTO;
@@ -22,12 +18,18 @@ import tabling.util.Define;
 
 public class LocationFrame extends JFrame implements ActionListener {
 
-	private BackgroundPanel frame;
+	// 패널
+	private BackgroundPanel backgroundPanel;
+
+	// 컴포넌트
 	private JLabel background;
 	private JLabel home;
-
 	private JButton[] locationbutton;
+
+	// DTO
 	private CustomerDTO customerDTO;
+
+	// request
 	private RestaurantRequest restaurantRequest;
 
 	public LocationFrame(CustomerDTO customerDTO) {
@@ -39,7 +41,7 @@ public class LocationFrame extends JFrame implements ActionListener {
 	}
 
 	private void initData() {
-		frame = new BackgroundPanel();
+		backgroundPanel = new BackgroundPanel("img/locationFrameBg.jpg");
 
 		restaurantRequest = new RestaurantRequest();
 		locationbutton = new JButton[17]; // 0 ~ 17 배열
@@ -48,29 +50,26 @@ public class LocationFrame extends JFrame implements ActionListener {
 		setLocationRelativeTo(null);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-		Icon icon = new ImageIcon("img/location.png");
-		background = new JLabel(icon);
-		// 413, 355
-		background.setSize(420, 370); // 413, 355
-		background.setLocation(32, 100); // 35, 50
+		background = new JLabel(new ImageIcon("img/location.png"));
+		background.setSize(420, 370);
+		background.setLocation(32, 100);
 
-		Icon icon4 = new ImageIcon("img/house-solid.png");
-		home = new JLabel(icon4);
+		home = new JLabel(new ImageIcon("img/house-solid.png"));
 		home.setSize(50, 50);
 		home.setLocation(217, 580);
 
-		Icon icon3 = new ImageIcon("img/지역별전체보기버튼.png");
-		locationbutton[Define.LOCATION_ALL] = new JButton(icon3);
-		locationbutton[Define.LOCATION_ALL].setBounds(37, 495, 410, 60); // 190, 460, 120, 40 // 37, 495, 410, 60
-		locationbutton[Define.LOCATION_ALL].setBorderPainted(false);
-		locationbutton[Define.LOCATION_ALL].setContentAreaFilled(false);
-		locationbutton[Define.LOCATION_ALL].setFocusPainted(false);
-		for (int i = Define.LOCATION_GANGSEOGU; i <= Define.LOCATION_GIJANGGUN; i++) {
+		// 전체보기 버튼
+		for (int i = Define.LOCATION_ALL; i <= Define.LOCATION_GIJANGGUN; i++) {
 			locationbutton[i] = new JButton();
 			locationbutton[i].setBorderPainted(false);
 			locationbutton[i].setContentAreaFilled(false);
 			locationbutton[i].setFocusPainted(false);
 		}
+		// 전체보기 버튼만 이미지가 있음
+		locationbutton[Define.LOCATION_ALL].setIcon(new ImageIcon("img/지역별전체보기버튼.png"));
+
+		// 지도에 맞추어 숨겨진 버튼이기 때문에 지역마다 버튼 크기가 다름
+		locationbutton[Define.LOCATION_ALL].setBounds(37, 495, 410, 60);
 		locationbutton[Define.LOCATION_GANGSEOGU].setBounds(40, 220, 70, 50);
 		locationbutton[Define.LOCATION_SAHAGU].setBounds(110, 300, 50, 50);
 		locationbutton[Define.LOCATION_SASANGGU].setBounds(125, 210, 40, 40);
@@ -88,24 +87,21 @@ public class LocationFrame extends JFrame implements ActionListener {
 		locationbutton[Define.LOCATION_HAEUNDAEGU].setBounds(290, 190, 40, 30);
 		locationbutton[Define.LOCATION_GIJANGGUN].setBounds(320, 50, 80, 80);
 
-	} // end of initData
+	}
 
 	private void setInitLayout() {
 
-		frame.setSize(getWidth(), getHeight());
-		frame.setLayout(null);
-//		setLayout(null);
+		backgroundPanel.setSize(getWidth(), getHeight());
+		backgroundPanel.setLayout(null);
 		setResizable(false);
 
-		for (int i = 1; i < 17; i++) {
+		for (int i = Define.LOCATION_GANGSEOGU; i <= Define.LOCATION_GIJANGGUN; i++) {
 			background.add(locationbutton[i]);
 		}
-		frame.add(locationbutton[Define.LOCATION_ALL]);
-
-//		frame.add(backBtn);
-		frame.add(home);
-		frame.add(background);
-		add(frame);
+		backgroundPanel.add(locationbutton[Define.LOCATION_ALL]);
+		backgroundPanel.add(home);
+		backgroundPanel.add(background);
+		add(backgroundPanel);
 		setVisible(true);
 	}
 
@@ -118,9 +114,9 @@ public class LocationFrame extends JFrame implements ActionListener {
 		home.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mousePressed(MouseEvent e) {
-				// TODO Auto-generated method stub
 				new CustomerMainMenuFrame(customerDTO);
-				super.mousePressed(e);
+				setVisible(false);
+				dispose();
 			}
 		});
 
@@ -129,15 +125,16 @@ public class LocationFrame extends JFrame implements ActionListener {
 	@Override
 	public void actionPerformed(ActionEvent e) {
 
-		for (int i = Define.CATEGORY_ALL; i <= Define.LOCATION_GIJANGGUN; i++) {
+		// 전체 선택시
+		if (e.getSource() == locationbutton[Define.LOCATION_ALL]) {
+			List<RestaurantDTO> list = restaurantRequest.getAllRestaurants(customerDTO.getCustomerId());
+			new RestaurantListFrame(list, customerDTO, RestaurantListFrame.LOCATION_ALL);
+			setVisible(false);
+			dispose();
+		}
+		// 각 로케이션 버튼 클릭시
+		for (int i = Define.LOCATION_GANGSEOGU; i <= Define.LOCATION_GIJANGGUN; i++) {
 
-			if (e.getSource() == locationbutton[Define.LOCATION_ALL]) {
-				List<RestaurantDTO> list = restaurantRequest.getAllRestaurants(customerDTO.getCustomerId());
-				new RestaurantListFrame(list, customerDTO, RestaurantListFrame.LOCATION_ALL);
-				setVisible(false);
-				dispose();
-				break;
-			}
 			if (e.getSource() == locationbutton[i]) {
 
 				List<RestaurantDTO> list = restaurantRequest.getRestaurantsByLocation(i, customerDTO.getCustomerId());
@@ -148,24 +145,5 @@ public class LocationFrame extends JFrame implements ActionListener {
 			}
 		}
 
-	} // end of actionPerformed
-
-	private class BackgroundPanel extends JPanel {
-		private JPanel backgroundPanel;
-		private Image backgroundImage;
-
-		public BackgroundPanel() {
-			backgroundImage = new ImageIcon("img/locationFrameBg.jpg").getImage();
-			backgroundPanel = new JPanel();
-			add(backgroundPanel);
-		}
-
-		@Override
-		protected void paintComponent(Graphics g) {
-			super.paintComponent(g);
-			g.drawImage(backgroundImage, 0, 0, getWidth(), getHeight(), null);
-		}
-
 	}
-
-} // end of class
+}
