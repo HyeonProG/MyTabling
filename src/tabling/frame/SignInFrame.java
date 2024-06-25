@@ -1,6 +1,7 @@
 package tabling.frame;
 
 import java.awt.Choice;
+import java.awt.Font;
 import java.awt.HeadlessException;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
@@ -8,6 +9,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
 import javax.swing.ImageIcon;
+import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -25,7 +27,7 @@ public class SignInFrame extends JFrame {
 	private JLabel signInBtn;
 
 	private Choice localTel;
-	private Choice myLocation;
+	private JComboBox<String> myLocation;
 	private String[] localArray;
 	private String[] localTelArray;
 
@@ -60,10 +62,10 @@ public class SignInFrame extends JFrame {
 
 		phoneField = new JTextField();
 
-		myLocation = new Choice();
+		myLocation = new JComboBox<String>();
 		localArray = new String[] { "강서구", "사하구", "사상구", "북구", "서구", "중구", "동구", "부산진구", "영도구", "남구", "동래구", "연제구", "수영구", "금정구", "해운대구", "기장군" };
 		for (int i = 0; i < localArray.length; i++) {
-			myLocation.add(localArray[i]);
+			myLocation.addItem(localArray[i]);
 		}
 
 		duplicateCheck = new JLabel(new ImageIcon("img/duplicateBtn.png"));
@@ -86,6 +88,7 @@ public class SignInFrame extends JFrame {
 
 		add(myLocation);
 		myLocation.setBounds(90, 380, 200, 25);
+		myLocation.setFont(new Font("Noto Sans KR", Font.BOLD, 13));
 
 		add(duplicateCheck);
 		duplicateCheck.setBounds(200, 300, 90, 25);
