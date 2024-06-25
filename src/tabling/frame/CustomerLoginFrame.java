@@ -4,6 +4,8 @@ import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.HeadlessException;
 import java.awt.Image;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
@@ -18,9 +20,10 @@ import javax.swing.JTextField;
 
 import tabling.dto.CustomerDTO;
 import tabling.request.CustomerRequest;
+import tabling.util.MyMouseListener;
 
 // 고객 로그인 화면
-public class CustomerLoginFrame extends JFrame {
+public class CustomerLoginFrame extends JFrame implements MyMouseListener {
 
 	private JLabel loginBtn;
 	private JLabel registerBtn;
@@ -78,29 +81,9 @@ public class CustomerLoginFrame extends JFrame {
 
 	private void addEventListener() {
 
-		registerBtn.addMouseListener(new MouseAdapter() {
-
-			@Override
-			public void mousePressed(MouseEvent e) {
-				new SignInFrame();
-			}
-		});
-
-		loginBtn.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mousePressed(MouseEvent e) {
-				login();
-			}
-		});
-		
-		backBtn.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mousePressed(MouseEvent e) {
-				new LoginSelectFrame();
-				setVisible(false);
-				dispose();
-			}
-		});
+		registerBtn.addMouseListener(this);
+		loginBtn.addMouseListener(this);
+		backBtn.addMouseListener(this);
 
 		// 전화번호 8자 이상 입력불가 & 숫자만 입력 가능
 		phoneText.addKeyListener(new KeyAdapter() {
@@ -113,18 +96,32 @@ public class CustomerLoginFrame extends JFrame {
 					e.consume();
 				}
 			}
+
 			@Override
 			public void keyPressed(KeyEvent e) {
 				if (e.getKeyCode() == KeyEvent.VK_ENTER) {
 					login();
 				}
 			}
-
 		});
-
 	}
 	
-	// 로그인 버튼 클릭시 & 엔터버튼 입력시 호출 
+	// 마우스 입력 이벤트 처리
+	@Override
+	public void mousePressed(MouseEvent e) {
+
+		if (e.getSource() == registerBtn) {
+			new SignInFrame();
+		} else if (e.getSource() == loginBtn) {
+			login();
+		} else if (e.getSource() == backBtn) {
+			new LoginSelectFrame();
+			setVisible(false);
+			dispose();
+		}
+	}
+
+	// 로그인 버튼 클릭시 & 엔터버튼 입력시 호출
 	private void login() {
 		if (!phoneText.getText().equals("")) {
 			try {
@@ -136,17 +133,18 @@ public class CustomerLoginFrame extends JFrame {
 				if ((customerDTO = request.getCustomerByPhone(phoneText.getText())) != null) {
 					JOptionPane.showMessageDialog(null, "로그인 되었습니다.", "성공", JOptionPane.INFORMATION_MESSAGE);
 					new CustomerMainMenuFrame(customerDTO);
-					setVisible(false); 
+					setVisible(false);
 					dispose();
 				} else {
 					JOptionPane.showMessageDialog(null, "존재하지 않는 유저 정보입니다.", "경고", JOptionPane.WARNING_MESSAGE);
 				}
 			} catch (HeadlessException e1) {
 				e1.printStackTrace();
-			} 
+			}
 		}
 	}
 
+	// 패널 내부 클래스
 	private class BackgroundPanel extends JPanel {
 		private JPanel backgroundPanel;
 		private Image backgroundImage;

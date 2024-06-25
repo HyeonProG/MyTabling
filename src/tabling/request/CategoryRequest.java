@@ -9,6 +9,11 @@ public class CategoryRequest {
 		urlStr = "http://" + Request.getIp() + ":8080/category";
 	}
 
+	/**
+	 * 매번 요청을 보내면 너무 오래걸려서 사용하지 않음
+	 * @param categoryId
+	 * @return
+	 */
 	public String getCategoryName(int categoryId) {
 		String str = null;
 		try {
