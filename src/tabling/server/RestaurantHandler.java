@@ -51,6 +51,7 @@ public class RestaurantHandler implements HttpHandler {
 				int customerId = 0;
 				int categoryId = 0;
 				int locationId = 0;
+				int restaurantId = 0;
 				String[] pairs = query.split("&");
 				for (String pair : pairs) {
 					String[] keyValue = pair.split("=");
@@ -60,13 +61,16 @@ public class RestaurantHandler implements HttpHandler {
 						categoryId = Integer.parseInt(keyValue[1]);
 					} else if (keyValue[0].equalsIgnoreCase("locationId")) {
 						locationId = Integer.parseInt(keyValue[1]);
+					} else if (keyValue[0].equalsIgnoreCase("restaurantId")) {
+						restaurantId = Integer.parseInt(keyValue[1]);
 					} else if (keyValue[0].equalsIgnoreCase("open")) {
 						restaurantDAO.setOpenFilter(Boolean.parseBoolean(keyValue[1]));
 					} else if (keyValue[0].equalsIgnoreCase("like")) {
 						restaurantDAO.setLikeFilter(Boolean.parseBoolean(keyValue[1]));
 					}
 				}
-				restaurantDAO.setCurrentTime(new Time(LocalDateTime.now().getHour(), LocalDateTime.now().getMinute(), LocalDateTime.now().getDayOfWeek().toString()));
+				restaurantDAO.setCurrentTime(
+						new Time(LocalDateTime.now().getHour(), LocalDateTime.now().getMinute(), LocalDateTime.now().getDayOfWeek().toString()));
 				if (type.equalsIgnoreCase("all")) {
 					List<RestaurantDTO> list = restaurantDAO.getAllRestaurants(customerId);
 					response = gson.toJson(list);
@@ -76,6 +80,9 @@ public class RestaurantHandler implements HttpHandler {
 				} else if (type.equalsIgnoreCase("location")) {
 					List<RestaurantDTO> list = restaurantDAO.getRestaurantsByLocation(locationId, customerId);
 					response = gson.toJson(list);
+				} else if (type.equalsIgnoreCase("restaurant")) {
+					RestaurantDTO dto = restaurantDAO.getRestaurantByRestaurantId(restaurantId);
+					response = gson.toJson(dto);
 				}
 				try {
 					byte[] bytes = response.getBytes();
