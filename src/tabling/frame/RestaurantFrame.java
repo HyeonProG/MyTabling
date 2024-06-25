@@ -4,7 +4,6 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
@@ -18,11 +17,11 @@ import javax.swing.JTable;
 import javax.swing.JTextArea;
 import javax.swing.table.DefaultTableCellRenderer;
 
-import tabling.dao.MenuDAO;
 import tabling.dto.CustomerDTO;
 import tabling.dto.MenuDTO;
 import tabling.dto.RestaurantDTO;
 import tabling.request.LikeRequest;
+import tabling.request.MenuRequest;
 
 public class RestaurantFrame extends JFrame {
 	private RestaurantFrame frame;
@@ -30,7 +29,7 @@ public class RestaurantFrame extends JFrame {
 
 	private RestaurantDTO restaurantDTO;
 	private List<MenuDTO> menuList = new ArrayList<>();
-	private MenuDAO menuDAO;
+	private MenuRequest menuRequest;
 	private CustomerDTO customerDTO;
 
 	private JLabel imageLabel;
@@ -59,12 +58,8 @@ public class RestaurantFrame extends JFrame {
 		this.customerDTO = customerDTO;
 		this.restaurantDTO = restaurantDTO;
 		this.restaurantListFrame = restaurantListFrame;
-		menuDAO = new MenuDAO();
-		try {
-			this.menuList = menuDAO.getMenuByRestaurantId(restaurantDTO.getRestaurantId());
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
+		menuRequest = new MenuRequest();
+		this.menuList = menuRequest.getMenuByRestaurantId(restaurantDTO.getRestaurantId());
 		initData();
 		setInitLayout();
 		addEventListener();
@@ -106,11 +101,7 @@ public class RestaurantFrame extends JFrame {
 			int price = menuList.get(i).getPrice();
 			int foodId = menuList.get(i).getFoodId();
 			String menuName = null;
-			try {
-				menuName = menuDAO.getFoodName(foodId);
-			} catch (SQLException e) {
-				e.printStackTrace();
-			}
+			menuName = menuRequest.getFoodName(foodId);
 			contents.get(i).add(menuName);
 			contents.get(i).add(String.valueOf(price));
 		}
