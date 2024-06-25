@@ -62,12 +62,11 @@ public class CustomerRequest {
 		}
 	}
 	
-	public boolean loginCustomer(String phone) {
-		boolean check = false;
+	public String loginCustomer(String phone) {
+		String check = "no";
 		try {
 			String selectUrl = urlStr + "/login/" + phone;
-			String str = Request.getRequest(selectUrl);
-			check = Boolean.parseBoolean(str);
+			check = Request.getRequest(selectUrl);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

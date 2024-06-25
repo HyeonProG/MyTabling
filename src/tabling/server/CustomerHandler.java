@@ -56,7 +56,9 @@ public class CustomerHandler implements HttpHandler {
 					dao.deleteCustomer(customerPhone);
 					response = "회원 삭제 성공";
 				} else if (type.equalsIgnoreCase("login")) {
-					if (OnlineCustomer.getCustomerPhone().contains(customerPhone)) {
+					if (dao.getCustomerByPhone(customerPhone) == null) {
+						response = "no";
+					} else if (OnlineCustomer.getCustomerPhone().contains(customerPhone)) {
 						response = "false";
 					} else {
 						OnlineCustomer.getCustomerPhone().add(customerPhone);

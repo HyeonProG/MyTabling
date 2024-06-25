@@ -128,7 +128,8 @@ public class CustomerLoginFrame extends JFrame {
 	private void login() {
 		if (!phoneText.getText().equals("")) {
 			try {
-				if (request.loginCustomer(phoneText.getText()) == false) {
+				String loginCheck = request.loginCustomer(phoneText.getText());
+				if (loginCheck.equals("false")) {
 					JOptionPane.showMessageDialog(null, "이미 접속 중인 사용자 입니다.", "경고", JOptionPane.WARNING_MESSAGE);
 					return;
 				}
