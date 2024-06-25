@@ -35,6 +35,7 @@ import tabling.dto.RestaurantDTO;
 import tabling.request.CategoryRequest;
 import tabling.request.LocationRequest;
 import tabling.request.RestaurantRequest;
+import tabling.util.Define;
 import tabling.util.Time;
 
 public class RestaurantListFrame extends JFrame {
@@ -95,8 +96,7 @@ public class RestaurantListFrame extends JFrame {
 		locationRequest = new LocationRequest();
 		categoryRequest = new CategoryRequest();
 		restaurantRequest = new RestaurantRequest();
-		currentTime = new Time(LocalDateTime.now().getHour(), LocalDateTime.now().getMinute(),
-				LocalDateTime.now().getDayOfWeek().toString());
+		currentTime = new Time(LocalDateTime.now().getHour(), LocalDateTime.now().getMinute(), LocalDateTime.now().getDayOfWeek().toString());
 		// 테이블에 담는 과정
 		tableSet();
 		filter = new JComboBox<String>();
@@ -315,8 +315,14 @@ public class RestaurantListFrame extends JFrame {
 			int locationId = restaurantList.get(i).getLocationId();
 			String categoryName = null;
 			String locationName = null;
-			categoryName = categoryRequest.getCategoryName(categoryId);
-			locationName = locationRequest.getLocationName(locationId);
+			/**
+			 *  원래는 db에 접근해서 id에 해당하는 이름을 받아 왔으나 <BR>
+			 *  1회 반복마다 서버에 요청을하니 너무 오래걸려서 자체적으로 처리함
+			 */
+			// categoryName = categoryRequest.getCategoryName(categoryId); 
+			// locationName = locationRequest.getLocationName(locationId);
+			categoryName = getCategoryName(categoryId);
+			locationName = getLocationName(locationId);
 
 			contents[i][0] = restaurantName;
 			contents[i][1] = categoryName;
@@ -438,6 +444,84 @@ public class RestaurantListFrame extends JFrame {
 			g.drawImage(backgroundImage, 0, 0, getWidth(), getHeight(), null);
 		}
 
+	}
+
+	/**
+	 * id를 이름으로 바꾸는 메서드 <BR>
+	 * 원래는 db에서 받아왔으나 서버에 요청을 하는 방식으로는 너무 오래걸려 바꿈
+	 * @param id
+	 * @return
+	 */
+	private String getCategoryName(int id) {
+		switch (id) {
+		case Define.CATEGORY_BOONSIK:
+			return "분식";
+		case Define.CATEGORY_CAFE:
+			return "카페";
+		case Define.CATEGORY_CHICKEN:
+			return "치킨";
+		case Define.CATEGORY_FAMILY:
+			return "패밀리레스토랑";
+		case Define.CATEGORY_FASTFOOD:
+			return "패스트푸드";
+		case Define.CATEGORY_GUI:
+			return "숯불구이";
+		case Define.CATEGORY_GYOUNGYANG:
+			return "경양식";
+		case Define.CATEGORY_HANSIK:
+			return "한식";
+		case Define.CATEGORY_HOE:
+			return "횟집";
+		case Define.CATEGORY_HOF:
+			return "호프";
+		case Define.CATEGORY_ILSIK:
+			return "일식";
+		case Define.CATEGORY_JOONGSIK:
+			return "중식";
+		case Define.CATEGORY_NAENGMYUN:
+			return "냉면";
+		default:
+			return null;
+		}
+	}
+
+	private String getLocationName(int id) {
+		switch (id) {
+		case Define.LOCATION_BUKGU:
+			return "북구";
+		case Define.LOCATION_BUSANSGINGU:
+			return "부산진구";
+		case Define.LOCATION_DONGGU:
+			return "동구";
+		case Define.LOCATION_DONGNAEGU:
+			return "동래구";
+		case Define.LOCATION_GANGSEOGU:
+			return "강서구";
+		case Define.LOCATION_GEUMJEONGGU:
+			return "금정구";
+		case Define.LOCATION_GIJANGGUN:
+			return "기장군";
+		case Define.LOCATION_HAEUNDAEGU:
+			return "해운대구";
+		case Define.LOCATION_JUNGGU:
+			return "중구";
+		case Define.LOCATION_NAMGU:
+			return "남구";
+		case Define.LOCATION_SAHAGU:
+			return "사하구";
+		case Define.LOCATION_SASANGGU:
+			return "사상구";
+		case Define.LOCATION_SEOGU:
+			return "서구";
+		case Define.LOCATION_SUYEONGGU:
+			return "수영구";
+		case Define.LOCATION_YEONGDOGU:
+			return "영도구";
+		case Define.LOCATION_YEONJEGU:
+			return "연제구";
+			default :
+				return null;
+		}
 	}
 
 }
