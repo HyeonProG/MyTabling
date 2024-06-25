@@ -18,12 +18,17 @@ import tabling.dto.RestaurantDTO;
 import tabling.request.CustomerRequest;
 import tabling.request.ReservationRequest;
 import tabling.request.RestaurantRequest;
+import tabling.util.MyMouseListener;
 
-public class CustomerReservationStatusFrame extends JFrame {
+public class CustomerReservationStatusFrame extends JFrame implements MyMouseListener {
 
+	// 프레임
 	private RestaurantFrame restaurantFrame;
 
+	// 패널
 	private BackgroundPanel backgroundPanel;
+
+	// 컴포넌트
 	private JLabel backBtn;
 	private JLabel cancelBtn;
 	private JLabel detailBtn;
@@ -31,11 +36,17 @@ public class CustomerReservationStatusFrame extends JFrame {
 	private JLabel customerQueue;
 	private JLabel restaurantName;
 	private JLabel customerName;
+
+	// DTO
 	private CustomerDTO customerDTO;
 	private ReservationDTO reservationDTO;
 	private RestaurantDTO restaurantDTO;
+
+	// request
 	private RestaurantRequest restaurantRequest;
 	private ReservationRequest reservationRequest;
+
+	// 대기열 수
 	private int count;
 
 	public CustomerReservationStatusFrame(CustomerDTO customerDTO) {
@@ -47,14 +58,18 @@ public class CustomerReservationStatusFrame extends JFrame {
 
 	private void initData() {
 
+		// request 초기화
 		restaurantRequest = new RestaurantRequest();
 		reservationRequest = new ReservationRequest();
+
 		// 고객 id를 통해서 예약 내역, 예약 순서, 식당 내역을 다 받아옴
 		reservationDTO = reservationRequest.getReservationByCustomer(customerDTO.getCustomerId());
 		restaurantDTO = restaurantRequest.getRestaurantByRestaurantId(reservationDTO.getRestaurantId());
 		count = reservationRequest.checkReservation(customerDTO.getCustomerId(), restaurantDTO.getRestaurantId());
 
 		backgroundPanel = new BackgroundPanel();
+
+		// 컴포넌트 초기화
 		backBtn = new JLabel(new ImageIcon("img/quitBtn.png"));
 		cancelBtn = new JLabel(new ImageIcon("img/그룹 25.png"));
 		detailBtn = new JLabel(new ImageIcon("img/그룹 24.png"));
@@ -106,54 +121,43 @@ public class CustomerReservationStatusFrame extends JFrame {
 	}
 
 	private void addEventListener() {
-		backBtn.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mousePressed(MouseEvent e) {
 
+		backBtn.addMouseListener(this);
+		cancelBtn.addMouseListener(this);
+		detailBtn.addMouseListener(this);
+		refreshBtn.addMouseListener(this);
+	}
+
+	@Override
+	public void mousePressed(MouseEvent e) {
+		if (e.getSource() == backBtn) {
+			new CustomerMainMenuFrame(customerDTO);
+			setVisible(false);
+			dispose();
+		} else if (e.getSource() == cancelBtn) {
+			reservationRequest.cancel(reservationDTO.getCustomerId(), reservationDTO.getRestaurantId());
+			JOptionPane.showMessageDialog(null, "예약 취소 되었습니다.", "성공", JOptionPane.WARNING_MESSAGE);
+			if (restaurantFrame != null) {
+				restaurantFrame.setVisible(false);
+				restaurantFrame.dispose();
+			}
+			customerDTO = new CustomerRequest().getCustomerByPhone(customerDTO.getPhone());
+			new CustomerMainMenuFrame(customerDTO);
+			setVisible(false);
+			dispose();
+		} else if (e.getSource() == detailBtn) {
+			restaurantFrame = new RestaurantFrame(customerDTO, restaurantDTO, null);
+		} else if (e.getSource() == refreshBtn) {
+			if (reservationRequest.getReservationByCustomer(customerDTO.getCustomerId()) == null) {
+				JOptionPane.showMessageDialog(null, "예약이 취소 되었습니다.", "경고", JOptionPane.WARNING_MESSAGE);
 				new CustomerMainMenuFrame(customerDTO);
 				setVisible(false);
 				dispose();
 			}
-		});
-
-		cancelBtn.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mousePressed(MouseEvent e) {
-				reservationRequest.cancel(reservationDTO.getCustomerId(), reservationDTO.getRestaurantId());
-				JOptionPane.showMessageDialog(null, "예약 취소 되었습니다.", "성공", JOptionPane.WARNING_MESSAGE);
-				if (restaurantFrame != null) {
-					restaurantFrame.setVisible(false);
-					restaurantFrame.dispose();
-				}
-				customerDTO = new CustomerRequest().getCustomerByPhone(customerDTO.getPhone());
-				new CustomerMainMenuFrame(customerDTO);
-				setVisible(false);
-				dispose();
-
-			}
-		});
-
-		detailBtn.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mousePressed(MouseEvent e) {
-				restaurantFrame = new RestaurantFrame(customerDTO, restaurantDTO, null);
-			}
-		});
-		refreshBtn.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mousePressed(MouseEvent e) {
-				if (reservationRequest.getReservationByCustomer(customerDTO.getCustomerId()) == null) {
-					JOptionPane.showMessageDialog(null, "예약이 취소 되었습니다.", "경고", JOptionPane.WARNING_MESSAGE);
-					new CustomerMainMenuFrame(customerDTO);
-					setVisible(false);
-					dispose();
-				}
-				count = reservationRequest.checkReservation(reservationDTO.getCustomerId(), reservationDTO.getRestaurantId());
-				customerQueue.setText(String.valueOf(count));
-				repaint();
-			}
-		});
-
+			count = reservationRequest.checkReservation(reservationDTO.getCustomerId(), reservationDTO.getRestaurantId());
+			customerQueue.setText(String.valueOf(count));
+			repaint();
+		}
 	}
 
 	private class BackgroundPanel extends JPanel {

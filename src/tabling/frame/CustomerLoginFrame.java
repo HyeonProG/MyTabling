@@ -4,11 +4,8 @@ import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.HeadlessException;
 import java.awt.Image;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
-import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
 import javax.swing.ImageIcon;
@@ -25,13 +22,20 @@ import tabling.util.MyMouseListener;
 // 고객 로그인 화면
 public class CustomerLoginFrame extends JFrame implements MyMouseListener {
 
+	// 패널
+	private BackgroundPanel backgroundPanel;
+	
+	// 컴포넌트
 	private JLabel loginBtn;
 	private JLabel registerBtn;
 	private JLabel backBtn;
 	private JTextField phoneText;
-	private BackgroundPanel backgroundPanel;
-	private CustomerRequest request;
+	
+	// DTO
 	private CustomerDTO customerDTO;
+	
+	// request
+	private CustomerRequest request;
 
 	public CustomerLoginFrame() {
 		initData();
@@ -41,11 +45,14 @@ public class CustomerLoginFrame extends JFrame implements MyMouseListener {
 
 	private void initData() {
 		backgroundPanel = new BackgroundPanel();
+		
+		// 컴포넌트 초기화
 		loginBtn = new JLabel(new ImageIcon("img/loginBtn.png"));
 		registerBtn = new JLabel(new ImageIcon("img/signInBtn.png"));
 		backBtn = new JLabel(new ImageIcon("img/quitBtn.png"));
 		phoneText = new JTextField();
-
+		
+		// request 초기화
 		request = new CustomerRequest();
 	}
 
@@ -56,11 +63,12 @@ public class CustomerLoginFrame extends JFrame implements MyMouseListener {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setLayout(null);
 		setResizable(false);
-
+		
 		backgroundPanel.setSize(getWidth(), getHeight());
 		backgroundPanel.setLayout(null);
 		add(backgroundPanel);
 
+		// 컴포넌트 세팅
 		loginBtn.setBounds(35, 390, 314, 46);
 		backgroundPanel.add(loginBtn);
 
@@ -109,11 +117,14 @@ public class CustomerLoginFrame extends JFrame implements MyMouseListener {
 	// 마우스 입력 이벤트 처리
 	@Override
 	public void mousePressed(MouseEvent e) {
-
+		
+		// 회원가입 버튼
 		if (e.getSource() == registerBtn) {
 			new SignInFrame();
+		// 로그인 버튼
 		} else if (e.getSource() == loginBtn) {
 			login();
+		// 뒤로가기 버튼
 		} else if (e.getSource() == backBtn) {
 			new LoginSelectFrame();
 			setVisible(false);
@@ -125,11 +136,13 @@ public class CustomerLoginFrame extends JFrame implements MyMouseListener {
 	private void login() {
 		if (!phoneText.getText().equals("")) {
 			try {
+				// 동일한 전화번호로 이미 접속중인지 확인하는 메서드 false 반환시 접속중
 				String loginCheck = request.loginCustomer(phoneText.getText());
 				if (loginCheck.equals("false")) {
 					JOptionPane.showMessageDialog(null, "이미 접속 중인 사용자 입니다.", "경고", JOptionPane.WARNING_MESSAGE);
 					return;
 				}
+				// 서버에 로그인 요청
 				if ((customerDTO = request.getCustomerByPhone(phoneText.getText())) != null) {
 					JOptionPane.showMessageDialog(null, "로그인 되었습니다.", "성공", JOptionPane.INFORMATION_MESSAGE);
 					new CustomerMainMenuFrame(customerDTO);

@@ -17,29 +17,36 @@ import tabling.request.RestaurantRequest;
 import tabling.util.Define;
 import tabling.util.MyMouseListener;
 
+// 카테고리 선택 화면
 public class CategoryFrame extends JFrame implements MyMouseListener {
 
-	private JLabel[] categoryImgs;
-
-	private JLabel homeLabel;
-
+	// 패널
 	private BackgroundPanel backgroundPanel;
+
+	// 컴포넌트
+	private JLabel[] categoryImgs;
+	private JLabel homeLabel;
 	private JLabel mainLabel;
+	
+	// DTO
 	private CustomerDTO customerDTO;
+	
+	// request
 	private RestaurantRequest restaurantRequest;
 
 	public CategoryFrame(CustomerDTO customerDTO) {
 		this.customerDTO = customerDTO;
 		initData();
 		setInitLayout();
-		initListener();
+		addEventListener();
 	}
 
 	private void initData() {
 		backgroundPanel = new BackgroundPanel();
 		restaurantRequest = new RestaurantRequest();
 		mainLabel = new JLabel();
-		// 그림라벨
+
+		// 그림라벨 초기화
 		categoryImgs = new JLabel[14];
 		String categoryStr = "img/category_";
 		for (int i = Define.CATEGORY_ALL; i <= Define.CATEGORY_HOF; i++) {
@@ -73,7 +80,7 @@ public class CategoryFrame extends JFrame implements MyMouseListener {
 
 	}
 
-	private void initListener() {
+	private void addEventListener() {
 		for (int i = Define.CATEGORY_ALL; i <= Define.CATEGORY_HOF; i++) {
 			categoryImgs[i].addMouseListener(this);
 
@@ -83,15 +90,16 @@ public class CategoryFrame extends JFrame implements MyMouseListener {
 
 	@Override
 	public void mousePressed(MouseEvent e) {
-		for (int i = Define.CATEGORY_ALL; i <= Define.CATEGORY_HOF; i++) {
-			if (e.getSource() == categoryImgs[Define.CATEGORY_ALL]) {
-				List<RestaurantDTO> list = restaurantRequest.getAllRestaurants(customerDTO.getCustomerId());
-				new RestaurantListFrame(list, customerDTO, RestaurantListFrame.CATEGORY_ALL);
-				setVisible(false);
-				dispose();
-				break;
-
-			}
+		// 전체 보기 선택시
+		if (e.getSource() == categoryImgs[Define.CATEGORY_ALL]) {
+			List<RestaurantDTO> list = restaurantRequest.getAllRestaurants(customerDTO.getCustomerId());
+			new RestaurantListFrame(list, customerDTO, RestaurantListFrame.CATEGORY_ALL);
+			setVisible(false);
+			dispose();
+		}
+		
+		// 어떤 카테고리를 선택했는지 확인
+		for (int i = Define.CATEGORY_GYOUNGYANG; i <= Define.CATEGORY_HOF; i++) {
 			if (e.getSource() == categoryImgs[i]) {
 				List<RestaurantDTO> list = restaurantRequest.getRestaurantsByCategory(i, customerDTO.getCustomerId());
 				new RestaurantListFrame(list, customerDTO, RestaurantListFrame.CATEGORY);
@@ -109,6 +117,7 @@ public class CategoryFrame extends JFrame implements MyMouseListener {
 
 	}
 
+	// 패널 내부 클래스
 	private class BackgroundPanel extends JPanel {
 		private JPanel backgroundPanel;
 		private Image backgroundImage;
