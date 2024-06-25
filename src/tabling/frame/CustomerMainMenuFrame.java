@@ -16,6 +16,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
 import tabling.dto.CustomerDTO;
+import tabling.request.CustomerRequest;
 import tabling.request.ReservationRequest;
 
 public class CustomerMainMenuFrame extends JFrame {
@@ -39,10 +40,18 @@ public class CustomerMainMenuFrame extends JFrame {
 
 	public CustomerMainMenuFrame(CustomerDTO customerDTO) {
 		this.customerDTO = customerDTO;
+		logout();
 		initData();
 		setInitLayout();
 		addEventListener();
 		labelShift();
+	}
+	
+	// 프로그램 종료시 로그아웃
+	private void logout() {
+		Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+			new CustomerRequest().logoutCustomer(customerDTO.getPhone());
+        }));
 	}
 
 	private void initData() {

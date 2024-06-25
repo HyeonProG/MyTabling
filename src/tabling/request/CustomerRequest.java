@@ -61,4 +61,26 @@ public class CustomerRequest {
 			e.printStackTrace();
 		}
 	}
+	
+	public boolean loginCustomer(String phone) {
+		boolean check = false;
+		try {
+			String selectUrl = urlStr + "/login/" + phone;
+			String str = Request.getRequest(selectUrl);
+			check = Boolean.parseBoolean(str);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return check;
+	}
+	
+	public void logoutCustomer(String phone) {
+		try {
+			String selectUrl = urlStr + "/logout/" + phone;
+			String str = Request.getRequest(selectUrl);
+			System.out.println(str);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
 }
