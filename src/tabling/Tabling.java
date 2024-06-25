@@ -10,7 +10,7 @@ import tabling.request.Request;
 public class Tabling {
 
 	public static void main(String[] args) {
-		Request.setIp("192.168.0.129");
+		Request.setIp("localhost");
 		UIManager.put("OptionPane.messageFont", new Font("Noto Sans KR", Font.PLAIN, 12));
 		new LoginSelectFrame();
 	}
