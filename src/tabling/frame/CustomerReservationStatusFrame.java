@@ -148,7 +148,7 @@ public class CustomerReservationStatusFrame extends JFrame {
 					setVisible(false);
 					dispose();
 				}
-				count = reservationRequest.checkReservation(reservationDTO.getRestaurantId(), reservationDTO.getReservationId());
+				count = reservationRequest.checkReservation(reservationDTO.getCustomerId(), reservationDTO.getRestaurantId());
 				customerQueue.setText(String.valueOf(count));
 				repaint();
 			}
