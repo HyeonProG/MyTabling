@@ -133,7 +133,7 @@ public class CustomerLoginFrame extends JFrame {
 					return;
 				}
 				if ((customerDTO = request.getCustomerByPhone(phoneText.getText())) != null) {
-					JOptionPane.showMessageDialog(null, "로그인 되었습니다.", "성공", JOptionPane.WARNING_MESSAGE);
+					JOptionPane.showMessageDialog(null, "로그인 되었습니다.", "성공", JOptionPane.INFORMATION_MESSAGE);
 					new CustomerMainMenuFrame(customerDTO);
 					setVisible(false); 
 					dispose();

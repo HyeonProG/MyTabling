@@ -92,7 +92,7 @@ public class RestaurantLoginFrame extends JFrame {
 					if (!resIdText.getText().equals("") || !pw.equals("")) {
 						restaurantId = Integer.parseInt(resIdText.getText());
 						if ((restDTO = restaurantRequest.getRestaurantByRestaurantId(restaurantId)) != null && pw.equals("1111")) {
-							JOptionPane.showMessageDialog(null, "로그인 되었습니다.", "성공", JOptionPane.WARNING_MESSAGE);
+							JOptionPane.showMessageDialog(null, "로그인 되었습니다.", "성공", JOptionPane.INFORMATION_MESSAGE);
 							setVisible(false);
 							dispose();
 							new RestaurantMainMenuFrame(restDTO);
@@ -126,18 +126,18 @@ public class RestaurantLoginFrame extends JFrame {
 					if (!resIdText.getText().equals("") || !pw.equals("")) {
 						restaurantId = Integer.parseInt(resIdText.getText());
 						if ((restDTO = restaurantRequest.getRestaurantByRestaurantId(restaurantId)) != null && pw.equals("1111")) {
-							JOptionPane.showMessageDialog(null, "로그인 되었습니다.", "성공", JOptionPane.WARNING_MESSAGE);
+							JOptionPane.showMessageDialog(null, "로그인 되었습니다.", "성공", JOptionPane.INFORMATION_MESSAGE);
 							setVisible(false);
 							dispose();
 							new RestaurantMainMenuFrame(restDTO);
 						} else if ((restDTO = restaurantRequest.getRestaurantByRestaurantId(restaurantId)) == null) {
-							JOptionPane.showMessageDialog(null, "아이디가 올바르지 않습니다.", "실패", JOptionPane.WARNING_MESSAGE);
+							JOptionPane.showMessageDialog(null, "아이디가 올바르지 않습니다.", "경고", JOptionPane.WARNING_MESSAGE);
 						} else {
-							JOptionPane.showMessageDialog(null, "비밀번호가 올바르지 않습니다.", "실패", JOptionPane.WARNING_MESSAGE);
+							JOptionPane.showMessageDialog(null, "비밀번호가 올바르지 않습니다.", "경고", JOptionPane.WARNING_MESSAGE);
 						}
 					}
 				} catch (NumberFormatException e1) {
-					JOptionPane.showMessageDialog(null, "존재하지 않는 ID입니다.", "실패", JOptionPane.WARNING_MESSAGE);
+					JOptionPane.showMessageDialog(null, "존재하지 않는 ID입니다.", "경고", JOptionPane.WARNING_MESSAGE);
 				}
 			}
 		});

@@ -148,7 +148,7 @@ public class SignInFrame extends JFrame {
 						nameField.setText("");
 					} else {
 						request.addCustomer(nameField.getText(), localTel.getSelectedItem() + phoneField.getText(), myLocation.getSelectedIndex() + 1);
-						JOptionPane.showMessageDialog(null, "회원가입 성공!", "경고", JOptionPane.WARNING_MESSAGE);
+						JOptionPane.showMessageDialog(null, "회원가입 성공!", "성공", JOptionPane.INFORMATION_MESSAGE);
 						setVisible(false);
 						dispose();
 					}
@@ -167,7 +167,7 @@ public class SignInFrame extends JFrame {
 						if (request.getCustomerByPhone(localTel.getSelectedItem() + phoneField.getText()) != null) {
 							JOptionPane.showMessageDialog(null, "중복되는 번호입니다.", "경고", JOptionPane.WARNING_MESSAGE);
 						} else {
-							JOptionPane.showMessageDialog(null, "가입 가능한 전화번호입니다.", "경고", JOptionPane.WARNING_MESSAGE);
+							JOptionPane.showMessageDialog(null, "가입 가능한 전화번호입니다.", "알림", JOptionPane.INFORMATION_MESSAGE);
 							signInBtn.setEnabled(true);
 							canLogin = true;
 						}
