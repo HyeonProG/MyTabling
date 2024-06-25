@@ -21,7 +21,7 @@ public class RestaurantRequest {
 	private boolean likeFilter; // 식당 리스트 프레임에서 좋아요 필터가 걸리면 true
 
 	public RestaurantRequest() {
-		urlStr = "http://localhost:8080/restaurant";
+		urlStr = "http://" + Request.getIp() + ":8080/restaurant";
 		gson = new GsonBuilder().setPrettyPrinting().create();
 	}
 

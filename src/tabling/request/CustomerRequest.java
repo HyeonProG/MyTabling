@@ -13,7 +13,7 @@ public class CustomerRequest {
 	private Gson gson;
 
 	public CustomerRequest() {
-		urlStr = "http://localhost:8080/customer";
+		urlStr = "http://" + Request.getIp()+ ":8080/customer";
 		gson = new GsonBuilder().setPrettyPrinting().create();
 	}
 

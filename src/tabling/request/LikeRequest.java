@@ -8,7 +8,7 @@ public class LikeRequest {
 	private String urlStr;
 
 	public LikeRequest() {
-		urlStr = "http://localhost:8080/like";
+		urlStr = "http://" + Request.getIp() + ":8080/like";
 	}
 
 	public int addLike(int customerId, int restaurantId) {

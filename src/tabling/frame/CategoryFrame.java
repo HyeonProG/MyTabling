@@ -22,7 +22,6 @@ public class CategoryFrame extends JFrame implements MyMouseListener {
 	private JLabel[] categoryImgs;
 
 	private JLabel homeLabel;
-	private JLabel adLabel;
 
 	private BackgroundPanel backgroundPanel;
 	private JLabel mainLabel;
@@ -39,30 +38,16 @@ public class CategoryFrame extends JFrame implements MyMouseListener {
 	private void initData() {
 		backgroundPanel = new BackgroundPanel();
 		restaurantRequest = new RestaurantRequest();
+		mainLabel = new JLabel();
 		// 그림라벨
 		categoryImgs = new JLabel[14];
-		categoryImgs[Define.CATEGORY_ALL] = new JLabel(new ImageIcon("img/전체보기버튼.png"));
-		categoryImgs[Define.CATEGORY_GYOUNGYANG] = new JLabel(new ImageIcon("img/경양식버튼.png"));
-		categoryImgs[Define.CATEGORY_CAFE] = new JLabel(new ImageIcon("img/카페버튼.png"));
-		categoryImgs[Define.CATEGORY_BOONSIK] = new JLabel(new ImageIcon("img/분식버튼.png"));
-		categoryImgs[Define.CATEGORY_GUI] = new JLabel(new ImageIcon("img/구이버튼.png"));
-		categoryImgs[Define.CATEGORY_JOONGSIK] = new JLabel(new ImageIcon("img/중식버튼.png"));
-		categoryImgs[Define.CATEGORY_FASTFOOD] = new JLabel(new ImageIcon("img/패스트푸드버튼.png"));
-		categoryImgs[Define.CATEGORY_HANSIK] = new JLabel(new ImageIcon("img/한식버튼.png"));
-		categoryImgs[Define.CATEGORY_CHICKEN] = new JLabel(new ImageIcon("img/치킨버튼.png"));
-		categoryImgs[Define.CATEGORY_HOE] = new JLabel(new ImageIcon("img/회버튼.png"));
-		categoryImgs[Define.CATEGORY_FAMILY] = new JLabel(new ImageIcon("img/패밀리레스토랑버튼.png"));
-		categoryImgs[Define.CATEGORY_ILSIK] = new JLabel(new ImageIcon("img/일식버튼.png"));
-		categoryImgs[Define.CATEGORY_NAENGMYUN] = new JLabel(new ImageIcon("img/냉면버튼.png"));
-		categoryImgs[Define.CATEGORY_HOF] = new JLabel(new ImageIcon("img/호프버튼.png"));
-		mainLabel = new JLabel();
-
-		for (int i = 0; i < 14; i++) {
+		String categoryStr = "img/category_";
+		for (int i = Define.CATEGORY_ALL; i <= Define.CATEGORY_HOF; i++) {
+			categoryImgs[i] = new JLabel(new ImageIcon(categoryStr + i + ".png"));
 			mainLabel.add(categoryImgs[i]);
 		}
 
 		homeLabel = new JLabel(new ImageIcon("img/house-solid.png"));
-		adLabel = new JLabel(new ImageIcon());
 
 	}
 

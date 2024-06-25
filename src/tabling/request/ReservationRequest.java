@@ -18,7 +18,7 @@ public class ReservationRequest {
 	private Gson gson;
 
 	public ReservationRequest() {
-		urlStr = "http://localhost:8080/reservation";
+		urlStr = "http://" + Request.getIp() + ":8080/reservation";
 		gson = new GsonBuilder().setPrettyPrinting().create();
 	}
 

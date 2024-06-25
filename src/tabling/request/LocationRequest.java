@@ -4,7 +4,7 @@ public class LocationRequest {
 	private String urlStr;
 
 	public LocationRequest() {
-		urlStr = "http://localhost:8080/location";
+		urlStr = "http://" + Request.getIp() + ":8080/location";
 	}
 
 	public String getLocationName(int locationId) {

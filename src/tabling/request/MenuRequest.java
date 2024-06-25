@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 
 import tabling.dto.MenuDTO;
@@ -14,7 +15,8 @@ public class MenuRequest {
 	private Gson gson;
 
 	public MenuRequest() {
-		urlStr = "http://localhost:8080/menu";
+		urlStr = "http://" + Request.getIp() + ":8080/menu";
+		gson = new GsonBuilder().setPrettyPrinting().create();
 	}
 
 	public String getFoodName(int foodId) {
@@ -31,7 +33,7 @@ public class MenuRequest {
 	public List<MenuDTO> getMenuByRestaurantId(int restaurantId) {
 		List<MenuDTO> list = new ArrayList<>();
 		try {
-			String selectUrl = urlStr + "/restaurant/" + "restaurantId=" + String.valueOf(restaurantId) + "&";
+			String selectUrl = urlStr + "/restaurant/" + "restaurantId=" + String.valueOf(restaurantId);
 			String str = Request.getRequest(selectUrl);
 			Type dtoType = new TypeToken<List<MenuDTO>>() {
 			}.getType();

@@ -49,15 +49,15 @@ public class MenuHandler implements HttpHandler {
 				String[] pairs = query.split("&");
 				for (String pair : pairs) {
 					String[] keyValue = pair.split("=");
-					if (keyValue[0].equalsIgnoreCase("menuId")) {
+					if (keyValue[0].equalsIgnoreCase("foodId")) {
 						foodId = Integer.parseInt(keyValue[1]);
 					} else if (keyValue[0].equalsIgnoreCase("restaurantId")) {
 						restaurantId = Integer.parseInt(keyValue[1]);
 					}
 				}
-				if (type.equalsIgnoreCase("foodId")) {
+				if (type.equalsIgnoreCase("food")) {
 					response = dao.getFoodName(foodId);
-				} else if (type.equalsIgnoreCase("restaurantId")) {
+				} else if (type.equalsIgnoreCase("restaurant")) {
 					List<MenuDTO> list = dao.getMenuByRestaurantId(restaurantId);
 					response = gson.toJson(list);
 				}

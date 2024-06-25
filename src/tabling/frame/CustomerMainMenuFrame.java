@@ -1,9 +1,13 @@
 package tabling.frame;
 
+import java.awt.Desktop;
 import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
 
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
@@ -23,6 +27,13 @@ public class CustomerMainMenuFrame extends JFrame {
 	private JLabel reservationBtn;
 	private JLabel userInfoBtn;
 	private JLabel homeBtn;
+	private JLabel linkLabel;
+	private JLabel adLabelLeft;
+	private JLabel adLabelRight;
+	private ImageIcon[] adImg;
+
+	private int countLeft = 0;
+	private int countRight = 1;
 
 	private CustomerDTO customerDTO;
 
@@ -31,6 +42,7 @@ public class CustomerMainMenuFrame extends JFrame {
 		initData();
 		setInitLayout();
 		addEventListener();
+		labelShift();
 	}
 
 	private void initData() {
@@ -47,6 +59,14 @@ public class CustomerMainMenuFrame extends JFrame {
 		locationBtn = new JLabel(new ImageIcon("img/locationBtn.png"));
 		userInfoBtn = new JLabel(new ImageIcon("img/user-solid.png"));
 		homeBtn = new JLabel(new ImageIcon("img/house-solid.png"));
+		linkLabel = new JLabel(new ImageIcon("img/linkLabel.jpg"));
+		adLabelLeft = new JLabel();
+		adLabelRight = new JLabel();
+		adImg = new ImageIcon[4];
+		String imgStr = "img/adLabel";
+		for (int i = 0; i < adImg.length; i++) {
+			adImg[i] = new ImageIcon(imgStr + i + ".png");
+		}
 	}
 
 	private void setInitLayout() {
@@ -55,13 +75,13 @@ public class CustomerMainMenuFrame extends JFrame {
 		backgroundPanel.setLayout(null);
 		add(backgroundPanel);
 
-		reservationBtn.setBounds(50, 280, 80, 120);
+		reservationBtn.setBounds(50, 320, 80, 120);
 		backgroundPanel.add(reservationBtn);
 
-		categoryBtn.setBounds(210, 280, 70, 120);
+		categoryBtn.setBounds(210, 320, 70, 120);
 		backgroundPanel.add(categoryBtn);
 
-		locationBtn.setBounds(360, 280, 70, 120);
+		locationBtn.setBounds(360, 320, 70, 120);
 		backgroundPanel.add(locationBtn);
 
 		userInfoBtn.setBounds(430, 15, 30, 30);
@@ -70,6 +90,13 @@ public class CustomerMainMenuFrame extends JFrame {
 		homeBtn.setBounds(217, 605, 50, 50);
 		backgroundPanel.add(homeBtn);
 
+		linkLabel.setBounds(25, 65, 430, 242);
+		backgroundPanel.add(linkLabel);
+
+		adLabelLeft.setBounds(10, 480, 230, 115);
+		backgroundPanel.add(adLabelLeft);
+		adLabelRight.setBounds(240, 480, 230, 115);
+		backgroundPanel.add(adLabelRight);
 	}
 
 	private void addEventListener() {
@@ -110,6 +137,67 @@ public class CustomerMainMenuFrame extends JFrame {
 				dispose();
 			}
 		});
+		linkLabel.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mousePressed(MouseEvent e) {
+				try {
+					Desktop.getDesktop().browse(new URI("https://www.youtube.com/watch?app=desktop&v=3rzvkwcmorA"));
+				} catch (IOException e1) {
+					e1.printStackTrace();
+				} catch (URISyntaxException e1) {
+					e1.printStackTrace();
+				}
+			}
+		});
+
+		adLabelLeft.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mousePressed(MouseEvent e) {
+				try {
+					switch (countLeft) {
+					case 0:
+						Desktop.getDesktop().browse(new URI("https://www.coupangeats.com/"));
+						break;
+					case 1:
+						Desktop.getDesktop().browse(new URI("https://baemin.com/"));
+						break;
+					case 2:
+						Desktop.getDesktop().browse(new URI("https://www.yogiyo.co.kr/"));
+						break;
+					case 3:
+						Desktop.getDesktop().browse(new URI("https://app.catchtable.co.kr/"));
+						break;
+					}
+				} catch (IOException e1) {
+					e1.printStackTrace();
+				} catch (URISyntaxException e1) {
+					e1.printStackTrace();
+				}
+			}
+		});
+	}
+
+	private void labelShift() {
+		new Thread(() -> {
+			while (true) {
+				adLabelLeft.setIcon(adImg[countLeft]);
+				adLabelRight.setIcon(adImg[countRight]);
+				repaint();
+				try {
+					Thread.sleep(2000);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+				countLeft++;
+				countRight++;
+				if (countLeft > 3) {
+					countLeft = 0;
+				}
+				if (countRight > 3) {
+					countRight = 0;
+				}
+			}
+		}).start();
 	}
 
 	private class BackgroundPanel extends JPanel {

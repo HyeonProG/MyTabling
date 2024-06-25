@@ -89,7 +89,7 @@ public class CustomerLoginFrame extends JFrame {
 		loginBtn.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mousePressed(MouseEvent e) {
-				rogin();
+				login();
 			}
 		});
 		
@@ -116,7 +116,7 @@ public class CustomerLoginFrame extends JFrame {
 			@Override
 			public void keyPressed(KeyEvent e) {
 				if (e.getKeyCode() == KeyEvent.VK_ENTER) {
-					rogin();
+					login();
 				}
 			}
 
@@ -125,7 +125,7 @@ public class CustomerLoginFrame extends JFrame {
 	}
 	
 	// 로그인 버튼 클릭시 & 엔터버튼 입력시 호출 
-	private void rogin() {
+	private void login() {
 		if (!phoneText.getText().equals("")) {
 			try {
 				if ((customerDTO = request.getCustomerByPhone(phoneText.getText())) != null) {

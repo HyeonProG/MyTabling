@@ -74,7 +74,7 @@ public class RestaurantHandler implements HttpHandler {
 					List<RestaurantDTO> list = restaurantDAO.getRestaurantsByCategory(categoryId, customerId);
 					response = gson.toJson(list);
 				} else if (type.equalsIgnoreCase("location")) {
-					List<RestaurantDTO> list = restaurantDAO.getRestaurantsByCategory(locationId, customerId);
+					List<RestaurantDTO> list = restaurantDAO.getRestaurantsByLocation(locationId, customerId);
 					response = gson.toJson(list);
 				}
 				try {
