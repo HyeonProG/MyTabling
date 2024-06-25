@@ -24,6 +24,8 @@ import tabling.request.LikeRequest;
 import tabling.request.MenuRequest;
 
 public class RestaurantFrame extends JFrame {
+	
+	private JLabel background;
 	private RestaurantFrame frame;
 	private RestaurantListFrame restaurantListFrame;
 
@@ -44,6 +46,7 @@ public class RestaurantFrame extends JFrame {
 	private Vector<String> head = new Vector<>();
 	private Vector<Vector<String>> contents = new Vector<>();
 
+	private JLabel reservationLabel;
 	private JButton reservationBtn;
 
 	private JLabel restaurantNameLabel;
@@ -73,6 +76,8 @@ public class RestaurantFrame extends JFrame {
 		setResizable(false);
 		setLocationRelativeTo(null);
 		setLayout(null);
+		
+		background = new JLabel(new ImageIcon("img/retaurantFrameBg.jpg"));
 
 		likeRequest = new LikeRequest();
 		// 현재 고객이 좋아요를 누른 식당인지 판별 -> 프레임에 띄우기 위함
@@ -113,7 +118,8 @@ public class RestaurantFrame extends JFrame {
 			}
 		};
 
-		reservationBtn = new JButton("예약하기");
+		reservationLabel = new JLabel(new ImageIcon("img/예약하기버튼1.png"));
+		reservationBtn = new JButton();
 
 		tableScroll = new JScrollPane(table);
 
@@ -141,16 +147,24 @@ public class RestaurantFrame extends JFrame {
 	}
 
 	private void setInitLayout() {
-		likeLabel.setBounds(60, 45, 50, 50);
-		add(likeLabel);
+		background.setSize(getWidth(), getHeight());
+		add(background);
+		
+		likeLabel.setBounds(60, 95, 50, 50);
+		background.add(likeLabel);
 		likeLabel.setVisible(true);
 
-		reservationBtn.setBounds(320, 50, 90, 30);
-		add(reservationBtn);
+		reservationLabel.setBounds(340, 27, 90, 40);
+		background.add(reservationLabel);
+		reservationBtn.setBounds(340, 27, 90, 40);
+		reservationBtn.setBorderPainted(false);
+		reservationBtn.setContentAreaFilled(false);
+		reservationBtn.setFocusPainted(false);
+		background.add(reservationBtn);
 
-		add(tableScroll);
+		background.add(tableScroll);
 		tableScroll.setSize(350, 148);
-		tableScroll.setLocation(65, 400);
+		tableScroll.setLocation(65, 430);
 
 		table.setFont(new Font("Noto Sans KR", Font.BOLD, 15));
 		table.setRowHeight(25);
@@ -163,32 +177,33 @@ public class RestaurantFrame extends JFrame {
 		table.getColumn("메뉴 이름").setPreferredWidth(70);
 		table.getColumn("메뉴 이름").setCellRenderer(centerAlign);
 
-		restaurantNameLabel.setBounds(65, 110, 150, 50);
-		restaurantNameLabel.setFont(new Font("Noto Sans KR", Font.BOLD, 15));
+		restaurantNameLabel.setBounds(65, 160, 150, 50);
+		restaurantNameLabel.setFont(new Font("Noto Sans KR", Font.BOLD, 30));
 		restaurantNameLabel.setOpaque(true);
 		restaurantNameLabel.setBackground(Color.WHITE);
-		add(restaurantNameLabel);
+		background.add(restaurantNameLabel);
 
-		add(detailScroll);
+		background.add(detailScroll);
 		detailScroll.setSize(350, 150);
-		detailScroll.setLocation(65, 250);
+		detailScroll.setLocation(65, 280);
 
-		restaurantDetail.setBounds(65, 250, 350, 150);
+		restaurantDetail.setBounds(65, 280, 350, 150);
 		restaurantDetail.setFont(new Font("Noto Sans KR", Font.BOLD, 15));
 		restaurantDetail.setOpaque(true);
 		restaurantDetail.setBackground(Color.WHITE);
 
-		imageLabel.setBounds(250, 100, 170, 150);
-		add(imageLabel);
+		imageLabel.setBounds(250, 110, 170, 150);
+		background.add(imageLabel);
 
-		ratingLabel.setBounds(65, 170, 150, 50);
+		ratingLabel.setBounds(65, 220, 150, 50);
+		ratingLabel.setFont(new Font("Noto Sans KR", Font.BOLD, 20));
 		ratingLabel.setBackground(Color.WHITE);
 		ratingLabel.setOpaque(true);
-		add(ratingLabel);
+		background.add(ratingLabel);
 
-		likeCountLabel.setBounds(120, 45, 50, 50);
+		likeCountLabel.setBounds(120, 95, 50, 50);
 		likeCountLabel.setFont(new Font("Noto Sans KR", Font.BOLD, 30));
-		add(likeCountLabel);
+		background.add(likeCountLabel);
 
 	}
 
