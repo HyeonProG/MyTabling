@@ -79,7 +79,6 @@ public class CustomerRequest {
 			String str = Request.getRequest(selectUrl);
 			System.out.println(str);
 		} catch (IOException e) {
-			e.printStackTrace();
 		}
 	}
 }

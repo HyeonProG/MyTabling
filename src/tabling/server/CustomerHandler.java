@@ -54,6 +54,7 @@ public class CustomerHandler implements HttpHandler {
 					response = gson.toJson(dto);
 				} else if (type.equalsIgnoreCase("delete")) {
 					dao.deleteCustomer(customerPhone);
+					OnlineCustomer.getCustomerPhone().remove(customerPhone);
 					response = "회원 삭제 성공";
 				} else if (type.equalsIgnoreCase("login")) {
 					if (dao.getCustomerByPhone(customerPhone) == null) {

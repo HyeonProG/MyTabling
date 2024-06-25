@@ -142,6 +142,12 @@ public class CustomerReservationStatusFrame extends JFrame {
 		refreshBtn.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mousePressed(MouseEvent e) {
+				if (reservationRequest.getReservationByCustomer(customerDTO.getCustomerId()) == null) {
+					JOptionPane.showMessageDialog(null, "예약이 취소 되었습니다.", "경고", JOptionPane.WARNING_MESSAGE);
+					new CustomerMainMenuFrame(customerDTO);
+					setVisible(false);
+					dispose();
+				}
 				count = reservationRequest.checkReservation(reservationDTO.getRestaurantId(), reservationDTO.getReservationId());
 				customerQueue.setText(String.valueOf(count));
 				repaint();
