@@ -12,16 +12,16 @@ public class JsonDTO {
 	private int restaurantId;
 	private int foodId;
 	private int reservationId;
-	
+
 	public JsonDTO(String customerName, String customerPhone, int locationId) {
 		this.customerName = customerName;
 		this.customerPhone = customerPhone;
 		this.locationId = locationId;
 	}
-	
+
 	public JsonDTO(int customerId, int restaurantId) {
 		this.customerId = customerId;
 		this.restaurantId = restaurantId;
 	}
-	
+
 }

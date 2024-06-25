@@ -18,7 +18,7 @@ public class ReservationDAO {
 		if (reservationId == 0) {
 			query = Define.SELECT_RESERVATION_COUNT_BY_RESTID;
 		}
-		
+
 		try (Connection conn = DBConnectionManager.getInstance().getConnection()) {
 
 			PreparedStatement pstmt = conn.prepareStatement(query);
@@ -59,5 +59,5 @@ public class ReservationDAO {
 		}
 		return dto;
 	}
-	
+
 }

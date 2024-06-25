@@ -28,7 +28,7 @@ public class MenuDAO {
 		}
 		return name;
 	}
-	
+
 	// 해당 식당의 모든 메뉴를 반환하는 메서드
 	public List<MenuDTO> getMenuByRestaurantId(int restaurantId) throws SQLException {
 		List<MenuDTO> list = new ArrayList<>();
@@ -37,17 +37,14 @@ public class MenuDAO {
 			PreparedStatement pstmt = conn.prepareStatement(query);
 			pstmt.setInt(1, restaurantId);
 			ResultSet rs = pstmt.executeQuery();
-			
-			while(rs.next()) {
-				MenuDTO dto = new MenuDTO().builder()
-						.restaurantId(rs.getInt("restaurant_id"))
-						.foodId(rs.getInt("food_id"))
-						.price(rs.getInt("price"))
+
+			while (rs.next()) {
+				MenuDTO dto = new MenuDTO().builder().restaurantId(rs.getInt("restaurant_id")).foodId(rs.getInt("food_id")).price(rs.getInt("price"))
 						.build();
-				list.add(dto);						
-			}			
+				list.add(dto);
+			}
 		}
 		return list;
 	}
-	
+
 }

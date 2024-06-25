@@ -16,5 +16,5 @@ public class ReservationForRestaurantDTO {
 	private String customerPhone; // 고객 전화번호
 	private String reservationTime; // 예약 시간
 	private String state; // 예약 상태
-	
+
 }

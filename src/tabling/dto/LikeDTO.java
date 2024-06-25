@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Builder
 public class LikeDTO {
-	
+
 	private int customerId; // 고객id
 	private int restaurantId; // 식당id
 

@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Builder
 public class CategoryDTO {
-	
+
 	private int categoryId; // 카테고리 id
 	private String categoryName; // 카테고리 이름
 }

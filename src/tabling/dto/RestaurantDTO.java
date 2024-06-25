@@ -29,11 +29,11 @@ public class RestaurantDTO implements Comparable<RestaurantDTO> {
 	private String restDay; // 가게 휴무일
 	private int locationId; // 가게 위치
 	private int categoryId; // 가게 카테고리
-	
+
 	public static void setSortType(int sortType) {
 		RestaurantDTO.sortType = sortType;
 	}
-	
+
 	@Override
 	public int compareTo(RestaurantDTO dto) {
 		if (sortType < 0) {

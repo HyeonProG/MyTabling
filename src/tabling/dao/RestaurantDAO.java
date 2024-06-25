@@ -22,6 +22,7 @@ public class RestaurantDAO {
 
 	/**
 	 * 모든 식당 리스트를 반환하는 메서드
+	 * 
 	 * @param customerId : 고객의 선호 지역, 좋아요한 식당을 조회하기 위함
 	 */
 	public List<RestaurantDTO> getAllRestaurants(int customerId) throws SQLException {
@@ -65,10 +66,11 @@ public class RestaurantDAO {
 		}
 		return list;
 	}
-	
+
 	/**
 	 * 해당 카테고리의 식당을 반환하는 메서드
-	 * @param categoryId 
+	 * 
+	 * @param categoryId
 	 * @param customerId : 좋아요한 식당을 조회하기 위함
 	 */
 	public List<RestaurantDTO> getRestaurantsByCategory(int categoryId, int customerId) throws SQLException {
@@ -115,7 +117,8 @@ public class RestaurantDAO {
 
 	/**
 	 * 해당 지역의 식당을 반환하는 메서드
-	 * @param locationId 
+	 * 
+	 * @param locationId
 	 * @param customerId : 좋아요한 식당을 조회하기 위함
 	 */
 	public List<RestaurantDTO> getRestaurantsByLocation(int locationId, int customerId) throws SQLException {
@@ -157,7 +160,6 @@ public class RestaurantDAO {
 			}
 		}
 		return list;
-
 	}
 
 	public RestaurantDTO getRestaurantByRestaurantId(int restaurantId) {
@@ -185,11 +187,9 @@ public class RestaurantDAO {
 						.build();
 				return dto;
 			}
-
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-
 		return dto;
 	}
 

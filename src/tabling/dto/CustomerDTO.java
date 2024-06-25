@@ -16,5 +16,5 @@ public class CustomerDTO {
 	private String phone; // 고객 전화번호
 	private String state; // 예약 상태
 	private int locationId; // 선호 지역 id
-	
+
 }

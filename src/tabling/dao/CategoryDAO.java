@@ -9,8 +9,8 @@ import tabling.util.DBConnectionManager;
 import tabling.util.Define;
 
 public class CategoryDAO {
-	
-	// 카테고리 id를 이름으로 바꿔주는 메서드 
+
+	// 카테고리 id를 이름으로 바꿔주는 메서드
 	public String getCategoryName(int categoryId) throws SQLException {
 		String name = null;
 		String query = Define.SELECT_CATEGORY_BY_CATEGORYID;

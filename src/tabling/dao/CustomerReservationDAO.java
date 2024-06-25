@@ -30,8 +30,7 @@ public class CustomerReservationDAO {
 
 			conn.commit();
 
-		} 
-
+		}
 	}
 
 	/**
@@ -54,8 +53,6 @@ public class CustomerReservationDAO {
 			pstmt2.executeUpdate();
 
 			conn.commit();
-
-		} 
+		}
 	}
-
 }

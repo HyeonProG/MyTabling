@@ -29,9 +29,8 @@ public class RestaurantReservationDAO {
 			try (ResultSet rs = pstmt.executeQuery()) {
 				while (rs.next()) {
 					ReservationDTO dto = new ReservationDTO().builder().reservationId(rs.getInt("reservation_id"))
-							.reservationState(rs.getString("reservation_state"))
-							.reservationTime(rs.getString("reservation_time")).customerId(rs.getInt("customer_id"))
-							.restaurantId(rs.getInt("restaurant_id")).build();
+							.reservationState(rs.getString("reservation_state")).reservationTime(rs.getString("reservation_time"))
+							.customerId(rs.getInt("customer_id")).restaurantId(rs.getInt("restaurant_id")).build();
 					list.add(dto);
 				}
 				for (ReservationDTO reservationDTO : list) {
@@ -42,29 +41,27 @@ public class RestaurantReservationDAO {
 		return list;
 	}
 
-	// TODO - 점주측에서 예약자 명단 띄우기 위함
 	public List<ReservationForRestaurantDTO> getCustomerInfoByReservation(int restaurantId) throws SQLException {
 
 		List<ReservationForRestaurantDTO> list = new ArrayList<>();
 
 		// JOIN으로 필요한 것만 띄우기 - 고객이름, 전화번호, 예약시간, 예약상태
 		String query = Define.SELECT_CUSTOMER_AND_RESERVATION;
-		
+
 		try (Connection conn = DBConnectionManager.getInstance().getConnection()) {
 			PreparedStatement pstmt = conn.prepareStatement(query);
 			pstmt.setInt(1, restaurantId);
-			try (ResultSet rs = pstmt.executeQuery()){
+			try (ResultSet rs = pstmt.executeQuery()) {
 				while (rs.next()) {
 					ReservationForRestaurantDTO dto2 = new ReservationForRestaurantDTO().builder().customerName(rs.getString("customer_name"))
 							.customerPhone(rs.getString("phone")).reservationTime(rs.getString("reservation_time"))
 							.state(rs.getString("reservation_state")).build();
 					list.add(dto2);
 				}
-				
-			}
-		} 
-		return list;
 
+			}
+		}
+		return list;
 	};
 
-} // end of class
+}
