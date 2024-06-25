@@ -139,7 +139,7 @@ public class SignInFrame extends JFrame {
 						JOptionPane.showMessageDialog(null, "닉네임은 공백으로 시작할 수 없습니다.", "경고", JOptionPane.WARNING_MESSAGE);
 						nameField.setText("");
 						return;
-					} else if (nameField.getText().matches("\\s*$")) {
+					} else if (nameField.getText().matches(".*\\s$")) {
 						JOptionPane.showMessageDialog(null, "닉네임은 공백으로 끝날 수 없습니다.", "경고", JOptionPane.WARNING_MESSAGE);
 						nameField.setText("");
 						return;
