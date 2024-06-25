@@ -3,6 +3,8 @@ package tabling.frame;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Image;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
@@ -11,6 +13,7 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 
 import tabling.dto.RestaurantDTO;
@@ -20,7 +23,7 @@ public class RestaurantLoginFrame extends JFrame {
 
 	private BackgroundPanel backgroundPanel;
 	private JTextField resIdText;
-	private JTextField resPwText;
+	private JPasswordField resPwText;
 	private JLabel loginBtn;
 	private JLabel backBtn;
 	private RestaurantRequest restaurantRequest;
@@ -30,14 +33,14 @@ public class RestaurantLoginFrame extends JFrame {
 	public RestaurantLoginFrame() {
 		initData();
 		setInitLayout();
-		initListener();
+		addEventListener();
 	}
 
 	private void initData() {
 		backgroundPanel = new BackgroundPanel();
 		loginBtn = new JLabel(new ImageIcon("img/loginBtn.png"));
 		resIdText = new JTextField();
-		resPwText = new JTextField();
+		resPwText = new JPasswordField();
 		backBtn = new JLabel(new ImageIcon("img/quitBtn.png"));
 
 		restaurantRequest = new RestaurantRequest();
@@ -78,19 +81,20 @@ public class RestaurantLoginFrame extends JFrame {
 		backgroundPanel.add(resPwText);
 	}
 
-	private void initListener() {
+	private void addEventListener() {
 		loginBtn.addMouseListener(new MouseAdapter() {
 
 			@Override
 			public void mousePressed(MouseEvent e) {
-
+				char[] pwChars = resPwText.getPassword();
+				String pw = new String(pwChars);
 				try {
-					if (!resIdText.getText().equals("") || !resPwText.getText().equals("")) {
+					if (!resIdText.getText().equals("") || !pw.equals("")) {
 						restaurantId = Integer.parseInt(resIdText.getText());
-						if ((restDTO = restaurantRequest.getRestaurantByRestaurantId(restaurantId)) != null
-								&& resPwText.getText().equals("1111")) {
+						if ((restDTO = restaurantRequest.getRestaurantByRestaurantId(restaurantId)) != null && pw.equals("1111")) {
 							JOptionPane.showMessageDialog(null, "로그인 되었습니다.", "성공", JOptionPane.WARNING_MESSAGE);
 							setVisible(false);
+							dispose();
 							new RestaurantMainMenuFrame(restDTO);
 						} else if ((restDTO = restaurantRequest.getRestaurantByRestaurantId(restaurantId)) == null) {
 							JOptionPane.showMessageDialog(null, "아이디가 올바르지 않습니다.", "실패", JOptionPane.WARNING_MESSAGE);
@@ -113,6 +117,31 @@ public class RestaurantLoginFrame extends JFrame {
 			}
 		});
 
+		addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyPressed(KeyEvent e) {
+				char[] pwChars = resPwText.getPassword();
+				String pw = new String(pwChars);
+				try {
+					if (!resIdText.getText().equals("") || !pw.equals("")) {
+						restaurantId = Integer.parseInt(resIdText.getText());
+						if ((restDTO = restaurantRequest.getRestaurantByRestaurantId(restaurantId)) != null && pw.equals("1111")) {
+							JOptionPane.showMessageDialog(null, "로그인 되었습니다.", "성공", JOptionPane.WARNING_MESSAGE);
+							setVisible(false);
+							dispose();
+							new RestaurantMainMenuFrame(restDTO);
+						} else if ((restDTO = restaurantRequest.getRestaurantByRestaurantId(restaurantId)) == null) {
+							JOptionPane.showMessageDialog(null, "아이디가 올바르지 않습니다.", "실패", JOptionPane.WARNING_MESSAGE);
+						} else {
+							JOptionPane.showMessageDialog(null, "비밀번호가 올바르지 않습니다.", "실패", JOptionPane.WARNING_MESSAGE);
+						}
+					}
+				} catch (NumberFormatException e1) {
+					JOptionPane.showMessageDialog(null, "존재하지 않는 ID입니다.", "실패", JOptionPane.WARNING_MESSAGE);
+				}
+			}
+		});
+
 	}
 
 	private class BackgroundPanel extends JPanel {
@@ -131,10 +160,6 @@ public class RestaurantLoginFrame extends JFrame {
 			g.drawImage(backgroundImage, 0, 0, getWidth(), getHeight(), null);
 		}
 
-	}
-
-	public static void main(String[] args) {
-		new RestaurantLoginFrame();
 	}
 
 }
