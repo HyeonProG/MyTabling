@@ -1,10 +1,11 @@
 package tabling.server;
 
-import java.util.Vector;
+import java.util.HashSet;
+import java.util.Set;
 
 public class OnlineCustomer {
-	private static Vector<String> customerPhone = new Vector<>();
-	public static Vector<String> getCustomerPhone(){
+	private static Set<String> customerPhone = new HashSet<>();
+	public static Set<String> getCustomerPhone(){
 		return customerPhone;
 	}
 }
