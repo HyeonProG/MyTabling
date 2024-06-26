@@ -35,6 +35,7 @@ public class MenuHandler implements HttpHandler {
 		}
 	}
 
+	// GET 요청시 동작
 	private void handleGetRequest(HttpExchange exchange) {
 		URI uri = exchange.getRequestURI();
 		String path = uri.getPath();
@@ -44,6 +45,7 @@ public class MenuHandler implements HttpHandler {
 			String type = pathSegments[2];
 			String query = pathSegments[3];
 			try {
+				// 키값에 대한 벨류값 초기화
 				int foodId = 0;
 				int restaurantId = 0;
 				String[] pairs = query.split("&");
@@ -55,8 +57,10 @@ public class MenuHandler implements HttpHandler {
 						restaurantId = Integer.parseInt(keyValue[1]);
 					}
 				}
+				// 음식 이름 요청 응답
 				if (type.equalsIgnoreCase("food")) {
 					response = dao.getFoodName(foodId);
+					// 메뉴 리스트 요청 응답
 				} else if (type.equalsIgnoreCase("restaurant")) {
 					List<MenuDTO> list = dao.getMenuByRestaurantId(restaurantId);
 					response = gson.toJson(list);

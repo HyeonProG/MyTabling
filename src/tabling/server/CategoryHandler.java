@@ -11,6 +11,9 @@ import com.sun.net.httpserver.HttpHandler;
 
 import tabling.dao.CategoryDAO;
 
+/**
+ * 현재 사용 하지 않음
+ */
 public class CategoryHandler implements HttpHandler {
 
 	private CategoryDAO dao;

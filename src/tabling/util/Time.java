@@ -4,6 +4,7 @@ import lombok.Data;
 import tabling.dto.RestaurantDTO;
 
 @Data
+// 영업중임을 확인 하기 위해 만든 클래스
 public class Time {
 	private int currentHour;
 	private int currentMinute;
@@ -17,7 +18,7 @@ public class Time {
 		}
 		this.currentHour = currentHour;
 		this.currentMinute = currentMinute;
-		switch(currentDay) {
+		switch (currentDay) {
 		case "MONDAY":
 			currentDay = "월요일";
 			break;
@@ -43,6 +44,7 @@ public class Time {
 		this.currentDay = currentDay;
 	}
 
+	// 식당의 영업 시간을 메서드를 호출하는 객체에 입력된 시간과 비교하는 메서드
 	public boolean isOpen(RestaurantDTO dto) {
 		boolean result;
 		String openStr = dto.getOpenTime();

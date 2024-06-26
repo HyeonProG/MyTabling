@@ -57,6 +57,7 @@ public class ReservationHandler implements HttpHandler {
 			String type = pathSegments[2];
 			String query = pathSegments[3];
 			try {
+				// 키값에 대한 벨류값 초기화
 				int customerId = 0;
 				int restaurantId = 0;
 				String[] pairs = query.split("&");
@@ -73,14 +74,18 @@ public class ReservationHandler implements HttpHandler {
 				if (dto != null) {
 					reservationId = dto.getReservationId();
 				}
+				// 대기열 확인 요청 응답
 				if (type.equalsIgnoreCase("check")) {
 					int count = reservationDAO.checkReservation(restaurantId, reservationId);
 					response = String.valueOf(count);
+					// 예약 정보 확인 요청 응답
 				} else if (type.equalsIgnoreCase("select")) {
 					response = gson.toJson(dto);
+					// 식당에 대한 예약 리스트 요청 응답
 				} else if (type.equalsIgnoreCase("restaurant")) {
 					List<ReservationDTO> list = RestaurantReservationDAO.getReservationByRestaurantId(restaurantId);
 					response = gson.toJson(list);
+					// 예약자 명단 리스트 요청 응답
 				} else if (type.equalsIgnoreCase("customer")) {
 					List<ReservationForRestaurantDTO> list = RestaurantReservationDAO.getCustomerInfoByReservation(restaurantId);
 					response = gson.toJson(list);
@@ -120,6 +125,7 @@ public class ReservationHandler implements HttpHandler {
 			}
 			br.close();
 
+			// 예약 요청 응답
 			if (protocol.equalsIgnoreCase("reservation")) {
 				JsonDTO reservationDTO = gson.fromJson(bufferStr.toString(), JsonDTO.class);
 				try {
@@ -129,6 +135,7 @@ public class ReservationHandler implements HttpHandler {
 				} catch (SQLException e) {
 					e.printStackTrace();
 				}
+				// 예약 취소 요청 응답
 			} else if (protocol.equalsIgnoreCase("cancel")) {
 				JsonDTO cancelDTO = gson.fromJson(bufferStr.toString(), JsonDTO.class);
 				try {

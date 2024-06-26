@@ -21,12 +21,12 @@ public class CustomerHandler implements HttpHandler {
 
 	private CustomerDAO dao;
 	private Gson gson;
-	
+
 	public CustomerHandler() {
 		dao = new CustomerDAO();
 		gson = new GsonBuilder().setPrettyPrinting().create();
 	}
-	
+
 	@Override
 	public void handle(HttpExchange exchange) throws IOException {
 		String method = exchange.getRequestMethod();
@@ -38,7 +38,7 @@ public class CustomerHandler implements HttpHandler {
 			handlePostRequest(exchange);
 		}
 	}
-	
+
 	// GET 요청시 동작
 	private void handleGetRequest(HttpExchange exchange) {
 		URI uri = exchange.getRequestURI();
@@ -49,13 +49,16 @@ public class CustomerHandler implements HttpHandler {
 			String type = pathSegments[2];
 			String customerPhone = pathSegments[3];
 			try {
+				// 회원 정보 요청 응답
 				if (type.equalsIgnoreCase("select")) {
 					CustomerDTO dto = dao.getCustomerByPhone(customerPhone);
 					response = gson.toJson(dto);
+					// 회원 삭제 요청 응답
 				} else if (type.equalsIgnoreCase("delete")) {
 					dao.deleteCustomer(customerPhone);
 					OnlineCustomer.getCustomerPhone().remove(customerPhone);
 					response = "회원 삭제 성공";
+					// 로그인 요청 응답
 				} else if (type.equalsIgnoreCase("login")) {
 					if (dao.getCustomerByPhone(customerPhone) == null) {
 						response = "no";
@@ -65,6 +68,7 @@ public class CustomerHandler implements HttpHandler {
 						OnlineCustomer.getCustomerPhone().add(customerPhone);
 						response = "true";
 					}
+					// 로그아웃 요청 응답
 				} else if (type.equalsIgnoreCase("logout")) {
 					if (OnlineCustomer.getCustomerPhone().contains(customerPhone)) {
 						OnlineCustomer.getCustomerPhone().remove(customerPhone);
@@ -105,7 +109,7 @@ public class CustomerHandler implements HttpHandler {
 				bufferStr.append(inputLine);
 			}
 			br.close();
-			
+			// 회원 가입 요청 응답
 			if (protocol.equalsIgnoreCase("insert")) {
 				JsonDTO insertDTO = gson.fromJson(bufferStr.toString(), JsonDTO.class);
 				try {
@@ -114,6 +118,7 @@ public class CustomerHandler implements HttpHandler {
 				} catch (SQLException e) {
 					e.printStackTrace();
 				}
+				// 회원 정보 수정 요청 응답
 			} else if (protocol.equalsIgnoreCase("update")) {
 				JsonDTO updateDTO = gson.fromJson(bufferStr.toString(), JsonDTO.class);
 				try {
@@ -133,5 +138,5 @@ public class CustomerHandler implements HttpHandler {
 			e.printStackTrace();
 		}
 	}
-	
+
 }

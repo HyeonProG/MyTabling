@@ -25,11 +25,15 @@ public class RestaurantRequest {
 		gson = new GsonBuilder().setPrettyPrinting().create();
 	}
 
+	/**
+	 * 모든 식당 리스트 요청 <BR>
+	 * 영업중, 좋아요 필터 여부에 따라 받는 리스트가 달라질 수 있음
+	 */
 	public List<RestaurantDTO> getAllRestaurants(int customerId) {
 		List<RestaurantDTO> list = new ArrayList<>();
 		try {
-			String strUrl = urlStr + "/all/" + "customerId=" + String.valueOf(customerId) + "&" + "open="
-					+ String.valueOf(openFilter) + "&" + "like=" + String.valueOf(likeFilter);
+			String strUrl = urlStr + "/all/" + "customerId=" + String.valueOf(customerId) + "&" + "open=" + String.valueOf(openFilter) + "&" + "like="
+					+ String.valueOf(likeFilter);
 			String str = Request.getRequest(strUrl);
 			Type dtoType = new TypeToken<List<RestaurantDTO>>() {
 			}.getType();
@@ -40,12 +44,15 @@ public class RestaurantRequest {
 		return list;
 	}
 
+	/**
+	 * 해당 카테고리의 식당 리스트 요청 <BR>
+	 * 영업중, 좋아요 필터 여부에 따라 받는 리스트가 달라질 수 있음
+	 */
 	public List<RestaurantDTO> getRestaurantsByCategory(int categoryId, int customerId) {
 		List<RestaurantDTO> list = new ArrayList<>();
 		try {
-			String strUrl = urlStr + "/category/" + "customerId=" + String.valueOf(customerId) + "&" + "categoryId="
-					+ String.valueOf(categoryId) + "&" + "open=" + String.valueOf(openFilter) + "&" + "like="
-					+ String.valueOf(likeFilter);
+			String strUrl = urlStr + "/category/" + "customerId=" + String.valueOf(customerId) + "&" + "categoryId=" + String.valueOf(categoryId)
+					+ "&" + "open=" + String.valueOf(openFilter) + "&" + "like=" + String.valueOf(likeFilter);
 			String str = Request.getRequest(strUrl);
 			Type dtoType = new TypeToken<List<RestaurantDTO>>() {
 			}.getType();
@@ -56,12 +63,15 @@ public class RestaurantRequest {
 		return list;
 	}
 
+	/**
+	 * 해당 지역의 식당 리스트 요청 <BR>
+	 * 영업중, 좋아요 필터 여부에 따라 받는 리스트가 달라질 수 있음
+	 */
 	public List<RestaurantDTO> getRestaurantsByLocation(int locationId, int customerId) {
 		List<RestaurantDTO> list = new ArrayList<>();
 		try {
-			String strUrl = urlStr + "/location/" + "customerId=" + String.valueOf(customerId) + "&" + "locationId="
-					+ String.valueOf(locationId) + "&" + "open=" + String.valueOf(openFilter) + "&" + "like="
-					+ String.valueOf(likeFilter);
+			String strUrl = urlStr + "/location/" + "customerId=" + String.valueOf(customerId) + "&" + "locationId=" + String.valueOf(locationId)
+					+ "&" + "open=" + String.valueOf(openFilter) + "&" + "like=" + String.valueOf(likeFilter);
 			String str = Request.getRequest(strUrl);
 			Type dtoType = new TypeToken<List<RestaurantDTO>>() {
 			}.getType();
@@ -72,6 +82,7 @@ public class RestaurantRequest {
 		return list;
 	}
 
+	// 해당 식당의 정보 요청
 	public RestaurantDTO getRestaurantByRestaurantId(int restaurantId) {
 		RestaurantDTO dto = null;
 		try {

@@ -48,6 +48,7 @@ public class LikeHandler implements HttpHandler {
 			String type = pathSegments[2];
 			String query = pathSegments[3];
 			try {
+				// 키값에 대한 벨류값 초기화
 				int customerId = 0;
 				int restaurantId = 0;
 				String[] pairs = query.split("&");
@@ -59,12 +60,15 @@ public class LikeHandler implements HttpHandler {
 						restaurantId = Integer.parseInt(keyValue[1]);
 					}
 				}
+				// 좋아요 여부 확인 요청 응답
 				if (type.equalsIgnoreCase("getLike")) {
 					boolean like = dao.getLike(customerId, restaurantId);
 					response = String.valueOf(like);
+					// 좋아요 취소 요청 응답
 				} else if (type.equalsIgnoreCase("delete")) {
 					int likeCount = dao.deleteLike(customerId, restaurantId);
 					response = String.valueOf(likeCount);
+					// 좋아요 수 확인 요청 응답
 				} else if (type.equalsIgnoreCase("getLikeCount")) {
 					int likeCount = dao.getLikeCount(restaurantId);
 					response = String.valueOf(likeCount);
@@ -104,6 +108,7 @@ public class LikeHandler implements HttpHandler {
 			}
 			br.close();
 
+			// 좋아요 요청 응답
 			if (protocol.equalsIgnoreCase("insert")) {
 				JsonDTO insertDTO = gson.fromJson(bufferStr.toString(), JsonDTO.class);
 				try {

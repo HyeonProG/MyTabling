@@ -17,6 +17,7 @@ public class CustomerRequest {
 		gson = new GsonBuilder().setPrettyPrinting().create();
 	}
 
+	// 회원 가입 요청
 	public void addCustomer(String customerName, String customerPhone, int locationId) {
 		try {
 			String insertUrl = urlStr + "/insert";
@@ -28,6 +29,7 @@ public class CustomerRequest {
 		}
 	}
 
+	// 해당 번호의 회원 정보 요청
 	public CustomerDTO getCustomerByPhone(String phone) {
 		CustomerDTO dto = null;
 		try {
@@ -40,6 +42,7 @@ public class CustomerRequest {
 		return dto;
 	}
 
+	// 회원 정보 수정 요청
 	public void updateCustomer(String customerName, String customerPhone, int locationId) {
 		try {
 			String updateUrl = urlStr + "/update";
@@ -51,6 +54,7 @@ public class CustomerRequest {
 		}
 	}
 
+	// 회원 탈퇴 요청
 	public void deleteCustomer(String phone) {
 
 		try {
@@ -62,6 +66,7 @@ public class CustomerRequest {
 		}
 	}
 	
+	// 로그인 요청
 	public String loginCustomer(String phone) {
 		String check = "no";
 		try {
@@ -73,6 +78,7 @@ public class CustomerRequest {
 		return check;
 	}
 	
+	// 로그아웃 요청
 	public void logoutCustomer(String phone) {
 		try {
 			String selectUrl = urlStr + "/logout/" + phone;

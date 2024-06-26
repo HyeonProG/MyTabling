@@ -11,6 +11,7 @@ public class LikeRequest {
 		urlStr = "http://" + Request.getIp() + ":8080/like";
 	}
 
+	// 좋아요 요청
 	public int addLike(int customerId, int restaurantId) {
 		int likeCount = 0;
 		try {
@@ -25,6 +26,7 @@ public class LikeRequest {
 		return likeCount;
 	}
 
+	// 해당 고객의 해당 식당에 대한 좋아요 여부 확인 요청
 	public boolean getLike(int customerId, int restaurantId) {
 		boolean like = false;
 		try {
@@ -38,6 +40,7 @@ public class LikeRequest {
 		return like;
 	}
 
+	// 좋아요 취소 요청
 	public int deleteLike(int customerId, int restaurantId) {
 		int likeCount = 0;
 		try {
@@ -51,6 +54,7 @@ public class LikeRequest {
 		return likeCount;
 	}
 
+	// 해당 식당의 총 좋아요 수 확인 요청
 	public int getLikeCount(int restaurantId) {
 		int likeCount = 0;
 		try {

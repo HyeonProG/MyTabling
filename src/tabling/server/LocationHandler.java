@@ -11,6 +11,9 @@ import com.sun.net.httpserver.HttpHandler;
 
 import tabling.dao.LocationDAO;
 
+/**
+ * 현재 사용하지 않음
+ */
 public class LocationHandler implements HttpHandler {
 
 	private LocationDAO dao;

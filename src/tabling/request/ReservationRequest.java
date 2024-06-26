@@ -22,6 +22,7 @@ public class ReservationRequest {
 		gson = new GsonBuilder().setPrettyPrinting().create();
 	}
 
+	// 예약 요청
 	public void reservation(int customerId, int restaurantId) {
 		try {
 			String reservationUrl = urlStr + "/reservation";
@@ -33,6 +34,7 @@ public class ReservationRequest {
 		}
 	}
 
+	// 예약 취소 or 종료 요청
 	public void cancel(int customerId, int restaurantId) {
 
 		try {
@@ -46,6 +48,7 @@ public class ReservationRequest {
 	}
 
 	// 주의 !! DAO와 파라미터가 다름
+	// 해당 식당의 대기열 수 확인 요청 (해당 고객이 몇번째인지를 알려줌)
 	public int checkReservation(int customerId, int restaurantId) {
 		int count = 0;
 		try {
@@ -59,6 +62,7 @@ public class ReservationRequest {
 		return count;
 	}
 
+	// 해당 고객의 예약 정보 요청
 	public ReservationDTO getReservationByCustomer(int customerId) {
 		ReservationDTO dto = null;
 		try {
@@ -72,6 +76,7 @@ public class ReservationRequest {
 		return dto;
 	}
 
+	// 해당 식당의 모든 예약 리스트 확인
 	public List<ReservationDTO> getReservationByRestaurantId(int restaurantId) {
 		List<ReservationDTO> list = new ArrayList<>();
 		try {
@@ -86,6 +91,7 @@ public class ReservationRequest {
 		return list;
 	}
 
+	// 해당 식당의 예약자 명단 확인
 	public List<ReservationForRestaurantDTO> getCustomerInfoByReservation(int restaurantId) {
 		List<ReservationForRestaurantDTO> list = new ArrayList<>();
 		try {

@@ -48,6 +48,7 @@ public class RestaurantHandler implements HttpHandler {
 			String type = pathSegments[2];
 			String query = pathSegments[3];
 			try {
+				// 키값에 대한 벨류값 초기화
 				int customerId = 0;
 				int categoryId = 0;
 				int locationId = 0;
@@ -69,17 +70,22 @@ public class RestaurantHandler implements HttpHandler {
 						restaurantDAO.setLikeFilter(Boolean.parseBoolean(keyValue[1]));
 					}
 				}
+				// 현재 시간 설정
 				restaurantDAO.setCurrentTime(
 						new Time(LocalDateTime.now().getHour(), LocalDateTime.now().getMinute(), LocalDateTime.now().getDayOfWeek().toString()));
+				// 모든 식당 리스트 요청 응답
 				if (type.equalsIgnoreCase("all")) {
 					List<RestaurantDTO> list = restaurantDAO.getAllRestaurants(customerId);
 					response = gson.toJson(list);
+					// 해당 카테고리의 식당 리스트 요청 응답
 				} else if (type.equalsIgnoreCase("category")) {
 					List<RestaurantDTO> list = restaurantDAO.getRestaurantsByCategory(categoryId, customerId);
 					response = gson.toJson(list);
+					// 해당 지역의 식당 리스트 요청 응답
 				} else if (type.equalsIgnoreCase("location")) {
 					List<RestaurantDTO> list = restaurantDAO.getRestaurantsByLocation(locationId, customerId);
 					response = gson.toJson(list);
+					// 식당 정보 요청 응답
 				} else if (type.equalsIgnoreCase("restaurant")) {
 					RestaurantDTO dto = restaurantDAO.getRestaurantByRestaurantId(restaurantId);
 					response = gson.toJson(dto);

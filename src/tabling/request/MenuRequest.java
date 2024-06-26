@@ -19,6 +19,7 @@ public class MenuRequest {
 		gson = new GsonBuilder().setPrettyPrinting().create();
 	}
 
+	// 해당 음식의 이름 요청
 	public String getFoodName(int foodId) {
 		String str = null;
 		try {
@@ -30,6 +31,7 @@ public class MenuRequest {
 		return str;
 	}
 
+	// 해당 식당의 모든 메뉴 리스트 요청
 	public List<MenuDTO> getMenuByRestaurantId(int restaurantId) {
 		List<MenuDTO> list = new ArrayList<>();
 		try {

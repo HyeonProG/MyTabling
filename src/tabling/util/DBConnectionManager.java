@@ -6,6 +6,7 @@ import java.sql.SQLException;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 
+// 싱글톤 패턴
 public class DBConnectionManager {
 
 	private static DBConnectionManager instance;
