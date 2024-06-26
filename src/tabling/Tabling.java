@@ -11,7 +11,7 @@ public class Tabling {
 
 	public static void main(String[] args) {
 		// 서버 주소 변경 가능
-		Request.setIp("192.168.0.129");
+		Request.setIp("localhost");
 		UIManager.put("OptionPane.messageFont", new Font("Noto Sans KR", Font.PLAIN, 12));
 		new LoginSelectFrame();
 	}

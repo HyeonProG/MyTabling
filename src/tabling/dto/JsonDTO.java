@@ -8,10 +8,7 @@ public class JsonDTO {
 	private String customerName;
 	private String customerPhone;
 	private int locationId;
-	private int categoryId;
 	private int restaurantId;
-	private int foodId;
-	private int reservationId;
 
 	public JsonDTO(String customerName, String customerPhone, int locationId) {
 		this.customerName = customerName;
