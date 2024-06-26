@@ -87,7 +87,6 @@ public class LoginSelectFrame extends JFrame {
 			setSize(400, 600);
 			setLocationRelativeTo(null);
 			setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-			setLayout(null);
 			setResizable(false);
 			
 			backgroundPanel.setSize(getWidth(), getHeight());
