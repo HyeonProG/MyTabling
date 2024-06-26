@@ -62,11 +62,8 @@ public class CustomerHandler implements HttpHandler {
 				} else if (type.equalsIgnoreCase("login")) {
 					if (dao.getCustomerByPhone(customerPhone) == null) {
 						response = "no";
-					} else if (OnlineCustomer.getCustomerPhone().contains(customerPhone)) {
-						response = "false";
 					} else {
-						OnlineCustomer.getCustomerPhone().add(customerPhone);
-						response = "true";
+						response = String.valueOf(OnlineCustomer.getCustomerPhone().add(customerPhone));
 					}
 					// 로그아웃 요청 응답
 				} else if (type.equalsIgnoreCase("logout")) {
