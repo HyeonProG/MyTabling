@@ -8,6 +8,8 @@ import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 
+import tabling.util.MyMouseListener;
+
 public class LoginSelectFrame extends JFrame {
 
 	private BackgroundPanel backgroundPanel;
@@ -15,9 +17,10 @@ public class LoginSelectFrame extends JFrame {
 	private JLabel restaurantBtn;
 
 	public LoginSelectFrame() {
-		initData();
-		setInitLayout();
-		addEventListener();
+		new WaittingFrame();
+//		initData();
+//		setInitLayout();
+//		addEventListener();
 	}
 
 	private void initData() {
@@ -73,5 +76,36 @@ public class LoginSelectFrame extends JFrame {
 			}
 		});
 
+	}
+	
+	private class WaittingFrame extends JFrame {
+		private BackgroundPanel backgroundPanel;
+		
+		public WaittingFrame() {
+			backgroundPanel = new BackgroundPanel("img/startBg.jpg");
+			setTitle("테이블링");
+			setSize(400, 600);
+			setLocationRelativeTo(null);
+			setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+			setLayout(null);
+			setResizable(false);
+			
+			backgroundPanel.setSize(getWidth(), getHeight());
+			backgroundPanel.setLayout(null);
+			add(backgroundPanel);
+			
+			setVisible(true);
+			
+			backgroundPanel.addMouseListener(new MyMouseListener() {
+				@Override
+				public void mousePressed(MouseEvent e) {
+					setVisible(false);
+					initData();
+					setInitLayout();
+					addEventListener();
+					dispose();
+				}
+			});
+		}
 	}
 }

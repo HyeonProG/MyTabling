@@ -92,6 +92,7 @@ public class EditCustomerInfoFrame extends JFrame implements MyMouseListener {
 		myLocation.setBounds(90, 380, 300, 30);
 		myLocation.setFont(new Font("Noto Sans KR", Font.BOLD, 13));
 		backgroundPanel.add(myLocation);
+		myLocation.setSelectedIndex(customerDTO.getLocationId() - 1);
 
 		backgroundPanel.add(locationField);
 
